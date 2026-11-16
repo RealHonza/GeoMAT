@@ -470,13 +470,119 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-bar)
  #rgtop #rgchk{grid-column:3/5;grid-row:2}
 }
 
+/* Terrain input stage, visible only in the administrator session. */
+#mods [hidden],#mod-terrain[hidden],#trImport[hidden]{display:none!important}
+body.mterrain #gm,body.mterrain #rgm{display:none!important}
+body.mterrain.split{padding-bottom:16px}body.mterrain.rsplit{padding-right:16px}
+body.mterrain #tw{max-height:none}
+#mod-terrain h1{align-items:center}.tr-heading{color:var(--ac);background:color-mix(in srgb,var(--ac) 16%,var(--bg));padding:10px 12px;font-size:16px;white-space:nowrap}.tr-description{padding:8px 12px;font-size:13px;font-weight:400;color:var(--mut)}
+.tr-zone{margin-top:12px}.tr-drop-zone .zm>.tr-formats{flex:0 0 100%;margin:0}.tr-data{min-width:0}.tr-drop-zone.over{background:color-mix(in srgb,var(--zc) 15%,var(--bg))}
+.tr-drop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px dashed var(--bd);border-radius:var(--r-bar);padding:10px;background:var(--card)}.tr-drop.over{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,var(--card))}.tr-drop>span,.tr-formats,.tr-stage{color:var(--mut);font-size:12px}.tr-formats{display:block;margin:7px 0}.tr-stage{margin:14px 0}
+.tr-files{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.tr-chip{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%;padding:3px 5px 3px 9px;border:1px solid var(--bd);border-radius:var(--r-pill);background:var(--card)}.tr-chip{border-color:var(--zc,var(--bd));background:color-mix(in srgb,var(--zc,var(--ac)) 12%,var(--bg))}.tr-chip>span{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:320px}.tr-chip button[data-remove]{padding:0;width:24px;height:24px;min-height:24px;flex-shrink:0;border:0;font-size:18px}.tr-status{font-size:13px;color:var(--mut)}.tr-status.bad{color:var(--red)}
+.tr-table-wrap{overflow:auto;max-width:100%;margin:7px 0}.tr-report table,.tr-table-wrap table{border-collapse:collapse;width:100%;font-size:12px}.tr-report th,.tr-report td,.tr-table-wrap th,.tr-table-wrap td{padding:5px 7px;border-bottom:1px solid var(--bd);text-align:right;white-space:nowrap}.tr-report th:first-child,.tr-report td:first-child,.tr-table-wrap th:first-child,.tr-table-wrap td:first-child{text-align:left}.tr-report p{font-size:12px;margin:5px 0}.tr-warning{color:var(--wrn)}.tr-table-wrap small{color:var(--mut)}
+.tr-storage{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--wrn);border-radius:var(--r-bar);padding:9px 12px;color:var(--wrn);font-size:13px}.tr-storage[hidden]{display:none}.tr-storage button{flex:none}
+#trImport{position:fixed;inset:0;z-index:1000;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px}.tr-dialog{width:min(820px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:var(--card);color:var(--fg);padding:18px 20px;border:1px solid var(--bd);border-radius:var(--r-zone);box-shadow:0 12px 40px #0003}.tr-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.tr-dialog-head h2{font-size:20px;margin:0}.tr-dialog-head button{width:30px;height:30px;padding:0;line-height:1;font-size:24px;border-color:transparent;color:var(--mut)}
+.tr-import-options{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(180px,1.5fr);gap:14px}.tr-import-options label{display:flex;align-items:stretch;flex-direction:column;gap:6px;font-size:13px}.tr-import-options select,#mod-terrain select{max-width:100%;padding:5px;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:var(--r-field)}.tr-import-options select{width:100%}.tr-surfaces{border:1px solid var(--bd);border-radius:var(--r-bar);margin:12px 0;padding:8px 12px;min-width:0}.tr-surfaces legend{font-size:13px;color:var(--mut)}#trSurfaceList{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow:auto}.tr-surfaces label{font-size:13px;word-break:break-word}.tr-import-bounds{font-size:13px;line-height:1.7}.tr-import-warnings{font-size:12px;color:var(--wrn);margin:8px 0}.tr-dialog-actions{display:flex;justify-content:flex-end;margin-top:14px}
+@media(max-width:650px){.tr-import-options{grid-template-columns:1fr}.tr-description{display:block}.tr-dialog{padding:12px}.tr-storage{flex-wrap:wrap}}
+
+
+/* Loaded terrain files share the existing filename/settings interaction. */
+.tr-chip .tr-file{display:block;min-width:0;max-width:min(320px,65vw);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 0;border:0;background:transparent;color:inherit;font:inherit;text-align:left}
+.tr-chip .tr-file:hover{text-decoration:underline;background:transparent}.tr-chip:has(.tr-file:hover){border-color:var(--zc,var(--ac))}
+#trImport.pro{--ac:var(--pro);--acfg:var(--profg)}
+#trImportFile{overflow-wrap:anywhere}
+#trImportPreviewBox{margin-top:12px;font-size:13px}#trImportPreviewBox>label{margin:7px 0;display:flex;gap:7px;flex-wrap:wrap}#trImportPreview{max-width:100%;padding:4px;border:1px solid var(--bd);border-radius:var(--r-field);background:var(--card);color:var(--fg)}
+
+
+.tr-files{margin:0}
+.tr-unit-field{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;font-size:13px}
+.tr-unit-field>small{color:var(--mut);font-size:12px}
+#trImport .cad-seg{max-width:100%;flex-shrink:0}
+#trImport .tr-import-options .cad-seg label{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:0;min-width:44px;min-height:28px;padding:3px 12px;font-size:13px;white-space:nowrap}
+#trImport .tr-import-options .cad-seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+#trImport .tr-import-options .cad-seg label:has(input:focus-visible){outline-offset:-3px}
+#trImport #trUnit[hidden]{display:none!important}
+@media(pointer:coarse){#trImport .tr-import-options .cad-seg label{min-height:40px}}
+
+#hbt3{flex:none;display:flex;align-items:center;padding:8px 19px 8px 18px}
+#hsp3{display:flex;border:1px solid var(--ac);border-radius:var(--r-btn);overflow:hidden;background:var(--card)}
+#hsp3 button{flex:1 1 50%;min-width:0;width:auto;height:auto;min-height:34px;margin:0;border:0;border-radius:0;font-size:14px;font-weight:500}
+#hsp3 #ib3{font:italic 700 16px Georgia,serif;color:var(--ac);border-right:1px solid var(--ac)}
+#hsp3 #rall3{white-space:nowrap;color:var(--ac);display:inline-flex;align-items:center;justify-content:center}
+#hsp3 #rall3:hover{color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--card))}
+@media (max-width:560px){#hbt3{flex:1 1 100%;padding:0 12px 8px}#hsp3{flex:1}}
+#im3{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+#im3[hidden]{display:none}
+#im3 .card{background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:var(--r-zone);max-width:820px;width:100%;max-height:90vh;overflow:auto;padding:18px 24px}
+#imh3{position:sticky;top:-18px;z-index:1;margin:-18px -24px 6px;padding:18px 24px 8px;background:var(--card);border-bottom:1px solid var(--bd)}
+#ims3{flex:1;min-width:160px;padding:5px 8px;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:var(--r-btn);font:inherit}
+#imc3{color:var(--mut);font-size:12.5px;white-space:nowrap}
+#im3 h2{margin:0 0 4px;font-size:18px}#im3 h3{margin:16px 0 4px;font-size:14px;color:var(--ac)}
+#im3 p,#im3 li{margin:3px 0;font-size:13.5px}#im3 ul{margin:4px 0;padding-left:20px}
+#im .info-title,#im3 .info-title{display:flex;align-items:center;gap:.4em;min-width:0}#im .app-favicon,#im3 .app-favicon{width:1em;height:1em;flex:0 0 1em;object-fit:contain}
+
+
+#mod-terrain h1{align-items:stretch}
+#hlb3{font-size:16px;width:128px;flex:none;display:flex;align-items:center;justify-content:center;padding:6px 8px;text-align:center;background:color-mix(in srgb,var(--ac) 16%,var(--bg));color:var(--ac)}
+#htl3{flex:1;min-width:0;align-self:center;padding:8px 12px}
+@media(max-width:560px){#hlb3{width:auto;padding:8px 12px}#htl3{flex:1 1 100%}}
+
 </style>
 </head>
 <body>
 <div id="gmApp" hidden>
-<nav id="mods" aria-label="Moduly"><button type="button" class="mod act" data-mod="zss" aria-current="page" title="Modul ZSS pilot: výpočet středů pilot ze zaměřených bodů a porovnání s projektem. Zkratka: Shift+1.">ZSS pilot</button><button type="button" class="mod" data-mod="rov" title="Modul Rovinnost: odchylky zaměřených bodů od zadané roviny, tabulka a plán. Zkratka: Shift+2.">Rovinnost</button><span id="gmAuthSession"><span id="gmAuthAdmin" role="img" aria-label="Administrátor" title="Administrátor" hidden>A</span><button type="button" id="gmAuthLogout" aria-label="Odhlásit" title="Odhlásit – zruší uložené přihlášení v tomto prohlížeči. Načtená data a nastavení zůstanou zachována."><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></span></nav>
+<nav id="mods" aria-label="Moduly"><button type="button" class="mod act" data-mod="zss" aria-current="page" title="Modul ZSS pilot: výpočet středů pilot ze zaměřených bodů a porovnání s projektem. Zkratka: Shift+1.">ZSS pilot</button><button type="button" class="mod" data-mod="rov" title="Modul Rovinnost: odchylky zaměřených bodů od zadané roviny, tabulka a plán. Zkratka: Shift+2.">Rovinnost</button><button type="button" id="terrainTab" class="mod" data-mod="terrain" title="DMT a kubatury" hidden>DMT a kubatury</button><span id="gmAuthSession"><span id="gmAuthAdmin" role="img" aria-label="Administrátor" title="Administrátor" hidden>A</span><button type="button" id="gmAuthLogout" aria-label="Odhlásit" title="Odhlásit – zruší uložené přihlášení v tomto prohlížeči. Načtená data a nastavení zůstanou zachována."><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></span></nav>
 <div class="file-save-controls"><div id="gmFileStatus" class="file-save-status" role="status" aria-live="polite" hidden></div><button type="button" id="gmFileRetry" class="wi" hidden title="Znovu otevře úložiště a obnoví dosud nenačtené soubory nebo uloží aktuální změny. Při resetu dokončí smazání staré kopie.">Zkusit znovu</button></div>
 <details id="gmLegacyMigration" class="card legacy-migration" hidden><summary>Vybrat soubory ze starší kopie k převodu</summary><p>Původní uložená kopie překračuje současný počet souborů. Nic se automaticky neodřízne ani neodstraní.</p><div id="gmLegacyGroups"></div></details>
+<div id="mod-terrain" class="modpane" hidden>
+ <h1><span id="hlb3">DMT a kubatury</span><span id="htl3"><span style="font-weight:400;color:var(--mut);font-size:13px">Digitální model terénu ze zaměřených bodů a TIN sítí, porovnání etap a výpočty objemů</span></span><span id="hbt3"><span id="hsp3"><button id="ib3" class="ib" title="Informace o modulu DMT a kubatury. Zkratka: I." aria-label="Popis modulu DMT a kubatury">i</button><button id="rall3" type="button" aria-label="Reset modulu DMT a kubatury" title="Reset: po potvrzení odebere měření, projekt a nastavení importu pouze v modulu DMT a kubatury."><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M9 7V4.5h6V7"></path><path d="M6 7l1 13h10l1-13"></path><path d="M10 11v6M14 11v6"></path></svg></button></span></span></h1>
+<div id="trStorage" class="tr-storage" hidden role="status"><span id="trStorageText"></span><button type="button" id="trStorageRetry">Zkusit znovu</button></div>
+ <section id="trmZone" class="tr-zone mer" aria-labelledby="trmTitle">
+  <div id="trmDrop" class="zone mer cta tr-drop-zone" aria-labelledby="trmTitle" title="Přetáhněte sem soubory STX, TXT, CSV, LandXML nebo DXF, nebo použijte tlačítko Načíst. Nejvýše 10 souborů."><div class="zl"><svg width="34" height="34" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 2v6M12 16v6M2 12h6M16 12h6"></path></svg><b id="trmTitle">1. MĚŘENÍ</b></div><div class="zm"><div class="zt">Zaměřený terén<small> (měření)</small></div><div id="trmStatus" class="zs tr-status" role="status" aria-live="polite">Čekám na soubory měření.</div>
+   <div id="trmFiles" class="fchips tr-files"></div><small class="tr-formats">STX / TXT / CSV: body · LandXML: TIN povrchy · DXF: 3DFACE nebo POINT</small>
+   </div><div class="zb"><button type="button" id="trmLoad" class="" aria-label="Načíst měření terénu">Načíst <svg class="ic bic" viewbox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 2v6M12 16v6M2 12h6M16 12h6"></path></svg> měření</button><button id="trmClear" aria-label="Zrušit všechny soubory měření" hidden title="Odebere všechny soubory pouze z této sekce. Jednotlivý soubor odeberete křížkem u jeho názvu." type="button">Zrušit <svg class="ic bic" viewbox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 2v6M12 16v6M2 12h6M16 12h6"></path></svg> měření</button><input id="trmInput" type="file" multiple accept=".stx,.txt,.csv,.xml,.landxml,.dxf" hidden></div></div></section>
+ <section id="trpZone" class="tr-zone pro" aria-labelledby="trpTitle">
+  <div id="trpDrop" class="zone pro cta tr-drop-zone" aria-labelledby="trpTitle" title="Přetáhněte sem soubory STX, TXT, CSV, LandXML nebo DXF, nebo použijte tlačítko Načíst. Nejvýše 10 souborů."><div class="zl"><svg width="34" height="34" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg><b id="trpTitle">2. PROJEKT / VÝCHOZÍ ETAPA</b></div><div class="zm"><div class="zt">Projektovaný terén / původní zaměření<small> (volitelné)</small></div><div id="trpStatus" class="zs tr-status" role="status" aria-live="polite">Čekám na projekt nebo výchozí etapu.</div>
+   <div id="trpFiles" class="fchips tr-files"></div><small class="tr-formats">Projektovaný terén nebo původní zaměření. Stejné vstupní formáty jako u měření.</small>
+   </div><div class="zb"><button type="button" id="trpLoad" class="" aria-label="Načíst projekt nebo výchozí etapu">Načíst <svg class="ic bic" viewbox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg> projekt</button><button id="trpClear" aria-label="Zrušit všechny soubory projektu / výchozí etapy" hidden title="Odebere všechny soubory pouze z této sekce. Jednotlivý soubor odeberete křížkem u jeho názvu." type="button">Zrušit <svg class="ic bic" viewbox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg> projekt</button><input id="trpInput" type="file" multiple accept=".stx,.txt,.csv,.xml,.landxml,.dxf" hidden></div></div></section>
+ <p class="tr-stage">V této části se načítají a kontrolují vstupy. Hotové TIN zachovávají původní trojúhelníky; z bodových souborů se síť zatím nevytváří. Plán, úpravy modelu a kubatury budou následovat.</p>
+ <div class="lrow"><p class="author">Autor: Jan Bartůněk · GeoMAT verze <span class="ver"></span></p>
+</div></div>
+<div id="im3" hidden><div class="card" role="dialog" aria-modal="true" aria-labelledby="im3t">
+<div id="imh3"><div class="row" style="margin:0"><h2 id="im3t" class="info-title"><img class="app-favicon" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="GeoMat" title="GeoMat" width="18" height="18"><span>DMT a kubatury – co modul dělá</span></h2><button id="ix3" style="margin-left:auto" title="Zavře popis modulu (stejně jako klávesa Esc).">Zavřít</button></div>
+<div class="row" style="margin:8px 0 0"><input type="search" id="ims3" placeholder="Hledat v popisu…" autocomplete="off" aria-label="Hledat v popisu" title="Hledá bez ohledu na diakritiku a velikost písmen, nalezené zvýrazní zeleně. Enter nebo Tab = další nález, Shift+Enter nebo Shift+Tab = předchozí, Esc = smaže hledání."><span id="imc3" aria-live="polite"></span></div></div>
+<div id="imb3">
+<p style="color:var(--mut)">GeoMAT verze <span class="ver"></span> · Autor: Jan Bartůněk.</p>
+<h3>K čemu modul slouží</h3>
+<p>Modul DMT a kubatury připravuje měření a referenční projekt nebo výchozí etapu pro digitální model terénu a porovnání povrchů. V této verzi je hotové načítání a kontrola vstupů. Vytváření TIN z bodů, plán, úpravy modelu a výpočet kubatur budou následovat.</p>
+<h3>1. Měření</h3>
+<p>Do zelené sekce načti zaměřené body nebo hotovou síť. Použij tlačítko Načíst měření nebo přetažení. Načtená data poznáš podle plnobarevného zeleného tlačítka. Zrušit měření vyprázdní pouze tuto sekci.</p>
+<h3>2. Projekt / výchozí etapa</h3>
+<p>Do modré sekce načti projektovaný terén nebo původní zaměření pro budoucí porovnání. Podporuje stejné formáty jako měření. Načítací tlačítko je při nahraných souborech modré; Zrušit projekt vyprázdní pouze tuto sekci.</p>
+<h3>Podporované soubory</h3>
+<ul><li><b>STX, TXT, CSV:</b> název bodu, Y, X, Z, případně kód. Výška je povinná. Lze použít mezery, tabulátor, středník a čárkové CSV s uvozovkami. Desetinná čárka se používá s oddělovačem středník, tabulátor nebo mezera.</li><li><b>LandXML:</b> hotové TIN povrchy definované seznamy Pnts a Faces. Lze vybrat více povrchů. Původní trojúhelníky se nepřepočítávají, neaktivní trojúhelníky i=1 se nepoužijí. GRID a definice pouze z povinných hran se zatím nevytvářejí.</li><li><b>DXF:</b> plochy 3DFACE a body POINT, oddělené podle vrstev. Trojúhelníky se zachovají; čtyřúhelníky se rozdělí úhlopříčkou 1–3 s upozorněním. Skryté skupiny lze výslovně vybrat. Samotné čáry, 2D kresba a polyface síť zatím nejsou hotovým TIN pro tento importér. DWG není podporované.</li></ul>
+<h3>Informace a nastavení souboru</h3>
+<p>Kliknutí na název načteného souboru otevře jeho informace a nastavení. Jednotky zvolíš přepínačem m / mm / ft; souřadnicovou konvenci z roletky. Zkontroluj pořadí a znaménka os i rozsahy Y, X, Z a jejich rozdíly. Nejde o převod mezi geodetickými nebo výškovými systémy.</p>
+<p>V okně jsou počty bodů a trojúhelníků, výběr povrchů, upozornění a ukázka prvních 100 bodů. Ve vstupu zůstávají všechny načtené body. Náhled změn je dočasný; teprve Použít změny upraví vybraný soubor. Zavření křížkem nebo Escape zachová původní nastavení.</p>
+<h3>Více souborů a kontroly</h3>
+<p>Každá sekce přijme nejvýše 10 souborů, soubor nejvýše 64 MiB a sekce dohromady 128 MiB zdrojových dat. Soubor může mít nejvýše 250 000 vrcholů a 500 000 trojúhelníků. Soubor se stejným názvem nahradí předchozí a stane se nejnovějším. Pouhá úprava nastavení pořadí nemění. Křížek u názvu odebere jediný soubor.</p>
+<p>Modul upozorní na shodné polohy s různými výškami, duplicity nebo svislé trojúhelníky. Degenerované trojúhelníky a neplatné odkazy vrcholů odmítne. Odlehlé body nefiltruje podle roviny — skutečný svah nebo vrchol hromady musí zůstat zachovaný. Úplná kontrola topologie a výpočty modelu budou součástí dalších částí.</p>
+<h3>Ukládání a úplný reset</h3>
+<p>Zdrojové soubory i potvrzená nastavení se ukládají místně v prohlížeči a po obnovení stránky se obnoví. Data se nikam neodesílají. Při chybě úložiště zůstávají změny v otevřené stránce a zobrazí se upozornění s možností opakování uložení.</p>
+<p>Koš v hlavičce po potvrzení odstraní měření i projekt a nastavení jejich importu pouze v modulu DMT a kubatury. Ostatní moduly ani přihlášení se nemění. Úplný reset nelze vrátit; pokud úložiště selže, zobrazí se výsledek uložení resetu.</p>
+<h3>Klávesové zkratky</h3>
+<p><b>I:</b> informace o modulu. <b>Shift+1 / Shift+2 / Shift+3:</b> přepnutí modulu, pokud není otevřené potvrzení resetu nebo import a nepíšeš do pole. <b>Escape:</b> zavření dialogu; v hledání informací nejprve smaže dotaz. Enter a Tab v hledání přejdou na další výskyt, se Shiftem na předchozí.</p>
+</div>
+</div></div>
+<div id="trImport" hidden><div class="tr-dialog" role="dialog" aria-modal="true" aria-labelledby="trImportTitle">
+ <div class="tr-dialog-head"><h2 id="trImportTitle">Import dat terénu</h2><button type="button" id="trCancel" aria-label="Zavřít import">×</button></div>
+ <p id="trImportFile"></p><p id="trImportMeta" class="tr-formats"></p><div class="tr-import-options"><div class="tr-unit-field"><span id="trUnitLabel">Jednotky souboru</span><select id="trUnit" hidden aria-hidden="true"><option value="m" selected>Metry [m]</option><option value="mm">Milimetry [mm]</option><option value="ft">Stopy [ft]</option></select><div class="rvseg cad-seg" role="radiogroup" aria-labelledby="trUnitLabel"><label title="Metry"><input type="radio" name="trUnitChoice" value="m" checked aria-label="Metry">m</label><label title="Milimetry"><input type="radio" name="trUnitChoice" value="mm" aria-label="Milimetry">mm</label><label title="Stopy"><input type="radio" name="trUnitChoice" value="ft" aria-label="Stopy">ft</label></div><small id="trUnitHelp"></small></div><label>Souřadnicová konvence<select id="trMapping"><option value="yx">S-JTSK: Y, X, Z</option><option value="xy">S-JTSK: X, Y, Z</option><option value="cad">CAD: X = −Y, Y = −X, Z</option><option value="nel">Northing, Easting: X = −N, Y = −E, Z</option></select></label></div>
+ <p class="tr-formats">Volba mění jednotky, pořadí a znaménka os. Neprovádí převod mezi geodetickými systémy; měření i projekt musí být ve stejné soustavě a výškovém systému.</p>
+ <fieldset class="tr-surfaces"><legend>Povrchy / skupiny k načtení</legend><div id="trSurfaceList"></div></fieldset>
+ <div id="trImportReport" class="tr-report"></div><div id="trImportBounds" class="tr-import-bounds"></div><div id="trImportWarnings" class="tr-import-warnings"></div><p id="trImportError" role="alert" class="bad" hidden></p>
+ <details id="trImportPreviewBox"><summary>Ukázka načtených bodů</summary><label>Povrch <select id="trImportPreview" aria-label="Povrch pro ukázku bodů"></select></label><div id="trImportPoints" class="tr-table-wrap"></div></details><div class="tr-dialog-actions"><button type="button" id="trConfirm" class="p">Potvrdit načtení</button></div>
+</div></div>
+
 <div id="mod-zss" class="modpane">
 <h1><span id="hlb">ZSS pilot</span><span id="htl"><span style="font-weight:400;color:var(--mut);font-size:13px">Středy pilot ze zaměřených bodů na plášti nebo ve středu, odchylky od projektu, plán PDF/DXF</span> </span><span id="hbt"><span id="hsp"><button id="ib" class="ib" title="Otevře popis aplikace: jak se hledají středy pilot, co znamenají jednotlivé volby a výstupy. Zkratka: I." aria-label="Popis aplikace">i</button><button id="rall" type="button" aria-label="Reset"  title="Reset: odebere načtené soubory (měření i projekt), ruční výběr a uložená nastavení a vrátí všechny parametry i volby plánu na výchozí hodnoty. Před smazáním se zeptá."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg></button></span></span></h1>
 <div class="zone mer cta" id="drop" title="Sem přetáhni soubor (STX, TXT nebo CSV) se zaměřenými body pilot (sloupce: název bodu, Y, X, Z, [kód]), nebo použij tlačítko Načíst SS s ikonou zaměření. Soubory lze načítat jednotlivě i víc najednou (celkem nejvýš 50), každý další se přidá a každý má štítek s křížkem pro odebrání. Sled bodů pro výpočet středů se nikdy nepřenáší z jednoho souboru do dalšího, ale „Dopočítat body mimo pořadí“ projde všechny soubory dohromady.">
@@ -956,8 +1062,19 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-bar)
 </script>
 <script type="application/x-geomat" data-gm-core="2">
 "use strict";
+document.addEventListener('keydown',event=>{
+ const modal=document.getElementById('trImport');if(modal&&!modal.hidden){terrainDialogKey(event);event.stopImmediatePropagation();return;}
+ if(typeof GM_INFO!=='undefined'&&GM_INFO?.id==='im3'){if(terrainInfoKey(event)){event.stopImmediatePropagation();return;}}
+ if(!document.getElementById('rm').hidden&&typeof rmMode!=='undefined'&&rmMode==='terrain'){terrainResetKey(event);event.stopImmediatePropagation();return;}
+ if(!document.body.classList.contains('mterrain'))return;
+ const target=event.target,typing=target&&(target.tagName==='INPUT'||target.tagName==='SELECT'||target.tagName==='TEXTAREA'||target.isContentEditable);
+ if(event.code==='KeyI'&&!event.shiftKey&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&!event.repeat&&!typing){event.preventDefault();terrainInfoOpen();event.stopImmediatePropagation();return;}
+ const moduleKey=event.shiftKey&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&/^(Digit|Numpad)[123]$/.test(event.code||'');
+ if(!moduleKey)event.stopImmediatePropagation();
+},true);
+
 var PLAN_MEASURE=null;
-const APP_VERSION="1.231", APP_DATE="16. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.236", APP_DATE="16. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -2840,7 +2957,7 @@ function wireDrop(el,fn){
 }
 wireDrop($("drop"),loadFile); wireDrop($("refrow"),loadRef);
 window.addEventListener("dragover",e=>e.preventDefault());
-window.addEventListener("drop",e=>{ e.preventDefault(); const f=e.dataTransfer.files; if(f&&f.length) (document.body.classList.contains("mrov")?rvLoad:loadFile)(f); });
+window.addEventListener("drop",e=>{ e.preventDefault(); const f=Array.from(e.dataTransfer.files||[]);if(document.body.classList.contains("mterrain")){terrainLoad("m",f);return;} if(f.length) (document.body.classList.contains("mrov")?rvLoad:loadFile)(f); });
 /* ---------- graf ---------- */
 const GC={off:"#c4c8cf",ok:"#1b7a3a",bad:"#d92d20",pile:"#2b5ea7",ref:"#555555",pt:"#7c3aed",grid:"#e3e6ea",txt:"#222222",frame:"#888888",gray:"#8a8f98",real:"#7c3aed",unp:"#d97706"};
 // barvy měřených souborů (jen v plánu na obrazovce, je-li načteno víc souborů měření; PDF a DXF se nemění)
@@ -3479,7 +3596,8 @@ function doReset(){planMeasureClear("zss");
   try{ [LSK,SPK].forEach(k=>removeStorage(k)); }catch(e){}
   renderTable(); syncSplit();return projectFilesResetResult('zss'); }
 // vlastní okno pro potvrzení resetu (místo systémového confirm): výchozí fokus na „Zrušit“, Esc nebo klik mimo okno zavře
-const rmClose=()=>{ $("rm").hidden=true; $(typeof rmMode!=="undefined"&&rmMode==="rov"?"rall2":"rall").focus({preventScroll:true}); };
+function gmResetButton(){return $(rmMode==="rov"?"rall2":rmMode==="terrain"?"rall3":"rall");}
+const rmClose=()=>{ $("rm").hidden=true; gmResetButton().focus({preventScroll:true}); };
 $("rall").onclick=()=>{ $("rm").hidden=false; $("rmn").focus(); };
 $("rmn").onclick=rmClose;
 $("rmy").onclick=()=>{ $("rm").hidden=true; doReset(); };
@@ -3537,18 +3655,20 @@ $("ims").addEventListener("keydown",e=>{
   else if(e.key==="Escape"&&$("ims").value){ e.preventDefault(); e.stopPropagation(); $("ims").value=""; imSearch(); } });   // první Esc smaže hledání, další zavře okno
 // Information dialogs share focus, background isolation and keyboard behaviour.
 let GM_INFO=null;
+function gmInfoSearch(id){return $(id==='im'?'ims':id==='im2'?'ims2':'ims3');}
+function gmInfoOpener(id){return $(id==='im'?'ib':id==='im2'?'ib2':'ib3');}
 function gmInfoFields(modal){return [...modal.querySelectorAll('button,input,select,textarea,a[href],[tabindex]')].filter(e=>!e.disabled&&!e.hidden&&!(e.tabIndex<0)&&(!e.getClientRects||e.getClientRects().length));}
 function gmInfoClose(restore=true){
  const state=GM_INFO;if(!state)return;GM_INFO=null;state.modal.hidden=true;
  state.background.forEach(([element,inert])=>element.inert=inert);
- if(restore&&!$('gmApp').hidden){const target=state.opener&&state.opener.isConnected!==false?state.opener:$(state.id==='im'?'ib':'ib2');target?.focus({preventScroll:true});}
+ if(restore&&!$('gmApp').hidden){const target=state.opener&&state.opener.isConnected!==false?state.opener:gmInfoOpener(state.id);target?.focus({preventScroll:true});}
 }
 function gmInfoOpen(id){
  const opener=document.activeElement;gmInfoClose(false);const modal=$(id),app=$('gmApp');
  if(!modal||app.hidden)return;
  const state={id,modal,opener,background:[]};GM_INFO=state;modal.hidden=false;
  for(const sibling of app.children)if(sibling!==modal&&!['SCRIPT','STYLE','LINK'].includes(sibling.tagName)){state.background.push([sibling,!!sibling.inert]);sibling.inert=true;}
- $(id==='im'?'ims':'ims2').focus({preventScroll:true});
+ gmInfoSearch(id).focus({preventScroll:true});
 }
 function gmInfoToggle(id){if(GM_INFO&&GM_INFO.id===id)gmInfoClose();else gmInfoOpen(id);}
 $('ib').onclick=()=>gmInfoOpen('im');$('ix').onclick=()=>gmInfoClose();
@@ -3556,12 +3676,12 @@ $('im').addEventListener('click',e=>{if(e.target===$('im'))gmInfoClose();});
 document.addEventListener('focusin',e=>{
  if(!GM_INFO)return;
  if($('gmApp').hidden||GM_INFO.modal.hidden){gmInfoClose(false);return;}
- if(!GM_INFO.modal.contains(e.target))$(GM_INFO.id==='im'?'ims':'ims2').focus({preventScroll:true});
+ if(!GM_INFO.modal.contains(e.target))gmInfoSearch(GM_INFO.id).focus({preventScroll:true});
 },true);
 document.addEventListener('keydown',e=>{
  const state=GM_INFO;if(!state)return;
  if($('gmApp').hidden||state.modal.hidden){gmInfoClose(false);return;}
- const search=$(state.id==='im'?'ims':'ims2'),typing=e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable);
+ const search=gmInfoSearch(state.id),typing=e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable);
  if(e.key==='Escape'){
   if(e.target===search&&search.value)return; // Existing field handler clears the search on the first Escape.
   e.preventDefault();e.stopImmediatePropagation();gmInfoClose();return;
@@ -3569,7 +3689,7 @@ document.addEventListener('keydown',e=>{
  if(e.code==='KeyI'&&!typing&&!e.shiftKey&&!e.ctrlKey&&!e.altKey&&!e.metaKey){e.preventDefault();e.stopImmediatePropagation();gmInfoClose();return;}
  if(e.shiftKey&&/^(Digit|Numpad)[12]$/.test(e.code||'')&&!typing&&!e.ctrlKey&&!e.altKey&&!e.metaKey){gmInfoClose(false);return;}
  if(e.key==='Tab'){
-  const hits=state.id==='im'?imHits:im2Hits;
+  const hits=state.id==='im'?imHits:state.id==='im2'?im2Hits:im3Hits;
   if(e.target===search&&hits.length)return; // Preserve Tab / Shift+Tab navigation between matches.
   const fields=gmInfoFields(state.modal),at=fields.indexOf(document.activeElement);
   if(!fields.length){e.preventDefault();return;}
@@ -3579,7 +3699,7 @@ document.addEventListener('keydown',e=>{
 
 // tlačítka vpravo v zónách 1 až 3 mají stejnou šířku podle nejširšího z nich (i skrytá se změří)
 function syncBw(){
-  const bs=["bl","mclr","br","rclr","hsp","rvbl","rvclr","rvpb","rvpclr","hsp2"].map($).filter(Boolean); let w=0;
+  const bs=["bl","mclr","br","rclr","hsp","rvbl","rvclr","rvpb","rvpclr","hsp2","trmLoad","trmClear","trpLoad","trpClear","hsp3"].map($).filter(Boolean); let w=0;
   const hid=bs.map(b=>b.hidden); bs.forEach(b=>{ b.hidden=false; b.style.width="max-content"; });   // nejdřív všechny zápisy, pak všechna měření: jen jeden přepočet rozvržení (s velkou tabulkou jinak sekundy)
   bs.forEach(b=>{ w=Math.max(w,b.getBoundingClientRect().width); }); bs.forEach((b,i)=>{ b.hidden=hid[i]; });
   if(w>0) bs.forEach(b=>{ b.style.width=Math.ceil(w)+"px"; });   // ve skrytém modulu mají tlačítka nulovou šířku: pak se nic nemění (dorovná se po přepnutí modulu)
@@ -6150,26 +6270,28 @@ let rmMode="zss";
 function rmSet(m){ rmMode=m; const x=RM_TXT[m]; $("rmt").textContent=x.t; $("rmd").textContent=x.d; $("rmy").title=x.y; }
 $("rall").onclick=()=>{ rmSet("zss"); $("rm").hidden=false; $("rmn").focus(); };
 $("rall2").onclick=()=>{ rmSet("rov"); $("rm").hidden=false; $("rmn").focus(); };
-$("rmy").onclick=()=>{ $("rm").hidden=true; if(rmMode==="rov") rvReset(); else doReset(); };
-$("rmn").onclick=()=>{ $("rm").hidden=true; $(rmMode==="rov"?"rall2":"rall").focus({preventScroll:true}); };
+$("rmy").onclick=()=>{ $("rm").hidden=true; if(rmMode==="rov") rvReset(); else if(rmMode==="terrain") terrainReset(); else doReset(); };
+$("rmn").onclick=()=>{ $("rm").hidden=true; gmResetButton().focus({preventScroll:true}); };
 $("rm").addEventListener("click",e=>{ if(e.target===$("rm")) $("rmn").onclick(); },true);
 
 /* ---------- přepínání modulů (ZSS pilot / Rovinnost) ---------- */
 (function(){
-  const MK="zsspilot.modul", TT={zss:"ZSS pilot",rov:"Rovinnost"};
+  const MK="zsspilot.modul", TT={zss:"ZSS pilot",rov:"Rovinnost",terrain:"DMT a kubatury"};
   const nav=document.getElementById("mods");
   let hintTimer=null,hintEpoch=0;
   function setMod(m,save){
-    if(!TT[m]) m="zss";
+    if(!TT[m]||(m==="terrain"&&!terrainAdmin())) m="zss";
     nav.querySelectorAll("button.mod").forEach(b=>{ const on=b.dataset.mod===m; b.classList.toggle("act",on); if(on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
-    ["zss","rov"].forEach(k=>{ const el=document.getElementById("mod-"+k); if(el) el.hidden=(k!==m); });
+    ["zss","rov","terrain"].forEach(k=>{ const el=document.getElementById("mod-"+k); if(el) el.hidden=(k!==m); });
     document.body.classList.toggle("mrov",m==="rov");
+    document.body.classList.toggle("mterrain",m==="terrain");
+    if(m==="terrain")Promise.resolve().then(()=>terrainActivate());
     document.title=TT[m];
     if(save){ try{ writeStorage(MK,m); }catch(e){} }
     // Same empty-measurement cue on startup and every module entry. Recheck after the delay.
     clearTimeout(hintTimer);const epoch=++hintEpoch;
     ["drop","rvdrop"].forEach(id=>$(id).classList.remove("shine"));
-    hintTimer=setTimeout(()=>{if(epoch!==hintEpoch)return;hintTimer=null;
+    hintTimer=setTimeout(()=>{if(epoch!==hintEpoch||m==="terrain")return;hintTimer=null;
       const hint=()=>{if(epoch===hintEpoch&&!$("mod-"+m).hidden&&!(m==="zss"?points.length:RV.pts.length))nudge($(m==="zss"?"drop":"rvdrop"));};if(PROJECT_FILES_BOOTING)PROJECT_FILES_READY.then(hint);else hint();
     },save?200:600);
     if(m==="zss") window.dispatchEvent(new Event("resize"));
@@ -6183,9 +6305,10 @@ $("rm").addEventListener("click",e=>{ if(e.target===$("rm")) $("rmn").onclick();
     const m=/^(?:Digit|Numpad)([1-9])$/.exec(e.code||""); if(!m) return;
     const t=e.target, tag=t&&t.tagName; if((tag==="INPUT"&&!/^(checkbox|radio|range|button|file)$/.test(t.type))||tag==="TEXTAREA"||tag==="SELECT"||(t&&t.isContentEditable)) return;
     if(!document.getElementById("rm").hidden) return;
-    const b=nav.querySelectorAll("button.mod")[+m[1]-1]; if(!b) return;
+    const b=nav.querySelectorAll("button.mod")[+m[1]-1]; if(!b||b.hidden||b.disabled) return;
     e.preventDefault(); gmInfoClose(false);   // otevřený popis aplikace se zavře
     setMod(b.dataset.mod,true); b.focus(); });
+  window.GeoMATSetModule=setMod;
   let m0="zss"; try{ m0=localStorage.getItem(MK)||"zss"; }catch(e){}
   setMod(m0,false);
 })();
@@ -6820,6 +6943,202 @@ $('rgSurfaceToggle').onclick=()=>{
  button.setAttribute('aria-expanded',String(!details.hidden));rgRequestRender();
 };
 
+/* Terrain input stage: source points and original faces, no triangulation or volumes. */
+function terrainFail(message){throw Error(message);}
+const TERRAIN_LIMIT={bytes:67108864,points:250000,faces:500000,files:10,total:134217728};
+function terrainCheckCount(surface){if(surface.points.length>TERRAIN_LIMIT.points||surface.faces.length>TERRAIN_LIMIT.faces)terrainFail('Povrch překračuje limit 250 000 bodů nebo 500 000 trojúhelníků.');}
+function terrainRawPoint(id,p){if(!Array.isArray(p)||p.length!==3||!p.every(Number.isFinite))terrainFail('Neplatné souřadnice bodu '+id+'.');return {id:String(id),p};}
+function terrainText(text){
+ const points=[],warnings=[];let bad=0,headers=0,mapping='yx';
+ const rows=text.replace(/^\uFEFF/,'').split(/\r\n|\n|\r/);
+ for(let i=0;i<rows.length;i++){const line=rows[i].trim();if(!line||/^#|^\/\//.test(line))continue;
+  // CSV separators, including quoted identifiers and semicolon CSV with decimal commas.
+  const loose=splitLine(line),validLoose=loose.length>=4&&loose.slice(1,4).every(v=>Number.isFinite(num(String(v))));
+  let fields;if(line.includes(';')||line.includes('\t')||(!validLoose&&(line.includes('"')||/,/.test(line)))){
+   const sep=line.includes(';')?';':line.includes('\t')?'\t':',';fields=[];let value='',quoted=false;
+   for(let j=0;j<line.length;j++){const c=line[j];if(c==='"'){if(quoted&&line[j+1]==='"'){value+='"';j++;}else quoted=!quoted;}else if(c===sep&&!quoted){fields.push(value.trim());value='';}else value+=c;}fields.push(value.trim());if(quoted){bad++;continue;}
+  }else fields=splitLine(line);
+  if(fields.length>=4&&/^(id|bod|nazev|název|name|point)$/i.test(fields[0])&&fields.slice(1,4).every(v=>/^[YXZNE]$/i.test(v))){headers++;if(fields[1].toUpperCase()==='X'&&fields[2].toUpperCase()==='Y')mapping='xy';else if(fields[1].toUpperCase()==='N'&&fields[2].toUpperCase()==='E')mapping='nel';continue;}
+  const xyz=fields.slice(1,4).map(v=>num(String(v)));if(!fields[0]||fields.length<4||!xyz.every(Number.isFinite)){bad++;continue;}
+  points.push({...terrainRawPoint(fields[0],xyz),code:fields[4]||''});if(points.length>TERRAIN_LIMIT.points)terrainFail('Soubor překračuje limit 250 000 bodů.');
+ }
+ if(!points.length)terrainFail('Žádný použitelný bod. Očekává se název bodu, Y, X, Z, případně kód.');
+ if(bad)warnings.push('Vynecháno neplatných řádků: '+bad+'.');
+ return {kind:'points',unit:'m',mapping,warnings,surfaces:[{name:'Body',points,faces:[],meta:{headers,bad}}]};
+}
+function terrainXML(text){
+ if(/<!DOCTYPE|<!ENTITY/i.test(text))terrainFail('LandXML s DTD nebo deklaracemi entit není podporované.');
+ const doc=new DOMParser().parseFromString(text,'application/xml');if(doc.getElementsByTagName('parsererror').length||doc.documentElement?.localName!=='LandXML')terrainFail('Soubor není platný LandXML.');
+ const children=(node,name)=>Array.from(node?.children||[]).filter(c=>c.localName===name),child=(node,name)=>children(node,name)[0],all=(node,name)=>Array.from(node.getElementsByTagName('*')).filter(c=>c.localName===name);
+ const units=child(doc.documentElement,'Units'),unitNode=child(units,'Metric')||child(units,'Imperial'),rawUnit=(unitNode?.getAttribute('linearUnit')||'').toLowerCase();
+ const unitMap={meter:'m',metre:'m',meters:'m',millimeter:'mm',millimetre:'mm',foot:'ft',feet:'ft',ussurveyfoot:'usft',centimeter:'cm',kilometer:'km'};
+ const surfaces=[],warnings=[];const unit=unitMap[rawUnit]||'m';if(!unitMap[rawUnit])warnings.push('Jednotky chybí nebo nejsou rozpoznány. Ověřte zvolenou jednotku.');
+ const list=all(doc.documentElement,'Surface');if(list.length>100)terrainFail('LandXML obsahuje více než 100 povrchů.');
+ for(const node of list){const definition=child(node,'Definition'),name=node.getAttribute('name')||'Povrch '+(surfaces.length+1);if(!definition||String(definition.getAttribute('surfType')).toUpperCase()!=='TIN'){warnings.push(name+': nejde o definici TIN s body a trojúhelníky.');continue;}
+  const points=[],faces=[],ids=new Map(),pnts=child(definition,'Pnts'),rawFaces=child(definition,'Faces');let hidden=0;
+  if(!pnts||!rawFaces){warnings.push(name+': chybí Pnts nebo Faces; samotné povinné hrany nestačí pro import hotového TIN.');continue;}
+  for(const p of children(pnts,'P')){const id=p.getAttribute('id');if(!id||ids.has(id))terrainFail(name+': chybějící nebo duplicitní ID vrcholu.');const xyz=p.textContent.trim().split(/\s+/).map(Number);ids.set(id,points.length);points.push(terrainRawPoint(id,xyz));if(points.length>TERRAIN_LIMIT.points)terrainFail('Povrch překračuje limit bodů.');}
+  for(const f of children(rawFaces,'F')){const refs=f.textContent.trim().split(/\s+/);if(refs.length!==3||refs.some(id=>!ids.has(id)))terrainFail(name+': neplatný odkaz trojúhelníku na vrcholy.');if(f.getAttribute('i')==='1'){hidden++;continue;}faces.push(refs.map(id=>ids.get(id)));if(faces.length>TERRAIN_LIMIT.faces)terrainFail('Povrch překračuje limit trojúhelníků.');}
+  if(!points.length||!faces.length){warnings.push(name+': žádné aktivní trojúhelníky.');continue;}
+  surfaces.push({name,points,faces,meta:{hidden,sourceXML:node.outerHTML||new XMLSerializer().serializeToString(node)}});
+  if(hidden)warnings.push(name+': neaktivních trojúhelníků mimo fyzický povrch / v otvorech '+hidden+'.');
+ }
+ if(!surfaces.length)terrainFail('LandXML neobsahuje použitelný TIN s Pnts a Faces. '+warnings.join(' '));
+ return {kind:'landxml',unit,mapping:'nel',warnings,surfaces};
+}
+function terrainDXF(bytes){
+ const model=GeoMATDXF.parseBytes(new Uint8Array(bytes)),groups=new Map(),warnings=[];let quads=0,ignored=0;
+ for(const e of model.entities){if(!(e.kind==='face'&&e.source==='3DFACE')&&e.kind!=='point'){ignored++;continue;}
+  const key=(e.kind==='point'?'points:':'tin:')+e.layer+(e.visible?'':':hidden');let g=groups.get(key);if(!g){g={name:e.layer+(e.kind==='point'?' · body':'')+(e.visible?'':' · skryté'),defaultSelected:e.visible,points:[],faces:[],meta:{layer:e.layer,visible:e.visible},index:new Map()};groups.set(key,g);}
+  const add=p=>{const id=p.join('|');if(g.index.has(id))return g.index.get(id);const i=g.points.length;g.index.set(id,i);g.points.push(terrainRawPoint(String(i+1),p.slice()));return i;};
+  if(e.kind==='point')add(e.p);else{const f=e.points.map(add);g.faces.push(f.slice(0,3));if(f[3]!==f[2]&&f[3]!==f[0]){g.faces.push([f[0],f[2],f[3]]);quads++;}}
+  terrainCheckCount(g);
+ }
+ for(const [kind,title] of [['invalid','Neplatné prvky'],['unsupported','Nepodporované prvky']]){const entries=Object.entries(model.report[kind]);if(entries.length)warnings.push(title+': '+entries.map(([k,v])=>k+' ('+v+')').join(', '));}
+ if(ignored)warnings.push('Pro terén nepoužito jiných prvků: '+ignored+'.');if(quads)warnings.push('Čtyřúhelníky 3DFACE rozdělené úhlopříčkou 1–3: '+quads+'.');
+ if(!model.explicitZ)warnings.push('DXF neobsahuje zadané výšky. Načtené body nebo plochy mají Z = 0; ověřte, že jde o požadovaný výškový povrch.');
+ const surfaces=Array.from(groups.values()).filter(g=>g.points.length).map(({index,...g})=>g);if(!surfaces.length)terrainFail('DXF neobsahuje viditelné prvky 3DFACE ani POINT. Čáry a 2D kresba samy netvoří TIN.');
+ const known=GeoMATDXF.units[model.unitCode],factor=known?.[0],unit=({1:'m',.001:'mm',.3048:'ft',.01:'cm',1000:'km'})[factor]||'m';if(!known)warnings.push('DXF neuvádí známé jednotky. Ověřte zvolenou jednotku.');
+ return {kind:'dxf',mapping:'cad',unit,warnings,surfaces};
+}
+function terrainParse(name,bytes){
+ if(!bytes||!Number.isFinite(bytes.byteLength)||!bytes.byteLength||bytes.byteLength>TERRAIN_LIMIT.bytes)terrainFail('Prázdný soubor nebo velikost nad 64 MiB.');
+ const ext=name.split('.').pop().toLowerCase();let model;if(['stx','txt','csv'].includes(ext))model=terrainText(decode(bytes));else if(['xml','landxml'].includes(ext))model=terrainXML(decode(bytes));else if(ext==='dxf')model=terrainDXF(bytes);else terrainFail(ext==='dwg'?'DWG zatím není podporované. Vyexportujte TIN do LandXML nebo DXF jako 3DFACE.':'Podporované přípony: STX, TXT, CSV, XML, LandXML a DXF.');
+ let points=0,faces=0;for(const surface of model.surfaces){points+=surface.points.length;faces+=surface.faces.length;}if(points>TERRAIN_LIMIT.points||faces>TERRAIN_LIMIT.faces)terrainFail('Součet všech povrchů v souboru překračuje 250 000 bodů nebo 500 000 trojúhelníků.');return model;
+}
+function terrainConvert(model,cfg){
+ const factors={m:1,mm:.001,ft:.3048,usft:1200/3937,cm:.01,km:1000},factor=factors[cfg?.unit];if(!factor||!['yx','xy','cad','nel'].includes(cfg.mapping)||!Array.isArray(cfg.surfaces)||!cfg.surfaces.length||cfg.surfaces.some(i=>!Number.isInteger(i)||!model.surfaces[i])||new Set(cfg.surfaces).size!==cfg.surfaces.length)terrainFail('Vyberte jednotky, souřadnicovou konvenci a alespoň jeden povrch.');
+ const out=[];for(const k of cfg.surfaces){const source=model.surfaces[k],seen=new Map();let duplicates=0,stacked=0,degenerate=0,vertical=0;
+  const points=source.points.map(q=>{const [a,b,c]=q.p,y=({yx:a,xy:b,cad:-a,nel:-b})[cfg.mapping]*factor,x=({yx:b,xy:a,cad:-b,nel:-a})[cfg.mapping]*factor,z=c*factor;if(![y,x,z].every(Number.isFinite)||rangeWhy(y,x,z))terrainFail(source.name+': souřadnice mimo rozsah GeoMATu. Ověřte jednotky a osy.');const key=y+'|'+x;if(seen.has(key)){if(seen.get(key)===z)duplicates++;else stacked++;}else seen.set(key,z);return {id:q.id,y,x,z,code:q.code||''};});
+  for(const face of source.faces){if(face.length!==3||face.some(i=>!Number.isInteger(i)||!points[i]))terrainFail('Neplatná definice trojúhelníku.');const [a,b,c]=face.map(i=>points[i]),u=[b.y-a.y,b.x-a.x,b.z-a.z],v=[c.y-a.y,c.x-a.x,c.z-a.z],cross=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(Math.hypot(...cross)<1e-12)degenerate++;else if(Math.abs(cross[2])<1e-12)vertical++;}
+  if(degenerate)terrainFail(source.name+': '+degenerate+' degenerovaných trojúhelníků; opravte síť ve zdroji.');
+  out.push({name:source.name,points,faces:source.faces.map(f=>f.slice()),meta:source.meta,warnings:[...(duplicates?['Opakované souřadnice Y, X, Z: '+duplicates+'.']:[]),...(stacked?['Více výšek ve stejné poloze Y, X: '+stacked+'. Před výpočtem DMT bude nutné povrchy oddělit.']:[]),...(vertical?['Svislé trojúhelníky: '+vertical+'. Nejsou výškovým terénem Z = f(Y, X).']:[])]});
+ }return out;
+}
+function terrainBounds(surfaces){const min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];let points=0,faces=0;for(const s of surfaces){faces+=s.faces.length;for(const p of s.points){points++;for(const [i,k] of ['y','x','z'].entries()){min[i]=Math.min(min[i],p[k]);max[i]=Math.max(max[i],p[k]);}}}return {min,max,points,faces};}
+
+const TERRAIN={m:{files:[],revision:0,tail:Promise.resolve(),error:'',resetToken:null,resetDurable:false},p:{files:[],revision:0,tail:Promise.resolve(),error:'',resetToken:null,resetDurable:false},started:false,ready:null,db:null,opening:null,busy:false,saving:0,epoch:0,pending:null};
+function terrainAdmin(){return window.GeoMATIsAdmin?.()===true;}
+function terrainFormat(n){return Number.isFinite(n)?n.toFixed(3).replace('.',','):'—';}
+function terrainExtentText(surfaces){const b=terrainBounds(surfaces);return ['Y','X','Z'].map((k,i)=>k+': '+terrainFormat(b.min[i])+' až '+terrainFormat(b.max[i])+' m · Δ'+k+' '+terrainFormat(b.max[i]-b.min[i])+' m').join('\n');}
+function terrainStorageUI(){const errors=['m','p'].filter(k=>TERRAIN[k].error).map(k=>(k==='m'?'Měření: ':'Projekt: ')+TERRAIN[k].error+' '+(TERRAIN[k].resetDurable?'Reset je zapamatovaný; data před resetem se neobnoví. Případné nové soubory jsou zatím jen v otevřené stránce.':'Změny jsou nyní pouze v této stránce; po obnovení se může vrátit poslední uložená kopie.'));$('trStorage').hidden=!errors.length;$('trStorageText').textContent=errors.length?'Úložiště terénu: '+errors.join(' '):'';}
+function terrainDB(){if(TERRAIN.db)return Promise.resolve(TERRAIN.db);if(TERRAIN.opening)return TERRAIN.opening;
+ const promise=new Promise((resolve,reject)=>{if(!globalThis.indexedDB){reject(Error('IndexedDB není dostupná.'));return;}let done=false,request;const end=(error,db)=>{if(done){if(db)db.close();return;}done=true;clearTimeout(timer);if(error)reject(error);else{TERRAIN.db=db;db.onversionchange=()=>{db.close();if(TERRAIN.db===db)TERRAIN.db=null;};resolve(db);}},timer=setTimeout(()=>end(Error('Otevření IndexedDB překročilo časový limit.')),5000);
+  try{request=indexedDB.open('geomat-terrain',1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('groups'))request.result.createObjectStore('groups',{keyPath:'id'});};request.onsuccess=()=>end(null,request.result);request.onerror=()=>end(request.error||Error('Chyba IndexedDB.'));request.onblocked=()=>end(Error('Úložiště blokuje jiná otevřená karta.'));}catch(error){end(error);}
+ });TERRAIN.opening=promise;promise.finally(()=>{if(TERRAIN.opening===promise)TERRAIN.opening=null;}).catch(()=>{});return promise;
+}
+async function terrainIO(key,value,write=false){const db=await terrainDB();if(write&&terrainResetToken(key)!==(value.resetToken||null))terrainFail('Data byla resetována v jiné kartě. Obnovte stránku.');return new Promise((resolve,reject)=>{let tx,result,done=false;const finish=error=>{if(done)return;done=true;clearTimeout(timer);if(error){if(TERRAIN.db===db)TERRAIN.db=null;try{db.close();}catch{}reject(error);}else resolve(result);},timer=setTimeout(()=>{finish(Error('Čtení nebo zápis terénu překročil časový limit.'));try{tx?.abort();}catch{}},10000);
+ try{tx=db.transaction(['groups'],write?'readwrite':'readonly');const store=tx.objectStore('groups'),r=write?store.put({...value,id:key}):store.get(key);r.onsuccess=()=>result=r.result;r.onerror=()=>finish(r.error||Error('Chyba úložiště.'));tx.oncomplete=()=>finish();tx.onerror=tx.onabort=()=>finish(tx.error||Error('Transakce úložiště nedokončena.'));}catch(error){finish(error);}
+ });}
+function terrainSave(key){const group=TERRAIN[key],revision=++group.revision,snapshot={schema:1,resetToken:group.resetToken,files:group.files.map(f=>({name:f.name,bytes:f.bytes,cfg:f.cfg}))};TERRAIN.saving++;group.tail=group.tail.catch(()=>{}).then(async()=>{if(revision!==group.revision)return;try{await terrainIO(key,snapshot,true);if(revision===group.revision){group.error='';terrainStorageUI();}}catch(error){group.error=error.message;terrainStorageUI();}}).finally(()=>TERRAIN.saving--);return group.tail;}
+async function terrainRestore(key){const group=TERRAIN[key],revision=group.revision,token=terrainResetToken(key);group.resetToken=token;group.resetDurable=!!token;try{const stored=await terrainIO(key);if(group.revision!==revision)return;if(terrainResetToken(key)!==token)terrainFail('Data byla resetována v jiné kartě. Obnovte stránku.');if(token&&stored?.resetToken!==token){group.files=[];terrainRender(key);await terrainSave(key);return;}if(stored===undefined){group.error='';return;}if(stored?.schema!==1||!Array.isArray(stored.files)||stored.files.length>TERRAIN_LIMIT.files)terrainFail('Neplatná uložená data terénu.');const next=[];let bytes=0;for(const f of stored.files){if(typeof f.name!=='string'||!(f.bytes instanceof ArrayBuffer))terrainFail('Neplatná uložená příloha.');bytes+=f.bytes.byteLength;if(bytes>TERRAIN_LIMIT.total)terrainFail('Uložená data překračují limit.');const model=terrainParse(f.name,f.bytes),surfaces=terrainConvert(model,f.cfg);next.push({...f,kind:model.kind,surfaces,warnings:model.warnings});}if(group.revision!==revision)return;group.files=next;group.error='';terrainRender(key);}catch(error){if(group.revision===revision)group.error='Obnova '+(key==='m'?'měření':'projektu')+': '+error.message;}finally{terrainStorageUI();}}
+function terrainActivate(){if(!terrainAdmin())return Promise.resolve(false);if(!TERRAIN.started){TERRAIN.started=true;TERRAIN.ready=Promise.all(['m','p'].map(terrainRestore));}return TERRAIN.ready;}
+function terrainRender(key){
+ const group=TERRAIN[key],prefix='tr'+key;
+ $('ib3').disabled=$('rall3').disabled=TERRAIN.busy;for(const side of ['m','p']){$('tr'+side+'Load').disabled=TERRAIN.busy;$('tr'+side+'Load').classList.toggle('p',TERRAIN[side].files.length>0);$('tr'+side+'Clear').disabled=TERRAIN.busy;$('tr'+side+'Clear').hidden=!TERRAIN[side].files.length;}
+ $(prefix+'Files').hidden=!group.files.length;$(prefix+'Files').innerHTML=group.files.map((f,i)=>'<span class="fp"><button type="button" class="cad-file" data-edit="'+i+'" title="'+esc(f.name)+' – informace a nastavení" aria-label="Informace a nastavení souboru '+esc(f.name)+'" '+(TERRAIN.busy?'disabled':'')+'>'+esc(f.name)+'</button><button type="button" data-remove="'+i+'" aria-label="Odebrat '+esc(f.name)+'" '+(TERRAIN.busy?'disabled':'')+'>×</button></span>').join('');
+ if(!TERRAIN.busy){$(prefix+'Status').classList.remove('bad');$(prefix+'Status').textContent=group.files.length?'Načteno '+group.files.length+' '+(group.files.length===1?'soubor':group.files.length<5?'soubory':'souborů')+'. Kliknutím na název otevřete informace a nastavení.':key==='m'?'Čekám na soubory měření.':'Čekám na projekt nebo výchozí etapu.';}
+}
+function terrainModalPoints(){
+ const surfaces=TERRAIN.pending?.converted||[],s=surfaces[Number($('trImportPreview').value)];
+ $('trImportPoints').innerHTML=s?'<table><thead><tr><th>Bod</th><th>Y [m]</th><th>X [m]</th><th>Z [m]</th></tr></thead><tbody>'+s.points.slice(0,100).map(p=>'<tr><td>'+esc(p.id)+'</td><td>'+terrainFormat(p.y)+'</td><td>'+terrainFormat(p.x)+'</td><td>'+terrainFormat(p.z)+'</td></tr>').join('')+'</tbody></table><small>Ukázka prvních '+Math.min(100,s.points.length)+' z '+s.points.length+' bodů. Ve vstupu zůstávají všechny body.</small>':'';
+}
+function terrainModalConfig(){const pending=TERRAIN.pending;if(!['m','mm','ft'].includes($('trUnit').value))terrainFail('Vyberte jednotky m, mm nebo ft. Původní soubor zůstane beze změny, dokud nastavení nepotvrdíte.');return {unit:$('trUnit').value,mapping:$('trMapping').value,surfaces:pending?Array.from($('trSurfaceList').querySelectorAll('input')).filter(c=>c.checked).map(c=>Number(c.value)):[]};}
+function terrainImportPreview(){
+ const pending=TERRAIN.pending;if(!pending)return;
+ for(const radio of document.querySelectorAll('input[name="trUnitChoice"]'))radio.checked=radio.value===$('trUnit').value;
+ $('trUnitHelp').textContent=({m:'Metry',mm:'Milimetry',ft:'Stopy'})[$('trUnit').value]||('Zdroj nebo uložené nastavení uvádí '+(pending.originalUnit||pending.model.unit)+'. Pro změnu vyberte m, mm nebo ft.');
+ try{
+  const surfaces=terrainConvert(pending.model,terrainModalConfig());pending.converted=surfaces;
+  $('trImportBounds').textContent=terrainExtentText(surfaces);$('trImportBounds').style.whiteSpace='pre-line';
+  $('trImportWarnings').textContent=pending.model.warnings.concat(surfaces.flatMap(s=>s.warnings)).join('\n');$('trImportWarnings').style.whiteSpace='pre-line';
+  $('trImportReport').innerHTML='<div class="tr-table-wrap"><table><thead><tr><th>Vybraný povrch / skupina</th><th>Body</th><th>Trojúhelníky</th></tr></thead><tbody>'+surfaces.map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+s.points.length+'</td><td>'+s.faces.length+'</td></tr>').join('')+'</tbody></table></div>';
+  const select=$('trImportPreview'),previous=select.value;select.innerHTML=surfaces.map((s,i)=>'<option value="'+i+'">'+esc(s.name)+'</option>').join('');select.value=Array.from(select.options).some(o=>o.value===previous)?previous:'0';
+  $('trImportPreviewBox').hidden=false;terrainModalPoints();$('trImportError').hidden=true;$('trConfirm').disabled=false;
+ }catch(error){pending.converted=null;$('trImportBounds').textContent='';$('trImportWarnings').textContent=pending.model.warnings.join('\n');$('trImportReport').innerHTML='';$('trImportPoints').innerHTML='';$('trImportPreviewBox').hidden=true;$('trImportError').textContent=error.message;$('trImportError').hidden=false;$('trConfirm').disabled=true;}
+}
+function terrainImportFinish(accept){const p=TERRAIN.pending;if(!p)return;let result=null;if(accept&&terrainAdmin()){try{const cfg=terrainModalConfig();result={cfg,surfaces:terrainConvert(p.model,cfg)};}catch(error){$('trImportError').textContent=error.message;$('trImportError').hidden=false;return;}}TERRAIN.pending=null;$('trImport').hidden=true;if(terrainAdmin())p.focus?.focus?.({preventScroll:true});p.resolve(result);}
+function terrainConfirm(name,model,old,context={}){
+ return new Promise(resolve=>{
+  TERRAIN.pending={name,model,resolve,focus:document.activeElement,...context};$('trImportTitle').textContent=context.editing?'Informace a nastavení souboru':'Import dat terénu';$('trConfirm').textContent=context.editing?'Použít změny':'Potvrdit načtení';$('trImport').classList.toggle('pro',context.key==='p');
+  $('trImportFile').textContent=name;$('trImportMeta').textContent=({points:'Bodový soubor',landxml:'LandXML · hotové TIN',dxf:'DXF · 3DFACE / POINT'})[model.kind]+(context.size?' · '+(context.size/1024).toFixed(1).replace('.',',')+' KiB':'');
+  const unit=old?.unit||model.unit;TERRAIN.pending.originalUnit=unit;$('trUnit').value=['m','mm','ft'].includes(unit)?unit:'';$('trMapping').value=old?.mapping||model.mapping;
+  $('trSurfaceList').innerHTML=model.surfaces.map((s,i)=>'<label><input type="checkbox" value="'+i+'" '+((old?old.surfaces.includes(i):s.defaultSelected!==false)?'checked':'')+'> '+esc(s.name)+' · '+s.points.length+' bodů · '+s.faces.length+' trojúhelníků</label>').join('');
+  $('trImportPreviewBox').open=false;$('trImportPreview').value='0';$('trImport').hidden=false;terrainImportPreview();(document.querySelector('input[name="trUnitChoice"]:checked')||document.querySelector('input[name="trUnitChoice"]')).focus();
+ });
+}
+async function terrainEdit(key,index){
+ if(!['m','p'].includes(key)||!terrainAdmin()||TERRAIN.busy||!Number.isInteger(index))return;
+ const group=TERRAIN[key],file=group.files[index];if(!file)return;
+ TERRAIN.busy=true;const epoch=++TERRAIN.epoch;terrainRender('m');terrainRender('p');
+ try{
+  const model=terrainParse(file.name,file.bytes),choice=await terrainConfirm(file.name,model,file.cfg,{key,editing:true,size:file.bytes.byteLength});
+  if(choice&&epoch===TERRAIN.epoch&&terrainAdmin()&&group.files[index]===file){group.files=group.files.map((f,i)=>i===index?{...f,...choice}:f);terrainSave(key);}
+ }catch(error){toast('Nastavení souboru se nepodařilo otevřít. '+error.message);}
+ finally{TERRAIN.busy=false;terrainRender('m');terrainRender('p');if(terrainAdmin())$('tr'+key+'Files').querySelector('button[data-edit="'+index+'"]')?.focus({preventScroll:true});}
+}
+function terrainClear(key){if(!['m','p'].includes(key)||!terrainAdmin()||TERRAIN.busy||!TERRAIN[key].files.length)return;TERRAIN[key].files=[];terrainRender(key);$('tr'+key+'Load').focus({preventScroll:true});return terrainSave(key);}
+async function terrainLoad(key,list){const selected=Array.from(list||[]);if(!['m','p'].includes(key)||!terrainAdmin()||!selected.length||!$('rm').hidden||GM_INFO?.id==='im3')return;if(TERRAIN.busy){toast('Nejprve dokončete otevřený import terénu.');return;}TERRAIN.busy=true;const epoch=++TERRAIN.epoch,group=TERRAIN[key],status=$('tr'+key+'Status'),errors=[];terrainRender('m');terrainRender('p');status.textContent='Obnovuji uložená data a načítám soubory…';
+ try{await terrainActivate();for(const file of selected){if(epoch!==TERRAIN.epoch||!terrainAdmin())break;try{if(typeof file.name!=='string'||file.name.length>300||file.size>TERRAIN_LIMIT.bytes)terrainFail('Neplatný název nebo velikost nad 64 MiB.');if(!/\.(stx|txt|csv|xml|landxml|dxf)$/i.test(file.name))terrainFail(/\.dwg$/i.test(file.name)?'DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.':'Nepodporovaný typ souboru.');const current=group.files.find(f=>f.name===file.name);if(!current&&group.files.length>=TERRAIN_LIMIT.files)terrainFail('Nejvýše 10 souborů v jedné sekci.');status.textContent='Načítám '+file.name+'…';const bytes=await readFileBuffer(file);if(epoch!==TERRAIN.epoch||!terrainAdmin())break;if(group.files.filter(f=>f!==current).reduce((n,f)=>n+f.bytes.byteLength,0)+bytes.byteLength>TERRAIN_LIMIT.total)terrainFail('Sekce překračuje 128 MiB vstupních souborů.');const model=terrainParse(file.name,bytes),choice=await terrainConfirm(file.name,model,current?.cfg,{key,size:bytes.byteLength});if(epoch!==TERRAIN.epoch||!terrainAdmin())break;if(!choice)continue;const record={name:file.name,bytes,kind:model.kind,warnings:model.warnings,...choice};group.files=group.files.filter(f=>f.name!==file.name).concat(record);terrainSave(key);terrainRender(key);}catch(error){errors.push(file.name+': '+error.message);}}
+ }finally{TERRAIN.busy=false;terrainRender('m');terrainRender('p');if(errors.length){status.classList.add('bad');status.textContent=errors.join('\n');status.style.whiteSpace='pre-line';}}
+}
+function terrainRoleChanged(){if(terrainAdmin())return;TERRAIN.epoch++;if(TERRAIN.pending)terrainImportFinish(false);if(GM_INFO?.id==='im3')gmInfoClose(false);if(rmMode==='terrain')$('rm').hidden=true;}
+for(const key of ['m','p']){const prefix='tr'+key;$(prefix+'Load').onclick=()=>{if(terrainAdmin())$(prefix+'Input').click();};$(prefix+'Input').onchange=e=>{const files=Array.from(e.target.files||[]);e.target.value='';return terrainLoad(key,files);};$(prefix+'Clear').onclick=()=>terrainClear(key);$(prefix+'Files').addEventListener('click',e=>{const edit=e.target.closest('button[data-edit]');if(edit){terrainEdit(key,Number(edit.dataset.edit));return;}const b=e.target.closest('button[data-remove]');if(!b||TERRAIN.busy||!terrainAdmin())return;const i=Number(b.dataset.remove);if(!Number.isInteger(i)||!TERRAIN[key].files[i])return;TERRAIN[key].files.splice(i,1);terrainSave(key);terrainRender(key);});
+ const drop=$(prefix+'Drop');for(const type of ['dragenter','dragover'])drop.addEventListener(type,e=>{e.preventDefault();e.stopPropagation();drop.classList.add('over');});drop.addEventListener('dragleave',()=>drop.classList.remove('over'));drop.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();drop.classList.remove('over');terrainLoad(key,Array.from(e.dataTransfer.files||[]));});}
+for(const radio of document.querySelectorAll('input[name="trUnitChoice"]'))radio.addEventListener('change',()=>{if(radio.checked){$('trUnit').value=radio.value;terrainImportPreview();}});
+for(const id of ['trUnit','trMapping','trSurfaceList'])$(id).addEventListener('change',terrainImportPreview);
+$('trImportPreview').onchange=terrainModalPoints;
+$('trConfirm').onclick=()=>terrainImportFinish(true);$('trCancel').onclick=()=>terrainImportFinish(false);
+function terrainDialogKey(e){if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();terrainImportFinish(false);}else if(e.key==='Tab'){const nodes=Array.from($('trImport').querySelectorAll('button,input,select')).filter(n=>!n.disabled&&!n.closest('[hidden]')&&!(n.closest('details')&&!n.closest('details').open));if(!nodes.length)return;const first=nodes[0],last=nodes.at(-1);if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}else if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}}}
+$('trStorageRetry').onclick=async()=>{if(!terrainAdmin()||TERRAIN.busy)return;for(const key of ['m','p']){if(TERRAIN[key].revision)await terrainSave(key);else await terrainRestore(key);}terrainStorageUI();};
+window.addEventListener('geomat-auth-change',terrainRoleChanged);
+window.addEventListener('beforeunload',event=>{if(TERRAIN.busy||TERRAIN.saving){event.preventDefault();event.returnValue='';}});
+$('terrainTab').hidden=!terrainAdmin();terrainRender('m');terrainRender('p');
+
+RM_TXT.terrain={t:'Resetovat modul DMT a kubatury?',d:'Odebere všechny soubory měření i projektu / výchozí etapy a jejich nastavení importu. Moduly ZSS pilot a Rovinnost ani přihlášení se nezmění. Tuto akci nelze vrátit zpět.',y:'Smaže pouze data a nastavení modulu DMT a kubatury.'};
+let im3Hits=[], im3Cur=-1;
+function im3Search(jump){
+  const box=$("imb3"), q=imFold($("ims3").value.trim());
+  box.querySelectorAll("mark.hl").forEach(m=>m.replaceWith(document.createTextNode(m.textContent))); box.normalize();
+  im3Hits=[]; im3Cur=-1;
+  if(q){ const nodes=[], w=document.createTreeWalker(box,NodeFilter.SHOW_TEXT); while(w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(n=>{ const f=imFold(n.data), pos=[]; let i=f.indexOf(q); while(i>=0){ pos.push(i); i=f.indexOf(q,i+q.length); }
+      const ms=[]; for(let k=pos.length-1;k>=0;k--){ const r=document.createRange(); r.setStart(n,pos[k]); r.setEnd(n,pos[k]+q.length); const m=document.createElement("mark"); m.className="hl"; r.surroundContents(m); ms.unshift(m); }
+      gmAppend(im3Hits,ms); }); }
+  $("imc3").textContent=!q?"":(im3Hits.length?tbWord(im3Hits.length):"nic nenalezeno");
+  if(im3Hits.length&&jump!==false) im3Go(0);
+}
+function im3Go(i){ if(!im3Hits.length) return; if(im3Cur>=0) im3Hits[im3Cur].classList.remove("cur"); im3Cur=(i+im3Hits.length)%im3Hits.length; const m=im3Hits[im3Cur]; m.classList.add("cur");
+  const card=$("im3").querySelector(".card"), hh=$("imh3").offsetHeight, r=m.getBoundingClientRect(), c=card.getBoundingClientRect();
+  card.scrollTop+=r.top-c.top-hh-Math.max(20,(c.height-hh)/3);
+  $("imc3").textContent=(im3Cur+1)+" / "+im3Hits.length; }
+$("ims3").addEventListener("input",()=>im3Search());
+$("ims3").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){ e.preventDefault(); if(!im3Hits.length) im3Search(); else im3Go(im3Cur+(e.shiftKey?-1:1)); }
+  else if(e.key==="Tab"&&im3Hits.length){ e.preventDefault(); im3Go(im3Cur+(e.shiftKey?-1:1)); }
+  else if(e.key==="Escape"&&$("ims3").value){ e.preventDefault(); e.stopPropagation(); $("ims3").value=""; im3Search(); } });   // první Esc smaže hledání, další zavře okno
+
+function terrainInfoOpen(){if(terrainAdmin()&&!TERRAIN.busy)gmInfoOpen('im3');}
+function terrainInfoKey(e){
+ const search=$('ims3'),typing=e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'||e.target.isContentEditable);
+ if(e.shiftKey&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&/^(Digit|Numpad)[123]$/.test(e.code||'')&&!typing){gmInfoClose(false);return false;}
+ if(e.key==='Escape'){e.preventDefault();if(e.target===search&&search.value){search.value='';im3Search();}else gmInfoClose();return true;}
+ if(e.code==='KeyI'&&!typing&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();gmInfoClose();return true;}
+ if(e.target===search&&(e.key==='Enter'||e.key==='Tab'&&im3Hits.length)){e.preventDefault();if(!im3Hits.length)im3Search();else im3Go(im3Cur+(e.shiftKey?-1:1));return true;}
+ if(e.key==='Tab'){const fields=gmInfoFields($('im3')),at=fields.indexOf(document.activeElement);if(fields.length&&((e.shiftKey&&at<=0)||(!e.shiftKey&&(at<0||at===fields.length-1)))){e.preventDefault();fields[e.shiftKey?fields.length-1:0].focus();}}
+ return true;
+}
+function terrainResetOpen(){if(!terrainAdmin()||TERRAIN.busy)return;gmInfoClose(false);rmSet('terrain');$('rm').hidden=false;$('rmn').focus();}
+function terrainResetKey(e){if(e.key==='Escape'){e.preventDefault();rmClose();}else if(e.key==='Tab'){e.preventDefault();(document.activeElement===$('rmn')?$('rmy'):$('rmn')).focus();}}
+function terrainResetToken(key){try{return localStorage.getItem('geomat.terrain.reset.'+key+'.v1')||null;}catch{return null;}}
+async function terrainReset(){
+ if(!terrainAdmin()||TERRAIN.busy)return false;gmInfoClose(false);TERRAIN.epoch++;TERRAIN.busy=true;
+ for(const key of ['m','p']){const g=TERRAIN[key];g.revision++;g.files=[];g.error='';g.resetDurable=false;const token=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);try{localStorage.setItem('geomat.terrain.reset.'+key+'.v1',token);g.resetDurable=terrainResetToken(key)===token;}catch{}g.resetToken=terrainResetToken(key);}
+ $('ims3').value='';im3Search(false);terrainRender('m');terrainRender('p');
+ try{await Promise.all(['m','p'].map(terrainSave));const errors=['m','p'].filter(k=>TERRAIN[k].error);toast(!errors.length?'Modul DMT a kubatury je resetován.':errors.every(k=>TERRAIN[k].resetDurable)?'Data byla odebrána a reset je zapamatovaný; dočištění úložiště lze zopakovat.':'Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.');return !errors.length;}finally{TERRAIN.busy=false;terrainRender('m');terrainRender('p');if(terrainAdmin())$('rall3').focus({preventScroll:true});}
+}
+$('ib3').onclick=terrainInfoOpen;$('ix3').onclick=()=>gmInfoClose();$('im3').addEventListener('click',e=>{if(e.target===$('im3'))gmInfoClose();});$('rall3').onclick=terrainResetOpen;
+
 $('gmFileRetry').onclick=projectFilesRetry;
 projectCADPlanInit();coordCheckInit();projectCADStage2Init();rvCodeInit();projectFilesBootstrap();
 </script>
@@ -6913,13 +7232,14 @@ projectCADPlanInit();coordCheckInit();projectCADStage2Init();rvCodeInit();projec
  const A=window.GeoMATAccess,$=id=>document.getElementById(id),gate=$('gmAuthGate'),app=$('gmApp'),form=$('gmAuthForm'),error=$('gmAuthError'),password=$('gmAuthPassword'),submit=$('gmAuthSubmit');
  const version=Array.from(document.querySelectorAll('script[data-gm-core]')).map(s=>s.textContent.match(/APP_VERSION="([^"]+)"/)).find(Boolean);$('gmAuthVersion').textContent=version?version[1]:'—';
  let config=null,started=false,locked=true,memory=null,storedKind=null,busy=false;
+ window.GeoMATIsAdmin=()=>!locked&&!!config&&A.ticketUser(config,memory)?.role==='admin';
  function message(text){error.textContent=text;error.hidden=!text;}
- function showUser(user){const icon=$('gmAuthAdmin');if(icon)icon.hidden=user?.role!=='admin';}
+ function showUser(user){const admin=user?.role==='admin',icon=$('gmAuthAdmin'),tab=$('terrainTab');if(icon)icon.hidden=!admin;if(tab)tab.hidden=!admin;if(!admin&&$('mod-terrain')&&!$('mod-terrain').hidden&&typeof window.GeoMATSetModule==='function')window.GeoMATSetModule('zss',false);window.dispatchEvent(new Event('geomat-auth-change'));}
  function lock(text=''){showUser(null);locked=true;app.hidden=true;gate.hidden=false;password.value='';message(text);password.focus();}
  function startCore(){
   if(started)return;for(const source of document.querySelectorAll('script[data-gm-core]')){const script=document.createElement('script');script.textContent=source.textContent;document.body.appendChild(script);}started=true;
  }
- function open(user){showUser(user);locked=false;gate.hidden=true;app.hidden=false;password.value='';message('');startCore();window.dispatchEvent(new Event('resize'));$('gmAuthLogout').focus({preventScroll:true});}
+ function open(user){locked=false;showUser(user);gate.hidden=true;app.hidden=false;password.value='';message('');startCore();window.dispatchEvent(new Event('resize'));$('gmAuthLogout').focus({preventScroll:true});}
  function check(){
   if(!config)return;const saved=A.read(config);if(saved){memory=saved.ticket;storedKind=saved.kind;if(locked)open(saved.user);else showUser(saved.user);return;}
   if(memory&&storedKind==='memory'){const user=A.ticketUser(config,memory);if(user){if(locked)open(user);else showUser(user);return;}}
