@@ -882,7 +882,7 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-bar)
 </script>
 <script type="application/x-geomat" data-gm-core="2">
 "use strict";
-const APP_VERSION="1.223", APP_DATE="15. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.224", APP_DATE="16. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -2590,6 +2590,11 @@ function applyMeas(files,restore,keep){
     const sv=keep?{off:[...off],skip:[...skip].map(k=>[k,skipSig.get(k)]),exp:[...expanded]}:null;   // přidání / odebrání souboru zachová ruční výběr
     const srcMap=sv?measFiles.map(f=>files.findIndex(q=>q.n===f.n)):null;   // výběr se váže na název zdroje i po přesunu nahrazeného souboru
     clearMeasurement(true);   // přepočet nesmí před novým zápisem smazat poslední úspěšně uložené měření
+    if(!files.length){   // obnova prázdného úložiště není neúspěšný import
+      if(refLog.length) $("log").textContent=refLog.join("\n");
+      if(!restore) projectSaveText('zss',false,[]);
+      return;
+    }
     if(sv){ const mk=k=>remapKey(k,keep.rm,srcMap);
       sv.off.forEach(k=>{ const n=mk(k); if(n) off.add(n); });
       sv.skip.forEach(([k,sg])=>{ const n=mk(k); if(n){ skip.add(n); skipSig.set(n,String(sg||"").split(",").map(mk).filter(Boolean).join(",")); } });
