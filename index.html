@@ -1306,7 +1306,7 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.282", APP_DATE="18. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.284", APP_DATE="18. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -7252,7 +7252,7 @@ async function terrainIO(key,value,write=false){const db=await terrainDB();if(wr
  try{tx=db.transaction(['groups'],write?'readwrite':'readonly');const store=tx.objectStore('groups'),r=write?store.put({...value,id:key}):store.get(key);r.onsuccess=()=>result=r.result;r.onerror=()=>finish(r.error||Error('Chyba úložiště.'));tx.oncomplete=()=>finish();tx.onerror=tx.onabort=()=>finish(tx.error||Error('Transakce úložiště nedokončena.'));}catch(error){finish(error);}
  });}
 function terrainSave(key){if(!terrainAdmin())return Promise.resolve(false);trNormalizeSource(key);const group=TERRAIN[key],revision=++group.revision,snapshot={schema:1,resetToken:group.resetToken,model:trPrefs(group.model),files:group.files.map(f=>({name:f.name,bytes:f.bytes,cfg:f.cfg})),breakFiles:(group.breakFiles||[]).map(f=>({name:f.name,bytes:f.bytes,cfg:f.cfg,enabled:f.enabled!==false}))};TERRAIN.saving++;group.tail=group.tail.catch(()=>{}).then(async()=>{if(revision!==group.revision)return;try{await terrainIO(key,snapshot,true);if(revision===group.revision){group.error='';terrainStorageUI();}}catch(error){group.error=error.message;terrainStorageUI();}}).finally(()=>TERRAIN.saving--);return group.tail;}
-async function terrainRestore(key){const group=TERRAIN[key],revision=group.revision,token=terrainResetToken(key);group.resetToken=token;group.resetDurable=!!token;try{const stored=await terrainIO(key);if(group.revision!==revision)return;if(terrainResetToken(key)!==token)terrainFail('Data byla resetována v jiné kartě. Obnovte stránku.');if(token&&stored?.resetToken!==token){group.files=[];group.breakFiles=[];terrainRender(key);await terrainSave(key);return;}if(stored===undefined){group.error='';return;}if(stored?.schema!==1||!Array.isArray(stored.files)||stored.files.length>TERRAIN_LIMIT.files)terrainFail('Neplatná uložená data terénu.');const next=[];let bytes=0;for(const f of stored.files){if(typeof f.name!=='string'||!(f.bytes instanceof ArrayBuffer))terrainFail('Neplatná uložená příloha.');bytes+=f.bytes.byteLength;if(bytes>TERRAIN_LIMIT.total)terrainFail('Uložená data překračují limit.');const model=terrainParse(f.name,f.bytes),surfaces=terrainConvert(model,f.cfg);next.push({...f,kind:model.kind,surfaces,warnings:model.warnings});}const breakFiles=[];if(stored.breakFiles!==undefined&&!Array.isArray(stored.breakFiles))terrainFail('Neplatné uložené soubory hran.');if(next.length+(stored.breakFiles||[]).length>TERRAIN_LIMIT.files)terrainFail('Příliš mnoho uložených zdrojových souborů.');for(const f of stored.breakFiles||[]){if(typeof f.name!=='string'||!(f.bytes instanceof ArrayBuffer))terrainFail('Neplatný uložený DXF hran.');bytes+=f.bytes.byteLength;if(bytes>TERRAIN_LIMIT.total)terrainFail('Uložená data překračují limit.');const model=terrainBreakDXF(f.bytes),surfaces=terrainBreakConvert(model,f.cfg);breakFiles.push({...f,kind:model.kind,surfaces,warnings:model.warnings});}if(group.revision!==revision)return;group.files=next;group.breakFiles=breakFiles;group.model=trPrefs(stored.model);group.error='';terrainRender(key);}catch(error){if(group.revision===revision)group.error='Obnova '+(key==='m'?'měření':'reference')+': '+error.message;}finally{terrainStorageUI();}}
+async function terrainRestore(key){const group=TERRAIN[key],revision=group.revision,token=terrainResetToken(key);group.resetToken=token;group.resetDurable=!!token;try{const stored=await terrainIO(key);if(group.revision!==revision)return;if(terrainResetToken(key)!==token)terrainFail('Data byla resetována v jiné kartě. Obnovte stránku.');if(token&&stored?.resetToken!==token){group.files=[];group.breakFiles=[];terrainRender(key);await terrainSave(key);return;}if(stored===undefined){group.error='';return;}if(stored?.schema!==1||!Array.isArray(stored.files)||stored.files.length>TERRAIN_LIMIT.files)terrainFail('Neplatná uložená data terénu.');const next=[];let bytes=0;for(const f of stored.files){if(typeof f.name!=='string'||!(f.bytes instanceof ArrayBuffer))terrainFail('Neplatná uložená příloha.');bytes+=f.bytes.byteLength;if(bytes>TERRAIN_LIMIT.total)terrainFail('Uložená data překračují limit.');const model=terrainParse(f.name,f.bytes),surfaces=terrainConvert(model,f.cfg);next.push({...f,kind:model.kind,surfaces,warnings:model.warnings});}const breakFiles=[];if(stored.breakFiles!==undefined&&!Array.isArray(stored.breakFiles))terrainFail('Neplatné uložené soubory hran.');if(next.length+(stored.breakFiles||[]).length>TERRAIN_LIMIT.files)terrainFail('Příliš mnoho uložených zdrojových souborů.');for(const f of stored.breakFiles||[]){if(typeof f.name!=='string'||!(f.bytes instanceof ArrayBuffer))terrainFail('Neplatný uložený DXF hran.');bytes+=f.bytes.byteLength;if(bytes>TERRAIN_LIMIT.total)terrainFail('Uložená data překračují limit.');const model=terrainBreakDXF(f.bytes),surfaces=terrainBreakConvert(model,f.cfg);breakFiles.push({...f,kind:model.kind,surfaces,warnings:model.warnings});}if(group.revision!==revision)return;group.files=next;group.breakFiles=breakFiles;group.model=trPrefs(stored.model);trPinLegacyPointRefs(key);group.error='';terrainRender(key);}catch(error){if(group.revision===revision)group.error='Obnova '+(key==='m'?'měření':'reference')+': '+error.message;}finally{terrainStorageUI();}}
 function terrainActivate(){if(!terrainAdmin())return Promise.resolve(false);if(!TERRAIN.started){TERRAIN.started=true;TERRAIN.ready=Promise.all(['m','p'].map(terrainRestore)).then(result=>{TERRAIN.restored=true;return result;});}return TERRAIN.ready;}
 function terrainRender(key){
  const group=TERRAIN[key],prefix='tr'+key;
@@ -7371,10 +7371,10 @@ const TR_BREAK_LIMIT={vertices:4096,segments:4096,manual:128,work:80000000};
 const TR_BREAK_QUEUE={tail:Promise.resolve()};
 const TR_BREAK_FILE_IDS=new WeakMap();let TR_BREAK_NEXT_ID=1;
 function trBreakFileId(file){if(!TR_BREAK_FILE_IDS.has(file))TR_BREAK_FILE_IDS.set(file,TR_BREAK_NEXT_ID++);return TR_BREAK_FILE_IDS.get(file);}
-function trBreakPrefs(v){return {enabled:v?.enabled===true,lines:Array.isArray(v?.lines)?v.lines.map(l=>({name:typeof l?.name==='string'?l.name.slice(0,80):'Hrana',enabled:l?.enabled!==false,closed:l?.closed===true,refs:Array.isArray(l?.refs)?l.refs.map(r=>({source:r?.source,index:r?.index,id:r?.id})):[]})):[]};}
+function trBreakPrefs(v){return {enabled:v?.enabled===true,lines:Array.isArray(v?.lines)?v.lines.map(l=>({name:typeof l?.name==='string'?l.name.slice(0,80):'Hrana',enabled:l?.enabled!==false,closed:l?.closed===true,refs:Array.isArray(l?.refs)?l.refs.map(r=>({source:r?.source,index:r?.index,id:r?.id,...trPtRefToken(r)})):[]})):[]};}
 function trBreakSignature(key,prefs=TERRAIN[key].model){return JSON.stringify([prefs.breaks,(TERRAIN[key].breakFiles||[]).map(f=>[f.name,f.cfg,f.enabled!==false,trBreakFileId(f)])]);}
 function trBreakSources(key){return (TRMODEL[key]?.sources||[]).filter(s=>!s.surface.faces.length&&!s.breakOnly);}
-function trBreakResolve(sources,ref){const s=sources.find(s=>s.id===ref?.source),p=s?.surface.points[trPtRefIndex(s?.surface.points,ref?.index,ref?.id)];if(!p||p.id!==ref.id)throw Error('Bod povinné hrany už není ve vybraných bodových vstupech. Upravte nebo vypněte příslušnou linii.');return p;}
+function trBreakResolve(sources,ref){const s=sources.find(s=>s.id===ref?.source),p=s?.surface.points[trPtRefIndex(s?.surface.points,ref,s?.originalPoints)];if(!p||p.id!==ref.id)throw Error('Bod povinné hrany chybí nebo je jeho původní odkaz nejednoznačný. Vyberte vrchol znovu nebo linii vypněte.');return p;}
 function* trBreakPointTree(points,ids){const box=trDBox(ids.map(i=>points[i]));if(ids.length<=24)return {box,ids};const axis=box.yb-box.ya>=box.xb-box.xa?'y':'x';ids.sort((a,b)=>points[a][axis]-points[b][axis]||a-b);const mid=ids.length>>1;yield;return {box,left:yield* trBreakPointTree(points,ids.slice(0,mid)),right:yield* trBreakPointTree(points,ids.slice(mid))};}
 function* trBreakEars(ids,P,eps,spend){const q=ids.slice(),out=[];if(trDArea(q.map(i=>P[i]))<0)q.reverse();while(q.length>3){let found=false;for(let i=0;i<q.length;i++){const a=q[(i+q.length-1)%q.length],b=q[i],c=q[(i+1)%q.length];if(trDCross(P[a],P[b],P[c])<=eps*eps)continue;let blocked=false;for(const j of q){spend(1);if(j!==a&&j!==b&&j!==c&&trDCross(P[a],P[b],P[j])>=-eps*eps&&trDCross(P[b],P[c],P[j])>=-eps*eps&&trDCross(P[c],P[a],P[j])>=-eps*eps){blocked=true;break;}}if(blocked)continue;out.push([a,b,c]);q.splice(i,1);found=true;break;}if(!found)throw Error('Okolí hrany nelze bezpečně rozdělit. Rozdělte linii v blízkém vrcholu.');if(out.length%32===0)yield;}if(q.length===3){if(trDCross(P[q[0]],P[q[1]],P[q[2]])<=eps*eps)throw Error('Povinná hrana vytváří nerozlišitelný trojúhelník.');out.push(q);}return out;}
 function* trBreakBuild(input,sources,files,prefs){const lines=[],extras=[];for(const l of prefs.breaks.lines){if(l.enabled===false)continue;if(l.refs.length<2||l.refs.length>TR_BREAK_LIMIT.vertices)throw Error('Každá povinná linie potřebuje alespoň dva body.');lines.push({name:l.name,closed:l.closed,strictZ:false,points:l.refs.map(r=>trBreakResolve(sources,r))});}for(const file of files.filter(f=>f.enabled!==false))for(const s of file.surfaces)for(const l of s.lines||[]){lines.push({name:file.name+' · '+l.name,closed:l.closed,strictZ:true,points:l.points.map(i=>s.points[i])});for(const i of l.points)extras.push({...s.points[i],id:'DXF_HRANA_'+(extras.length+1),breakVertex:true});}
@@ -7449,17 +7449,17 @@ function trVolumeLevel(value){if(typeof value!=='string'||!value.trim())return '
    Source statistics use original vertices of selected model sources, never cut vertices. */
 const TR_VOLUME_REFERENCES={m:null,p:null};
 let TR_VOLUME_PICK=null;
-function trVolumeRefPrefs(v){if(v&&['min','max','avg','med'].includes(v.kind))return {kind:v.kind};if(v?.kind==='point'&&typeof v.source==='string'&&v.source.length<=1000&&Number.isInteger(v.index)&&v.index>=0&&typeof v.id==='string'&&v.id.length<=1000)return {kind:'point',source:v.source,index:v.index,id:v.id};return {kind:'manual'};}
+function trVolumeRefPrefs(v){if(v&&['min','max','avg','med'].includes(v.kind))return {kind:v.kind};if(v?.kind==='point'&&typeof v.source==='string'&&v.source.length<=1000&&Number.isInteger(v.index)&&v.index>=0&&typeof v.id==='string'&&v.id.length<=1000)return {kind:'point',source:v.source,index:v.index,id:v.id,...trPtRefToken(v)};return {kind:'manual'};}
 function trVolumeRefSources(key){return trVolumeSourcesOf(key==='m'&&trBatchOn()&&!trBatchOwn()?trBatchSources():TRMODEL[key]?.sources||[],key);}
 function trVolumeRefCache(key){const sources=trVolumeRefSources(key),prior=TR_VOLUME_REFERENCES[key];if(prior&&prior.sources.length===sources.length&&sources.every((s,i)=>s.id===prior.sources[i].id&&s.points===prior.sources[i].points))return prior;const state={sources,n:sources.reduce((n,s)=>n+(s.indices?s.indices.length:s.points.length),0),status:'idle',stats:null,error:'',issue:'',pending:false};TR_VOLUME_REFERENCES[key]=state;if(prior&&TR_VOLUME_PICK?.key===key)trVolumePickClose();return state;}
 function* trVolumeSourceStats(sources){let n=0,min=Infinity,max=-Infinity,sum=0,correction=0,work=0;const values=[];for(const s of sources)for(let j=0;j<(s.indices?s.indices.length:s.points.length);j++){const z=s.points[s.indices?s.indices[j]:j].z;if(!Number.isFinite(z)||Math.abs(z)>Z_MAX)throw Error('Zdroj obsahuje neplatnou výšku.');if(++n>TERRAIN_LIMIT.points)throw Error('Zdrojové body překračují limit 250 000.');min=Math.min(min,z);max=Math.max(max,z);const y=z-correction,t=sum+y;correction=(t-sum)-y;sum=t;values.push(z);if(++work%2048===0)yield;}if(!n)throw Error('Vybraný zdroj neobsahuje žádné body s výškou.');let a=Float64Array.from(values),b=new Float64Array(n);for(let width=1;width<n;width*=2){for(let lo=0;lo<n;lo+=width*2){const mid=Math.min(lo+width,n),end=Math.min(lo+width*2,n);let i=lo,j=mid;for(let k=lo;k<end;k++){b[k]=i<mid&&(j>=end||a[i]<=a[j])?a[i++]:a[j++];if(++work%2048===0)yield;}}[a,b]=[b,a];}const med=n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2;return {n,min,max,avg:sum/n,med};}
 function trVolumeStatsEnsure(key,cache){if(['pending','ready','error'].includes(cache.status))return;cache.status='pending';const current=()=>terrainAdmin()&&!(key==='m'&&trCompareOn())&&TR_VOLUME_REFERENCES[key]===cache&&(['min','max','avg','med'].includes(TERRAIN[key].model.volumeRef.kind)||TR_VOLUME_PICK?.key===key);TR_VOLUME_QUEUE.tail=TR_VOLUME_QUEUE.tail.catch(()=>{}).then(async()=>{if(!current()){cache.status='cancelled';return;}try{const it=trVolumeSourceStats(cache.sources);let step;do{const start=performance.now();do{if(!current()){cache.status='cancelled';return;}step=it.next();}while(!step.done&&performance.now()-start<8);if(!step.done)await new Promise(resolve=>setTimeout(resolve,0));}while(!step.done);cache.stats=step.value;cache.status='ready';}catch(error){cache.status='error';cache.error=error.message;}if(current()){trModelRefresh();if(TR_VOLUME_PICK?.key===key)trVolumePickDraw();}});}
-function trVolumeReferenceSync(key){if(key==='m'&&trCompareOn())return;const p=TERRAIN[key].model,ref=p.volumeRef,cache=trVolumeRefCache(key);cache.issue='';cache.pending=false;if(ref.kind==='manual'){p.volumeZ=p.volumeManualZ;return;}if(ref.kind==='point'){const source=cache.sources.find(s=>s.id===ref.source),at=trPtRefIndex(source?.points,ref.index,ref.id),point=source?.points[at],eligible=source&&(!source.indices||source.indices.includes(at));if(!point||!eligible||String(point.id)!==ref.id){p.volumeZ='';cache.issue='Zvolený bod již není ve vybraném zdroji modelu. Vyberte jiný bod nebo ruční zadání.';}else p.volumeZ=trVolumeLevel(Math.abs(point.z)<1e-6?point.z.toFixed(20):String(point.z));return;}if(!cache.n){p.volumeZ='';cache.issue='Nejprve načtěte data a vyberte zdroj modelu.';return;}trVolumeStatsEnsure(key,cache);if(cache.status==='ready')p.volumeZ=trVolumeLevel(cache.stats[ref.kind].toFixed(3));else{p.volumeZ='';cache.pending=cache.status==='pending';cache.issue=cache.status==='error'?'Výšku ze zdroje nelze určit: '+cache.error:'Počítám statistiku výšek zdrojových bodů…';}}
+function trVolumeReferenceSync(key){if(key==='m'&&trCompareOn())return;const p=TERRAIN[key].model,ref=p.volumeRef,cache=trVolumeRefCache(key);cache.issue='';cache.pending=false;if(ref.kind==='manual'){p.volumeZ=p.volumeManualZ;return;}if(ref.kind==='point'){const source=cache.sources.find(s=>s.id===ref.source),at=trPtRefIndex(source?.points,ref,source?.originalPoints),point=source?.points[at],eligible=source&&(!source.indices||source.indices.includes(at));if(!point||!eligible||String(point.id)!==ref.id){p.volumeZ='';cache.issue='Zvolený bod chybí nebo je jeho původní odkaz nejednoznačný. Vyberte bod znovu nebo zadejte výšku ručně.';}else p.volumeZ=trVolumeLevel(Math.abs(point.z)<1e-6?point.z.toFixed(20):String(point.z));return;}if(!cache.n){p.volumeZ='';cache.issue='Nejprve načtěte data a vyberte zdroj modelu.';return;}trVolumeStatsEnsure(key,cache);if(cache.status==='ready')p.volumeZ=trVolumeLevel(cache.stats[ref.kind].toFixed(3));else{p.volumeZ='';cache.pending=cache.status==='pending';cache.issue=cache.status==='error'?'Výšku ze zdroje nelze určit: '+cache.error:'Počítám statistiku výšek zdrojových bodů…';}}
 function trVolumeRefText(key){const ref=TERRAIN[key].model.volumeRef;return ref.kind==='manual'?'ručně':ref.kind==='point'?ref.id:RV_ST[ref.kind]+' (výšky zdroje)';}
 function trVolumeRefDescription(key){const p=TERRAIN[key].model,ref=p.volumeRef,cache=TR_VOLUME_REFERENCES[key];if(ref.kind==='manual')return 'Ruční výška zůstává uložená i při výběru z dat.';if(cache?.issue)return cache.issue;if(ref.kind==='point'){const source=cache?.sources.find(s=>s.id===ref.source);return 'Bod '+ref.id+' · '+(source?.label||'zdroj není dostupný');}return RV_STL[ref.kind]+' z '+(cache?.stats?.n||cache?.n||0)+' původních bodů vybraného zdroje modelu · zaokrouhleno na 0,001 m';}
 function trVolumeRefRender(key){const p=TERRAIN[key].model,input=$('tr'+key+'LevelPick'),toggle=$('tr'+key+'LevelToggle'),field=$('tr'+key+'Level');if(document.activeElement!==input){input.value=trVolumeRefText(key);input.dataset.trTyped='0';}input.disabled=toggle.disabled=TERRAIN.busy;field.readOnly=p.volumeRef.kind!=='manual';field.setAttribute('aria-readonly',String(field.readOnly));field.title=field.readOnly?'Výška převzatá ze zdroje. Pro vlastní zadání vyberte ručně.':'Enter nebo opuštění pole potvrdí celou výšku; prázdné pole výpočet vypne.';$('tr'+key+'LevelHint').textContent=trVolumeRefDescription(key);}
 function trVolumeReferenceChoose(key,ref,focusManual=true){if(!terrainAdmin()||TERRAIN.busy)return;const p=TERRAIN[key].model;p.volumeRef=trVolumeRefPrefs(ref);trVolumePickClose();const input=$('tr'+key+'LevelPick');input.value=trVolumeRefText(key);input.dataset.trTyped='0';trModelRefresh();terrainSave(key);if(focusManual&&p.volumeRef.kind==='manual')$('tr'+key+'Level').focus();}
-function trVolumePointChoice(source,index){const p=source.points[index],ref={kind:'point',source:source.id,index,id:String(p.id)};return {key:'point:'+JSON.stringify([source.id,index,String(p.id)]),text:String(p.id),ref,label:source.label+' · Z = '+terrainFormat(p.z)+' m'};}
+function trVolumePointChoice(source,index){const p=source.points[index],ref={kind:'point',...trPtRef(source.id,index,p)};return {key:'point:'+JSON.stringify([source.id,index,String(p.id)]),text:String(p.id),ref,label:source.label+' · Z = '+terrainFormat(p.z)+' m'};}
 function trVolumePickChoices(key,text='',typing=false){const cache=trVolumeRefCache(key),fixed=[{key:'manual',text:'ručně',ref:{kind:'manual'}},...['min','max','avg','med'].map(kind=>({key:kind,text:RV_ST[kind]+' (výšky zdroje)',ref:{kind},value:cache.status==='ready'?terrainFormat(cache.stats[kind])+' m':cache.status==='pending'?'…':'—'}))],out=rvPointFilter(fixed,text,typing),query=typing?rvPointFold(text.trim()):'';let more=false,count=0;outer:for(const s of cache.sources)for(let j=0;j<(s.indices?s.indices.length:s.points.length);j++){const index=s.indices?s.indices[j]:j,p=s.points[index];if(query&&!rvPointFold(p.id).includes(query))continue;if(count>=100){more=true;break outer;}out.push(trVolumePointChoice(s,index));count++;}return {choices:out,more};}
 function trVolumePickClose(){if(!TR_VOLUME_PICK)return;clearTimeout(TR_VOLUME_PICK.timer);TR_VOLUME_PICK.input.setAttribute('aria-expanded','false');TR_VOLUME_PICK.input.removeAttribute('aria-activedescendant');$('trVolumeMenu').hidden=true;TR_VOLUME_PICK=null;}
 function gmPointMenuPosition(box,input){const r=input.getBoundingClientRect(),width=Math.min(Math.max(r.width,220),Math.max(120,innerWidth-16)),below=innerHeight-r.bottom-8,above=r.top-8,up=below<150&&above>below;box.style.width=width+'px';box.style.maxHeight=Math.max(48,Math.min(240,up?above:below))+'px';box.style.left=Math.max(8,Math.min(innerWidth-width-8,r.left))+'px';box.style.top=Math.max(8,up?r.top-box.offsetHeight-2:r.bottom+2)+'px';}
@@ -7476,14 +7476,14 @@ const TR_MEAS_BATCH={state:null,cache:new Map()};
 function trBatchOn(){return TERRAIN.m.model.measureMode==='sources';}
 function trBatchSources(p=TERRAIN.m.model){return trSources('m').filter(s=>p.measureSources===null||p.measureSources.includes(s.id));}
 function trBatchOwn(p=TERRAIN.m.model){return p.measureMode==='sources'&&p.measurePlane==='source'&&['min','max','avg','med'].includes(p.volumeRef.kind);}
-function trVolumeSourcesOf(sources,key){const out=[];for(const s of sources){if(!s.breakOnly){out.push({id:s.id,label:s.label,points:s.surface.points,indices:null});continue;}for(const f of TERRAIN[key].breakFiles||[])if(f.enabled!==false)f.surfaces.forEach((surface,j)=>out.push({id:JSON.stringify(['break',f.name,f.cfg.surfaces[j]]),label:f.name+' · '+surface.name,points:surface.points,indices:Array.from(new Set((surface.lines||[]).flatMap(l=>l.points)))}));}return out;}
+function trVolumeSourcesOf(sources,key){const out=[];for(const s of sources){if(!s.breakOnly){out.push({id:s.id,label:s.label,points:s.surface.points,originalPoints:s.originalPoints,indices:null});continue;}for(const f of TERRAIN[key].breakFiles||[])if(f.enabled!==false)f.surfaces.forEach((surface,j)=>out.push({id:JSON.stringify(['break',f.name,f.cfg.surfaces[j]]),label:f.name+' · '+surface.name,points:surface.points,indices:Array.from(new Set((surface.lines||[]).flatMap(l=>l.points)))}));}return out;}
 function trBatchKey(p=TERRAIN.m.model){return JSON.stringify([p.measureSources,p.maxEdge,p.minAngle,p.domain,p.breaks,p.tinCuts,p.tinFlips,trBreakSignature('m',p),p.volumeRef,p.volumeManualZ,p.measurePlane,p.volumeTarget]);}
 function trBatchCurrent(state){const p=TERRAIN.m.model,sources=trBatchSources(p);return terrainAdmin()&&trBatchOn()&&TR_MEAS_BATCH.state===state&&trBatchKey(p)===state.signature&&sources.length===state.sources.length&&sources.every((s,i)=>s.id===state.sources[i].id&&s.surface===state.sources[i].surface);}
 function* trBatchAudit(base,p){const {candidates}=trFilterFaces(base,p.maxEdge,p.minAngle);let result;if(base.inputError)result={status:'error',count:{},samples:[],badFaces:new Set(),badPoints:new Set(),partFaces:new Set(),parts:[],candidates};else result={...yield* trMeshAudit(base.points,candidates.map(t=>t.f),{generated:!base.imported&&!base.verifyOverlap}),candidates};const check={status:result.status,result};base.checks=new Map([[trFilterKey(p.maxEdge,p.minAngle),check]]);return check;}
 function trBatchBreakPrefs(source,p,sources){const lines=[];for(const line of p.breaks.lines){if(line.enabled===false)continue;const belongs=line.refs.some(r=>r.source===source.id);if(!belongs)continue;if(line.refs.some(r=>r.source!==source.id))throw Error('Povinná linie „'+line.name+'“ spojuje různé zdroje. V režimu po zdrojích ji vypněte nebo rozdělte.');lines.push(line);}const files=(TERRAIN.m.breakFiles||[]).filter(f=>f.enabled!==false);if(p.breaks.enabled&&files.length&&sources.length>1)throw Error('Povinné hrany DXF nemají přiřazený zdroj. Pro samostatné výpočty vyberte jediný zdroj nebo použití povinných hran vypněte.');return {...p,breaks:{enabled:p.breaks.enabled&&(lines.length>0||files.length>0),lines}};}
 function* trBatchGeometry(source,p,sources){const inputBase=trGeometry([source],!!source.surface.faces.length);let rawBase=inputBase,base=inputBase;yield;if(p.breaks.enabled){const bp=trBatchBreakPrefs(source,p,sources);if(bp.breaks.enabled){if(inputBase.imported)throw Error('Hotový TIN zachovává původní trojúhelníky. Použití povinných hran vypněte.');if(!inputBase.inputError&&inputBase.metrics.length)rawBase=yield* trBreakBuild(inputBase,[source],TERRAIN.m.breakFiles||[],bp);}}
  {const scope=trTinScope([source],true);rawBase=trTinMask(trTinFlip(rawBase,p,scope),p,scope);}yield* trBatchAudit(rawBase,p);base=rawBase;let model=trEvaluate(base,p.maxEdge,p.minAngle,p.domain);if(p.domain.enabled&&p.domain.rings.length&&!model.error&&['ok','warning'].includes(model.check?.status)){base=yield* trDomainClip(rawBase,p);yield* trBatchAudit(base,p);model=trEvaluate(base,p.maxEdge,p.minAngle,p.domain);}return {inputBase,rawBase,base,model};}
-function* trBatchLevel(sources,p){const ref=p.volumeRef;if(ref.kind==='manual')return p.volumeManualZ===''?null:Number(p.volumeManualZ);const descriptors=trVolumeSourcesOf(sources,'m');if(ref.kind==='point'){const source=descriptors.find(s=>s.id===ref.source),at=trPtRefIndex(source?.points,ref.index,ref.id),point=source?.points[at];if(!point||String(point.id)!==ref.id||source.indices&&!source.indices.includes(at))throw Error('Zvolený bod referenční výšky není ve vybraných zdrojích.');return Number(trVolumeLevel(Math.abs(point.z)<1e-6?point.z.toFixed(20):String(point.z)));}const stats=yield* trVolumeSourceStats(descriptors);return Number(stats[ref.kind].toFixed(3));}
+function* trBatchLevel(sources,p){const ref=p.volumeRef;if(ref.kind==='manual')return p.volumeManualZ===''?null:Number(p.volumeManualZ);const descriptors=trVolumeSourcesOf(sources,'m');if(ref.kind==='point'){const source=descriptors.find(s=>s.id===ref.source),at=trPtRefIndex(source?.points,ref,source?.originalPoints),point=source?.points[at];if(!point||String(point.id)!==ref.id||source.indices&&!source.indices.includes(at))throw Error('Bod referenční výšky chybí nebo je jeho původní odkaz nejednoznačný. Vyberte bod znovu.');return Number(trVolumeLevel(Math.abs(point.z)<1e-6?point.z.toFixed(20):String(point.z)));}const stats=yield* trVolumeSourceStats(descriptors);return Number(stats[ref.kind].toFixed(3));}
 function* trBatchBuild(state,p){const sources=state.sources;if(sources.reduce((n,s)=>n+s.surface.points.length,0)>TERRAIN_LIMIT.points||sources.reduce((n,s)=>n+s.surface.faces.length,0)>TERRAIN_LIMIT.faces)throw Error('Výběr překračuje společný limit 250 000 bodů nebo 500 000 trojúhelníků. Vyberte méně zdrojů.');let common=null,commonError='';if(!['reference','lsq'].includes(p.volumeTarget)&&!trBatchOwn(p))try{common=yield* trBatchLevel(sources,p);}catch(e){commonError=e.message;}
  const geometryKey=JSON.stringify([p.maxEdge,p.minAngle,p.domain,p.breaks,trBreakSignature('m',p),sources.map(s=>s.id)]),rows=[];let countPoints=0,countFaces=0;for(const source of sources){const row={id:source.id,label:source.label,source,level:null,result:null,error:'',geometry:null};try{const cached=TR_MEAS_BATCH.cache.get(source.id),key=JSON.stringify([geometryKey,p.tinCuts.find(c=>c.scope===trTinScope([source],true))?.faces,p.tinFlips.find(c=>c.scope===trTinScope([source],true))?.edges]);if(cached?.surface===source.surface&&cached.key===key)row.geometry=cached.geometry;else{row.geometry=yield* trBatchGeometry(source,p,sources);if(!trBatchCurrent(state))return [];TR_MEAS_BATCH.cache.set(source.id,{surface:source.surface,key,geometry:row.geometry});}countPoints+=row.geometry.base.points.length;countFaces+=row.geometry.base.metrics.length;if(countPoints>TERRAIN_LIMIT.points||countFaces>TERRAIN_LIMIT.faces)throw Error('Odvozené sítě překračují společný limit vrcholů nebo trojúhelníků. Omezte výběr nebo vymezení.');const model=row.geometry.model;if(!trVolumeReady(model))throw Error(model.error||(!model.kept.length?'Ve zdroji nezůstal žádný použitelný trojúhelník.':'Kontrola sítě není úplná.'));if(!['reference','lsq'].includes(p.volumeTarget)){if(commonError)throw Error(commonError);row.level=trBatchOwn(p)?yield* trBatchLevel([source],p):common;if(row.level!==null)row.result=yield* trVolumeBuild(model,row.level);else row.error='Zadejte referenční výšku.';}}catch(error){row.error=error.message;}if(countPoints>TERRAIN_LIMIT.points||countFaces>TERRAIN_LIMIT.faces)throw Error('Odvozené sítě překračují společný limit vrcholů nebo trojúhelníků. Omezte výběr nebo vymezení.');rows.push(row);state.rows=rows.slice();yield;}return rows;}
 function trBatchEnsure(sources,p){const signature=trBatchKey(p),old=TR_MEAS_BATCH.state;if(old&&old.signature===signature&&old.sources.length===sources.length&&sources.every((s,i)=>s.id===old.sources[i].id&&s.surface===old.sources[i].surface)&&old.status!=='cancelled')return old;const state={signature,sources,rows:[],status:'pending',error:''};TR_MEAS_BATCH.state=state;for(const id of TR_MEAS_BATCH.cache.keys())if(!sources.some(s=>s.id===id))TR_MEAS_BATCH.cache.delete(id);TR_VOLUME_QUEUE.tail=TR_VOLUME_QUEUE.tail.catch(()=>{}).then(async()=>{if(!trBatchCurrent(state)){state.status='cancelled';return;}try{const it=trBatchBuild(state,p);let step;do{const start=performance.now();do{if(!trBatchCurrent(state)){state.status='cancelled';return;}step=it.next();}while(!step.done&&performance.now()-start<8);if(!step.done)await new Promise(resolve=>setTimeout(resolve,0));}while(!step.done);state.rows=step.value;state.status='ready';}catch(error){state.status='error';state.error=error.message;state.rows=[];TR_MEAS_BATCH.cache.clear();}if(trBatchCurrent(state)){trModelRefresh();TPLAN.cache=null;tpGpuRelease();tpMeasureUI();trDrawRequest();}});return state;}
@@ -7808,11 +7808,35 @@ function trShiftExportUI(){const box=$('trShiftExport');if(!box)return;let on=fa
  for(const [id,t] of [['trxrxml','LandXML: TIN povrch „Reference posunutá o '+(tag||'…')+'“ (S-JTSK, N = −X, E = −Y). '],['trxrdxf','DXF 3D JTSK: vrstvy REFERENCE_POSUNUTA_TIN / _BODY / _POPIS a popis posunu ve vrstvě REFERENCE_POSUNUTA_INFO (CAD X = −Y, Y = −X, Z = výška + posun). '],['trxrstx','STX: body Reference (název Y X Z [kód]) se zvýšenou výškou; posun je v názvu souboru. ']]){const b=$(id);b.disabled=!ok;b.title=t+base+why;}}
 /* DMT: export rozdílového modelu ΔZ (měření − Reference + posun, nebo měření − Z₀). Výška Z v souborech je rozdíl ΔZ, nikoli nadmořská výška; TIN tvoří přesné průniky obou sítí (vůči Referenci) nebo měřený TIN (vůči Z₀). */
 const TR_DIFF={busy:false,limit:2000000};
-function trDiffData(){if(!terrainAdmin())return {why:'Export je dostupný jen administrátorovi.'};if(TERRAIN.busy)return {why:'Probíhá import nebo změna vstupních dat.'};if(tpEditing())return {why:'Nejprve dokončete zadávání vymezení nebo povinné hrany.'};if(TR_DIFF.busy)return {why:'Export rozdílového modelu právě probíhá.'};const ref=trCompareOn(),token=trDeltaToken();if(!token)return {why:ref?'Porovnání s Referencí zatím není spočítané.':!TRMODEL.m?.sources?.length?'Nejprve načtěte měření.':'Kubatury vůči rovině Z₀ zatím nejsou spočítané (zadejte Z₀ v Nastavení → Kubatury).'};const rows=trDeltaAllRows();if(!rows.length)return {why:ref?'Měření a Reference nemají společnou plochu.':'Model měření nemá vyhodnocenou plochu.'};if(ref&&!TR_COMPARE.index?.index)return {why:'Index Reference není připravený.'};
- const levels=ref?[]:[...new Set(rows.map(r=>trRound4(r.result.level)))];let A=0,U=0,D=0,B=0;for(const r of rows){A+=r.result.area;U+=r.result.above;D+=r.result.below;B+=r.result.balance;}return {ok:true,mode:ref?'reference':'plane',token,rows,shift:ref?(token.input.shift||0):0,refLabel:ref?token.input.referenceLabel:'',levels,batch:trBatchOn(),sum:{A,U,D,B,multi:rows.length>1}};}
-function trDiffFormula(d){return d.mode==='reference'?'ΔZ = Měření − (Reference'+(d.shift?' '+(d.shift<0?'−':'+')+' '+trFmt4(Math.abs(d.shift))+' m':'')+')':'ΔZ = Měření − Z₀'+(d.levels.length===1?' (Z₀ = '+trFmt4(d.levels[0])+' m)':' (Z₀ podle zdroje)');}
-function trDiffName(d,ext){const tag=d.mode==='reference'?'mereni-REFERENCE'+(d.shift?'_posun'+trShiftTag(d.shift):''):'mereni-Z0'+(d.levels.length===1?'_'+trFmt4(d.levels[0])+'m':'_podle_zdroju');return 'GeoMAT_DMT_ROZDIL_dZ_'+tag+'.'+ext;}
-function trDiffInfo(d){const now=new Date(),s=d.sum;return ['ROZDÍLOVÝ MODEL ΔZ – výška Z je rozdíl, nikoli nadmořská výška',trDiffFormula(d),'Měření: '+d.rows.map(r=>r.label).join(', '),...(d.mode==='reference'?['Reference: '+d.refLabel+(d.shift?' (svislý posun '+trSigned4(d.shift)+' m)':''),'Plocha: pouze společná plocha měření a Reference, bez extrapolace']:[]),'Kladné ΔZ = měření nad '+(d.mode==='reference'?'Referencí':'rovinou Z₀')+' (násyp), záporné = pod (výkop)','Násyp '+terrainFormat(s.U)+' m³ · výkop '+terrainFormat(s.D)+' m³ · bilance '+trVolumeSigned(s.B)+' m³ · plocha '+terrainFormat(s.A)+' m²'+(s.multi?' (součet zdrojů)':''),'GeoMAT '+APP_VERSION+' · '+now.toLocaleDateString('cs-CZ')+' '+now.toLocaleTimeString('cs-CZ')];}
+function trDiffTarget(){
+ if(trCompareLsq())return {name:'rovina MNČ',file:'ROVINA_MNC',instrumental:'rovinou MNČ',genitive:'roviny MNČ'};
+ if(trCompareOn())return {name:'Reference',file:'REFERENCE',instrumental:'Referencí',genitive:'Reference'};
+ return {name:'Z₀',file:'Z0',instrumental:'rovinou Z₀',genitive:'roviny Z₀'};
+}
+function trDiffData(){
+ if(!terrainAdmin())return {why:'Export je dostupný jen administrátorovi.'};
+ if(TERRAIN.busy)return {why:'Probíhá import nebo změna vstupních dat.'};
+ if(tpEditing())return {why:'Nejprve dokončete zadávání vymezení nebo povinné hrany.'};
+ if(TR_DIFF.busy)return {why:'Export rozdílového modelu právě probíhá.'};
+ const ref=trCompareOn(),target=trDiffTarget(),token=trDeltaToken();
+ if(!token)return {why:ref?'Porovnání s '+target.instrumental+' zatím není spočítané.':!TRMODEL.m?.sources?.length?'Nejprve načtěte měření.':'Kubatury vůči rovině Z₀ zatím nejsou spočítané (zadejte Z₀ v Nastavení → Kubatury).'};
+ const rows=trDeltaAllRows();
+ if(!rows.length)return {why:ref?'Měření nemá společnou plochu s '+target.instrumental+'.':'Model měření nemá vyhodnocenou plochu.'};
+ if(ref&&!TR_COMPARE.index?.index)return {why:'Index '+target.genitive+' není připravený.'};
+ const levels=ref?[]:[...new Set(rows.map(r=>trRound4(r.result.level)))];
+ let A=0,U=0,D=0,B=0;
+ for(const r of rows){A+=r.result.area;U+=r.result.above;D+=r.result.below;B+=r.result.balance;}
+ return {ok:true,mode:ref?'reference':'plane',target,token,rows,shift:ref?(token.input.shift||0):0,refLabel:ref?token.input.referenceLabel:'',levels,batch:trBatchOn(),sum:{A,U,D,B,multi:rows.length>1}};
+}
+function trDiffFormula(d){
+ if(d.mode==='reference')return 'ΔZ = Měření − '+(d.shift?'('+d.target.name+' '+(d.shift<0?'−':'+')+' '+trFmt4(Math.abs(d.shift))+' m)':d.target.name);
+ return 'ΔZ = Měření − Z₀'+(d.levels.length===1?' (Z₀ = '+trFmt4(d.levels[0])+' m)':' (Z₀ podle zdroje)');
+}
+function trDiffName(d,ext){
+ const suffix=d.mode==='reference'?(d.shift?'_posun'+trShiftTag(d.shift):''):(d.levels.length===1?'_'+trFmt4(d.levels[0])+'m':'_podle_zdroju');
+ return 'GeoMAT_DMT_ROZDIL_dZ_mereni-'+d.target.file+suffix+'.'+ext;
+}
+function trDiffInfo(d){const now=new Date(),s=d.sum;return ['ROZDÍLOVÝ MODEL ΔZ – výška Z je rozdíl, nikoli nadmořská výška',trDiffFormula(d),'Měření: '+d.rows.map(r=>r.label).join(', '),...(d.mode==='reference'?['Srovnávací plocha: '+d.refLabel+(d.shift?' (svislý posun '+trSigned4(d.shift)+' m)':''),'Plocha: pouze společná plocha měření a '+d.target.genitive+', bez extrapolace']:[]),'Kladné ΔZ = měření nad '+d.target.instrumental+' (násyp), záporné = pod (výkop)','Násyp '+terrainFormat(s.U)+' m³ · výkop '+terrainFormat(s.D)+' m³ · bilance '+trVolumeSigned(s.B)+' m³ · plocha '+terrainFormat(s.A)+' m²'+(s.multi?' (součet zdrojů)':''),'GeoMAT '+APP_VERSION+' · '+now.toLocaleDateString('cs-CZ')+' '+now.toLocaleTimeString('cs-CZ')];}
 // Never quantise geometry: distinct representable XY pairs remain distinct vertices.
 // The spatial lookup is used only for original point names, not to weld mesh coordinates.
 function trDiffVertexPool(){const verts=[],vmap=new Map(),key=p=>p.y+'|'+p.x;let grid=null,scale=1;const agrees=(a,b)=>Math.abs(a-b)<=Math.max(1e-9,128*Number.EPSILON*Math.max(1,Math.abs(a),Math.abs(b))),add=w=>{const k=key(w),known=vmap.get(k);if(known!==undefined){const v=verts[known];if(!agrees(v.z,w.z)||!agrees(v.d,w.d))throw Error('Rozdílový model má v jedné poloze rozdílné výšky. Export byl zastaven, aby se nesloučily různé povrchy.');return known;}const i=verts.length;vmap.set(k,i);verts.push(w);scale=Math.max(scale,Math.abs(w.y),Math.abs(w.x));grid=null;return i;};
@@ -7853,9 +7877,9 @@ function trDiffDXF(d,parts){const a=[],g=(c,v)=>a.push(String(c),String(v)),num=
  const H=ext*.018;info.forEach((line,i)=>{g(0,'TEXT');g(8,'ROZDIL_DZ_INFO');g(7,'STANDARD');g(10,num(min[0]));g(20,num(max[1]+H*(1.6*(info.length-i)+.6)));g(30,'0.000000');g(40,num(i?H*.7:H));g(1,dxfAscii(line).slice(0,250));g(50,0);});
  g(0,'ENDSEC');g(0,'EOF');return a.join('\n')+'\n';}
 function trDiffSTX(d,parts){const nm=v=>String(v).trim().replace(/[\s;]+/g,'_'),c=v=>trTinNum(v,3),seen=new Set(),rows=[];parts.forEach((p,k)=>{for(const v of p.pts){let n=nm(v.id);if(seen.has(n)){let s=parts.length>1?n+'_Z'+(k+1):n+'_2',j=2;while(seen.has(s))s=n+'_'+(++j);n=s;}seen.add(n);rows.push([n,c(v.y),c(v.x),trTinNum(v.d,4)].concat(v.code?[nm(v.code)]:[]).join(' '));}});return {n:rows.length,t:rows.join('\r\n')+'\r\n'};}
-async function trDiffSave(kind){const d=trDiffData();if(!d.ok){toast(d.why);return;}TR_DIFF.busy=true;trDiffExportUI();try{toast('Připravuji rozdílový model ΔZ…');const parts=await trDiffBuild(d);if(!parts.some(p=>p.faces.length)&&kind!=='stx')throw Error('rozdílový model je prázdný.');if(kind==='xml')download(trDiffName(d,'xml'),trDiffXML(d,parts),false,'application/xml;charset=utf-8');else if(kind==='dxf')download(trDiffName(d,'dxf'),trDiffDXF(d,parts),false);else{const r=trDiffSTX(d,parts);if(!r.n)throw Error(d.mode==='reference'?'žádný měřený bod neleží na společné ploše s Referencí.':'model neobsahuje měřené body.');download(trDiffName(d,'stx'),r.t,false);}toast('Uložen ROZDÍLOVÝ MODEL ('+trDiffFormula(d)+') – výška Z je ΔZ, nikoli nadmořská výška. '+trDiffPrecisionInfo(parts).join(' '));}catch(e){toast('Export rozdílového modelu se nezdařil: '+(e?.message||e));}finally{TR_DIFF.busy=false;trDiffExportUI();}}
-function trDiffExportUI(){const box=$('trDiffExport');if(!box)return;let has=false;try{has=!!TRMODEL.m?.sources?.length;}catch(e){}box.hidden=!has;if(!has)return;let d;try{d=trDiffData();}catch(e){d={why:'Rozdílový model není připravený.'};}const ok=!!d.ok,f=ok?trDiffFormula(d):(trCompareOn()?'ΔZ = Měření − Reference':'ΔZ = Měření − Z₀');$('trDiffCap').textContent='Rozdílový model '+(trCompareOn()?'Měření − Reference':'Měření − Z₀')+':';const base='Exportuje se ROZDÍLOVÝ MODEL '+f+' – výška Z v souboru je ΔZ, nikoli nadmořská výška. '+(trCompareOn()?'TIN tvoří přesné průniky měření a Reference na společné ploše, bez extrapolace. ':'TIN je měřený model s výškou Z − Z₀. ')+(trBatchOn()?'Po zdrojích: každý vyhodnocovaný zdroj samostatně. ':''),why=ok?'':'Nedostupné: '+d.why;
- for(const [id,t] of [['trxdxml','LandXML: TIN povrch ΔZ'+(trBatchOn()?' pro každý zdroj':'')+' (S-JTSK, N = −X, E = −Y, výška = ΔZ). '],['trxddxf','DXF 3D: vrstvy ROZDIL_DZ_TIN / _NULOVA_CARA / _BODY / _POPIS (Z = ΔZ; plochy červeně násyp, modře výkop, nulová čára ΔZ = 0) a popis ve vrstvě ROZDIL_DZ_INFO. '],['trxdstx','STX: měřené body s ΔZ ve sloupci výšky (název Y X ΔZ [kód]); '+(trCompareOn()?'body mimo Referenci se vynechají. ':'')]]){const b=$(id);b.disabled=!ok;b.title=t+base+why;}}
+async function trDiffSave(kind){const d=trDiffData();if(!d.ok){toast(d.why);return;}TR_DIFF.busy=true;trDiffExportUI();try{toast('Připravuji rozdílový model ΔZ…');const parts=await trDiffBuild(d);if(!parts.some(p=>p.faces.length)&&kind!=='stx')throw Error('rozdílový model je prázdný.');if(kind==='xml')download(trDiffName(d,'xml'),trDiffXML(d,parts),false,'application/xml;charset=utf-8');else if(kind==='dxf')download(trDiffName(d,'dxf'),trDiffDXF(d,parts),false);else{const r=trDiffSTX(d,parts);if(!r.n)throw Error(d.mode==='reference'?'žádný měřený bod neleží na společné ploše s '+d.target.instrumental+'.':'model neobsahuje měřené body.');download(trDiffName(d,'stx'),r.t,false);}toast('Uložen ROZDÍLOVÝ MODEL ('+trDiffFormula(d)+') – výška Z je ΔZ, nikoli nadmořská výška. '+trDiffPrecisionInfo(parts).join(' '));}catch(e){toast('Export rozdílového modelu se nezdařil: '+(e?.message||e));}finally{TR_DIFF.busy=false;trDiffExportUI();}}
+function trDiffExportUI(){const box=$('trDiffExport');if(!box)return;let has=false;try{has=!!TRMODEL.m?.sources?.length;}catch(e){}box.hidden=!has;if(!has)return;let d;try{d=trDiffData();}catch(e){d={why:'Rozdílový model není připravený.'};}const target=d.target||trDiffTarget(),ref=trCompareOn(),ok=!!d.ok,f=ok?trDiffFormula(d):'ΔZ = Měření − '+target.name;$('trDiffCap').textContent='Rozdílový model Měření − '+target.name+':';const base='Exportuje se ROZDÍLOVÝ MODEL '+f+' – výška Z v souboru je ΔZ, nikoli nadmořská výška. '+(ref?'TIN tvoří přesné průniky měření a '+target.genitive+' na společné ploše, bez extrapolace. ':'TIN je měřený model s výškou Z − Z₀. ')+(trBatchOn()?'Po zdrojích: každý vyhodnocovaný zdroj samostatně. ':''),why=ok?'':'Nedostupné: '+d.why;
+ for(const [id,t] of [['trxdxml','LandXML: TIN povrch ΔZ'+(trBatchOn()?' pro každý zdroj':'')+' (S-JTSK, N = −X, E = −Y, výška = ΔZ). '],['trxddxf','DXF 3D: vrstvy ROZDIL_DZ_TIN / _NULOVA_CARA / _BODY / _POPIS (Z = ΔZ; plochy červeně násyp, modře výkop, nulová čára ΔZ = 0) a popis ve vrstvě ROZDIL_DZ_INFO. '],['trxdstx','STX: měřené body s ΔZ ve sloupci výšky (název Y X ΔZ [kód]); '+(ref?'vynechají se body mimo společnou plochu. ':'')]]){const b=$(id);b.disabled=!ok;b.title=t+base+why;}}
 function trVolumeCSV(key){if(key!=='m')return;if(key==='m'&&trCompareOn())return trCompareCSV();if(key==='m'&&trBatchOn())return trBatchCSV();if(!terrainAdmin()||TERRAIN.busy||tpEditing())return;const s=trVolumeState(key);if(s?.status!=='ready')return;const r=s.result,p=TERRAIN[key].model,cell=v=>'"'+String(v).replace(/"/g,'""')+'"',number=v=>trPtsDec(v),rows=[['GeoMAT verze',APP_VERSION],['Model',key==='m'?'Měření':'Reference'],['Zdroj',TRMODEL[key].sources.map(s=>s.label).join(' | ')],['Referenční výška Z0 [m]',number(r.level)],['Výška podle',trVolumeRefText(key)],['Zdroj referenční výšky',trVolumeRefDescription(key)],['Půdorysná plocha [m2]',number(r.area)],['Násyp (nad rovinou) [m3]',number(r.above)],['Výkop (pod rovinou) [m3]',number(r.below)],['Bilance násyp minus výkop [m3]',number(r.balance)],['Z0 pro bilanci 0 [m]',number(trRound4(r.mean))],['Plocha nad rovinou [m2]',number(r.areaAbove)],['Plocha pod rovinou [m2]',number(r.areaBelow)],['Plocha v rovině [m2]',number(r.areaOn)],['Počet trojúhelníků',r.triangles],['Max. hrana [m]',p.maxEdge||'Bez omezení'],['Min. úhel [gon]',p.minAngle||'0'],['Vymezení',p.domain.enabled?'Zapnuto':'Vypnuto'],['Povinné hrany',trBreakActive(p,TERRAIN[key].breakFiles||[])?'Zapnuto':'Vypnuto'],['Metoda','Přesná integrace lineárního TIN; rozdělení v úrovni Z0; objemy jsou svislé, násyp i výkop kladně.']];download('GeoMAT_DMT_'+(key==='m'?'mereni':'reference')+'_kubatury.csv','\uFEFF'+rows.map(row=>row.map(cell).join(';')).join('\r\n'),false,'text/csv;charset=utf-8');}
 
 // Exclusions refer to a source selection and to the exact XYZ of the three vertices.
@@ -7989,30 +8013,126 @@ function trPtsAdd(){if(TR_PTS.all||TERRAIN.busy)return;const code=$('trccin').va
 function trPtsReset(apply=true){gmNameRangeSet('tr',null);TR_PTS.all=true;TR_PTS.codes=[];TR_PTS.comma=true;$('trccin').value='';trPtsMessage();if(apply)trPtsChanged();else{TR_PTS.version++;trPtsSave();trPtsRender();}}
 function trPtsInit(){TR_PTS.bound=true;gmNameRangeBind('tr');$('trPtsAll').onchange=()=>{if(TERRAIN.busy){trPtsRender();return;}TR_PTS.all=$('trPtsAll').checked;trPtsMessage();trPtsChanged();};$('trComma').onchange=()=>{TR_PTS.comma=$('trComma').checked;trPtsSave();trPtsRender();};$('trccadd').onclick=trPtsAdd;$('trccin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();trPtsAdd();}});$('trccin').addEventListener('input',()=>trPtsMessage());$('trcclist').addEventListener('click',e=>{const b=e.target.closest?.('button[data-trcc]');if(!b||TERRAIN.busy)return;const i=TR_PTS.codes.indexOf(b.dataset.trcc);if(i<0)return;TR_PTS.codes.splice(i,1);trPtsMessage();trPtsChanged();});$('trPtsDefaults').onclick=e=>{e.preventDefault();e.stopPropagation();if(TERRAIN.busy)return;trPtsReset(true);};trPtsRender();}
 trPtsLoad();
-/* Nástroj Body: ruční úpravy výšky, vyřazení a přidání bodů. Úpravy se pamatují podle půdorysné polohy a původní výšky; zdrojové soubory se nemění. */
-const TR_PT_EDIT_MAX=5000,TR_PT_CACHE=new WeakMap();
-function trPtEditsPrefs(v){if(!Array.isArray(v))return [];const out=[],seen=new Set();for(const e of v.slice(0,TR_PT_EDIT_MAX)){if(!e||!['z','off','add'].includes(e.k))continue;const y=Number(e.y),x=Number(e.x),oz=Number(e.oz),z=Number(e.z),id=typeof e.id==='string'?e.id.slice(0,80):'';if(![y,x,oz].every(Number.isFinite)||e.k!=='off'&&!Number.isFinite(z)||e.k==='add'&&!id)continue;const key=e.k==='add'?'a|'+id:'p|'+y+','+x;if(seen.has(key))continue;seen.add(key);const q={k:e.k,y,x,oz,id,code:typeof e.code==='string'?e.code.slice(0,80):'',source:typeof e.source==='string'?e.source.slice(0,1000):''};if(e.k!=='off')q.z=z;out.push(q);}return out;}
-function trPtKey(y,x,z){return y+','+x+','+z;}
-function trPtSurface(surface,edits,adds){
- if(surface.lines||!edits.length&&!adds.length)return surface;
- const imported=!!surface.faces?.length,sig=JSON.stringify([edits,adds]),hit=TR_PT_CACHE.get(surface);
- if(hit&&hit.sig===sig)return hit.out;
- const map=new Map();for(const e of edits)map.set(trPtKey(e.y,e.x,e.oz),e);
+/* Změny i odkazy drží zdroj a původní identitu bodu, nikoli pozici v odfiltrovaném poli. */
+const TR_PT_EDIT_MAX=5000,TR_PT_CACHE=new WeakMap(),TR_PT_INDEX=new WeakMap();
+function trPtKey(p,added=p.k==='add'||p.ptEdit==='add'){
+ return JSON.stringify([added?'add':'input',String(p.id),p.y,p.x,p.oz??p.z]);
+}
+function trPtRefToken(ref){return typeof ref?.pointKey==='string'?{pointKey:ref.pointKey}:{};}
+function trPtRef(source,index,p){return {source,index,id:String(p.id),pointKey:trPtKey(p)};}
+function trPtEditsPrefs(v){
+ if(!Array.isArray(v))return [];
+ const out=[],seen=new Set();
+ for(const e of v.slice(0,TR_PT_EDIT_MAX)){
+  if(!e||!['z','off','add'].includes(e.k))continue;
+  const y=Number(e.y),x=Number(e.x),oz=Number(e.oz),z=Number(e.z),id=typeof e.id==='string'?e.id:'';
+  if(![y,x,oz].every(Number.isFinite)||e.k!=='off'&&!Number.isFinite(z)||e.k==='add'&&!id)continue;
+  const q={k:e.k,y,x,oz,id,code:typeof e.code==='string'?e.code.slice(0,80):'',source:typeof e.source==='string'?e.source:''};
+  if(e.k!=='off')q.z=z;
+  const key=JSON.stringify([q.source,trPtKey(q)]);
+  if(seen.has(key))continue;
+  seen.add(key);out.push(q);
+ }
+ return out;
+}
+function trPtSurface(surface,edits){
+ if(surface.lines||!edits.length)return surface;
+ const imported=!!surface.faces?.length,sig=JSON.stringify(edits),hit=TR_PT_CACHE.get(surface);
+ if(hit?.sig===sig)return hit.out;
+ const map=new Map(edits.filter(e=>e.k!=='add').map(e=>[trPtKey(e),e]));
  let changed=0;const points=[];
- for(const p of surface.points){const e=map.get(trPtKey(p.y,p.x,p.z));if(!e){points.push(p);continue;}if(e.k==='off'&&!imported){changed++;continue;}if(e.k==='z'){points.push({...p,z:e.z,oz:p.z,ptEdit:'z'});changed++;}else points.push(p);}
- if(!imported)for(const e of adds){points.push({id:e.id,y:e.y,x:e.x,z:e.z,oz:e.oz,code:e.code||'',ptEdit:'add'});changed++;}
+ for(const p of surface.points){
+  const e=map.size?map.get(trPtKey(p)):null;
+  if(e?.k==='off'&&!imported){changed++;continue;}
+  if(e?.k==='z'){points.push({...p,z:e.z,oz:p.z,ptEdit:'z'});changed++;}
+  else points.push(p);
+ }
+ if(!imported)for(const e of edits)if(e.k==='add'){
+  points.push({id:e.id,y:e.y,x:e.x,z:e.z,oz:e.oz,code:e.code||'',ptEdit:'add'});changed++;
+ }
  const out=changed?{...surface,points,ptEdits:changed}:surface;
  TR_PT_CACHE.set(surface,{sig,out});return out;
 }
 function trPtApply(key,list,edits=trPtEditsPrefs(TERRAIN[key]?.model?.tinPoints)){
- if(!edits.length)return list;
- const clouds=list.filter(s=>!s.surface.faces?.length&&!s.surface.lines&&!s.breakOnly).map(s=>s.id),moves=edits.filter(e=>e.k!=='add');
- for(const s of list){if(s.breakOnly||s.surface.lines)continue;const adds=s.surface.faces?.length?[]:edits.filter(e=>e.k==='add'&&(e.source===s.id||!clouds.includes(e.source)&&s.id===clouds[0]));s.surface=trPtSurface(s.surface,moves,adds);}
+ const bySource=new Map();
+ for(const edit of edits){
+  if(!edit.source)continue;
+  if(!bySource.has(edit.source))bySource.set(edit.source,[]);
+  bySource.get(edit.source).push(edit);
+ }
+ for(const s of list)if(!s.breakOnly&&bySource.has(s.id))s.surface=trPtSurface(s.surface,bySource.get(s.id));
  return list;
 }
-// Odkazy na body (povinné hrany, Z0 z bodu) drží index; po vyřazení bodu se index posune, proto záložně hledáme podle názvu.
-function trPtRefIndex(points,index,id){if(!points)return -1;if(points[index]&&String(points[index].id)===String(id))return index;let found=-1;for(let i=0;i<points.length;i++)if(String(points[i].id)===String(id)){if(found>=0)return -1;found=i;}return found;}
-function trSources(key){const list=[];for(const file of TERRAIN[key].files)file.surfaces.forEach((surface,j)=>list.push({id:JSON.stringify([file.name,file.cfg.surfaces[j]]),label:file.name+' · '+surface.name,surface:trPtsSurface(file,surface)}));trPtApply(key,list);if(!list.some(s=>!s.surface.faces.length)){const extra=trBreakStandalone(key);if(extra)list.push(extra);}return list;}
+function trPtIndexes(points){
+ let indexes=TR_PT_INDEX.get(points);
+ if(indexes)return indexes;
+ const ids=new Map(),keys=new Map();
+ points.forEach((p,i)=>{
+  const id=String(p.id),key=trPtKey(p);
+  ids.set(id,ids.has(id)?-1:i);
+  if(!keys.has(key))keys.set(key,i);
+ });
+ indexes={ids,keys};TR_PT_INDEX.set(points,indexes);return indexes;
+}
+function trPtRefIndex(points,ref,originalPoints=points){
+ if(!points||!ref)return -1;
+ const key=ref.pointKey;
+ if(typeof key==='string'){
+  if(points[ref.index]&&trPtKey(points[ref.index])===key)return ref.index;
+  return trPtIndexes(points).keys.get(key)??-1;
+ }
+ // Legacy indices may already have shifted. Resolve a legacy ID only if it was
+ // unique before filtering and still identifies that point, or a unique added point.
+ const original=trPtIndexes(originalPoints).ids.get(String(ref.id));
+ if(original!==undefined)return original<0?-1:(trPtIndexes(points).keys.get(trPtKey(originalPoints[original]))??-1);
+ const current=trPtIndexes(points).ids.get(String(ref.id))??-1;
+ return points[current]?.ptEdit==='add'?current:-1;
+}
+function trPinLegacyPointRefs(key){
+ const group=TERRAIN[key],p=group.model;
+ const refs=(p.volumeRef.kind==='point'?[p.volumeRef]:[]).concat(p.breaks.lines.flatMap(l=>l.refs));
+ const legacy=refs.filter(ref=>typeof ref.pointKey!=='string');
+ if(!legacy.length)return;
+ // Resolve against the original source, before any name/code filter changes its indices.
+ const sources=trSources(key);
+ for(const ref of legacy){
+  const s=sources.find(source=>source.id===ref.source);
+  let points=s?.surface.points,original=s?.originalPoints;
+  if(!points)for(const file of group.breakFiles||[]){
+   const i=file.cfg.surfaces.findIndex(surface=>JSON.stringify(['break',file.name,surface])===ref.source);
+   if(i>=0){points=original=file.surfaces[i].points;break;}
+  }
+  const rawIndex=original?trPtIndexes(original).ids.get(String(ref.id)):undefined;
+  const index=rawIndex===undefined?trPtRefIndex(points,ref,original):rawIndex;
+  const point=(rawIndex===undefined?points:original)?.[index];
+  ref.pointKey=point?trPtKey(point):'';
+ }
+}
+function trPointSourceRef(sources,point){
+ for(const s of sources){
+  const index=s.surface.points.indexOf(point);
+  if(index>=0)return trPtRef(s.id,index,point);
+ }
+ const key=trPtKey(point);
+ let match=null;
+ for(const s of sources){
+  const index=trPtIndexes(s.surface.points).keys.get(key);
+  if(index===undefined)continue;
+  if(match)return null;
+  match=trPtRef(s.id,index,s.surface.points[index]);
+ }
+ return match;
+}
+function trSources(key){
+ const list=[];
+ for(const file of TERRAIN[key].files)file.surfaces.forEach((surface,j)=>list.push({
+  id:JSON.stringify([file.name,file.cfg.surfaces[j]]),label:file.name+' · '+surface.name,
+  originalPoints:surface.points,surface:trPtsSurface(file,surface)
+ }));
+ trPtApply(key,list);
+ if(!list.some(s=>!s.surface.faces.length)){const extra=trBreakStandalone(key);if(extra)list.push(extra);}
+ return list;
+}
 /* TIN checks operate on derived, selected geometry; original source files are immutable. */
 const TR_CHECK_LIMIT={pairs:2000000,work:20000000,samples:24,marks:6000};
 function trTriangleOverlap(A,B){
@@ -8142,7 +8262,7 @@ function tpTinTargets(){
   if(!base?.metrics.length||base.inputError||data.model.breakPending||data.model.breakError)return;
   const p=TERRAIN[key].model,scope=trTinScope(sources,batch),label=(key==='m'?'Měření':'Reference')+' · '+sources.map(s=>s.label).join(' + ');
   const pointSources=sources.filter(s=>!s.surface.faces.length&&!s.breakOnly);
-  out.push({key,id,label,base,source:base.tinFlipParent||base,raw,input:data.inputBase,pointSources,scope,filter:trFilterKey(p.maxEdge,p.minAngle)});
+  out.push({key,id,label,base,source:base.tinFlipParent||base,raw,input:data.inputBase,pointSources,sources,scope,filter:trFilterKey(p.maxEdge,p.minAngle)});
  };
  if(trBatchOn()){
   const state=TR_MEAS_BATCH.state;
@@ -8169,6 +8289,7 @@ function tpTinPanelTargets(){
  return targets;
 }
 function tpTinTool(){return TPLAN.tinTool||'del';}
+function tpTinSourceIds(d){return new Set(d.sources.map(s=>s.id));}
 function tpTinDirty(d){return !!d&&(d.changed.size>0||d.flips.join('\n')!==d.originalFlips.join('\n')||d.lines.length>0||d.line.length>1||JSON.stringify(d.pts)!==d.ptsOriginal);}
 function tpTinOpts(d){
  const p=TERRAIN[d.key].model,limit=Number(p.maxEdge)||Infinity,min=trAngleLimit(p.minAngle);
@@ -8205,9 +8326,10 @@ function tpTinStart(id){
  if(source){
   const {candidates}=trFilterFaces(source,p.maxEdge,p.minAngle);
   const original=new Set(p.tinCuts.find(c=>c.scope===scope)?.faces||[]);
+  const sourceIds=tpTinSourceIds(target);
   d={...target,sourceModel:{...source,kept:candidates,check:null},original,cuts:new Set(original),changed:new Set(),history:[],future:[],
    marked:new Map(raw.tinRemoved||[]),lines:[],line:[],hover:[],flipHover:null,mouse:null,index:null,error:'',
-   pts:trPtEditsPrefs(p.tinPoints),ptSel:null,ptHover:null};
+   pts:trPtEditsPrefs(p.tinPoints).filter(e=>sourceIds.has(e.source)),ptSel:null,ptHover:null};
   d.ptsOriginal=JSON.stringify(d.pts);
   d.skipped=tpTinRebuild(d,p.tinFlips.find(c=>c.scope===scope)?.edges||[]);
   d.originalFlips=d.flips.slice();
@@ -8383,7 +8505,10 @@ function tpTinHit(x,y,edge){
  const hits=near.filter(q=>q.key===best);
  return {faces:[...new Set(hits.map(q=>q.triangle))],edge:hits[0]?.edge||null};
 }
-function tpTinRefPoint(d,r){return d.pointSources.find(s=>s.id===r.source)?.surface.points[r.index]||null;}
+function tpTinRefPoint(d,r){
+ const s=d.pointSources.find(s=>s.id===r.source),points=s?.surface.points;
+ return points?.[trPtRefIndex(points,r,s?.originalPoints)]||null;
+}
 function tpTinDraw(sc=TPLAN.scene){
  const d=TPLAN.tinDraft;if(!d||!sc)return;
  const canvas=$('tpTinOverlay'),ctx=canvas.getContext?.('2d');if(!ctx)return;
@@ -8495,14 +8620,7 @@ function tpTinFlipPick(x,y){
  tpTinRefreshBase(d);d.flipHover=null;
  tpTinUI('Hrana otočena.');tpTinScene();
 }
-function tpTinRef(d,raw){
- for(const s of d.pointSources){
-  let i=s.surface.points.indexOf(raw);
-  if(i<0)i=s.surface.points.findIndex(p=>p.y===raw.y&&p.x===raw.x&&p.z===raw.z);
-  if(i>=0)return {source:s.id,index:i,id:s.surface.points[i].id};
- }
- return null;
-}
+function tpTinRef(d,raw){return trPointSourceRef(d.pointSources,raw);}
 function tpTinLineAppend(d,ref){
  const last=d.line.at(-1);
  if(last){const a=tpTinRefPoint(d,last),b=tpTinRefPoint(d,ref);if(a&&b&&a.y===b.y&&a.x===b.x)return 'Dva sousední vrcholy mají stejnou půdorysnou polohu.';}
@@ -8515,7 +8633,7 @@ function tpTinLinePick(x,y){
  const ref=tpTinRef(d,hit.q.raw||hit.q.p);
  if(!ref){tpTinUI('Vyberte bod z bodových vstupů, výpočetní vrcholy se nepoužijí.');return;}
  const last=d.line.at(-1);
- if(last&&last.source===ref.source&&last.index===ref.index){tpTinLineFinish();return;}
+ if(last&&last.source===ref.source&&last.pointKey===ref.pointKey){tpTinLineFinish();return;}
  tpTinPush(d);
  const error=tpTinLineAppend(d,ref);
  if(error){d.history.pop();tpTinUI(error);return;}
@@ -8544,7 +8662,7 @@ function tpTinLineByNames(){
  for(const name of names){
   let ref=null;
   for(const fold of [false,true]){
-   for(const s of d.pointSources){const i=s.surface.points.findIndex(p=>fold?String(p.id??'').toLowerCase()===name.toLowerCase():String(p.id??'')===name);if(i>=0){ref={source:s.id,index:i,id:s.surface.points[i].id};break;}}
+   for(const s of d.pointSources){const i=s.surface.points.findIndex(p=>fold?String(p.id??'').toLowerCase()===name.toLowerCase():String(p.id??'')===name);if(i>=0){ref=trPtRef(s.id,i,s.surface.points[i]);break;}}
    if(ref)break;
   }
   if(ref)refs.push(ref);else missing.push(name);
@@ -8595,7 +8713,10 @@ function tpTinApply(){
  const p=TERRAIN[d.key].model,tinCuts=p.tinCuts.filter(c=>c.scope!==d.scope),tinFlips=p.tinFlips.filter(c=>c.scope!==d.scope);
  if(d.cuts.size)tinCuts.push({scope:d.scope,faces:Array.from(d.cuts)});
  if(d.flips.length)tinFlips.push({scope:d.scope,edges:d.flips.slice()});
- let next={...p,tinCuts,tinFlips,tinPoints:d.pts.map(e=>({...e}))};
+ const sourceIds=tpTinSourceIds(d);
+ const tinPoints=p.tinPoints.filter(e=>!sourceIds.has(e.source)).concat(d.pts);
+ if(tinPoints.length>TR_PT_EDIT_MAX){tpTinUI('Nejvýše '+TR_PT_EDIT_MAX+' úprav bodů v sekci.');return;}
+ let next={...p,tinCuts,tinFlips,tinPoints};
  if(d.lines.length){
   const lines=p.breaks.lines.concat(d.lines.map(l=>({name:l.name,enabled:true,closed:false,refs:l.refs.map(r=>({...r}))})));
   next={...next,breaks:{...p.breaks,enabled:true,lines}};
@@ -8614,23 +8735,35 @@ function tpPtMode(){return ['z','off','add'].includes(TPLAN.tinPtMode)?TPLAN.tin
 function tpPtFmt(n){return Number.isFinite(n)?terrainFormat(n):'—';}
 function tpPtSigned(n){const r=Math.round(n*1000)/1000;return (r>0?'+':r<0?'−':'±')+Math.abs(r).toFixed(3).replace('.',',');}
 function tpPtSame(a,b){return a.y===b.y&&a.x===b.x;}
-function tpPtEntry(d,sel){if(!d||!sel)return null;return sel.add?d.pts.find(e=>e.k==='add'&&e.id===sel.add)||null:d.pts.find(e=>e.k!=='add'&&tpPtSame(e,sel))||null;}
+function tpPtSelection(d,p){
+ const ref=trPointSourceRef(d.sources,p);
+ return ref?{source:ref.source,index:ref.index,pointKey:ref.pointKey,y:p.y,x:p.x,...(p.ptEdit==='add'?{add:String(p.id)}:{})}:null;
+}
+function tpPtEditSelection(e){
+ return {source:e.source,pointKey:trPtKey(e),y:e.y,x:e.x,...(e.k==='add'?{add:e.id}:{})};
+}
+function tpPtEntry(d,sel){
+ return d.pts.find(e=>e.source===sel.source&&trPtKey(e)===sel.pointKey)||null;
+}
 function tpPtBasePoint(d,y,x){for(const p of d.base.points)if(p.y===y&&p.x===x&&!p.synthetic)return p;return null;}
-// Popis vybraného bodu podle konceptu: původní výška, aktuální (koncept) výška a stav.
 function tpPtResolve(d,sel){
- if(!d||!sel)return null;const e=tpPtEntry(d,sel);
- if(sel.add){if(!e)return null;return {sel,entry:e,added:true,y:e.y,x:e.x,oz:e.oz,z:e.z,id:e.id,code:e.code||'',off:false};}
- const p=tpPtBasePoint(d,sel.y,sel.x);if(!p&&!e)return null;
+ if(!d||!sel)return null;
+ if(!sel.pointKey){const base=tpPtBasePoint(d,sel.y,sel.x);if(base)sel=tpPtSelection(d,base);}
+ if(!sel)return null;
+ const e=tpPtEntry(d,sel),s=d.sources.find(s=>s.id===sel.source);
+ const i=s?trPtRefIndex(s.surface.points,sel,s.originalPoints):-1,p=s?.surface.points[i];
+ if(!e&&!p)return null;
  const oz=e?.oz??(p.oz??p.z);
- return {sel,entry:e,added:false,point:p,y:sel.y,x:sel.x,oz,z:e?.k==='z'?e.z:oz,id:String(p?.id??e?.id??''),code:String(p?.code??e?.code??''),off:e?.k==='off'};
+ return {sel,source:sel.source,entry:e,added:!!sel.add,point:p,y:sel.y,x:sel.x,oz,
+  z:e?.z??p?.z??oz,id:String(p?.id??e?.id??''),code:String(p?.code??e?.code??''),off:e?.k==='off'};
 }
 function tpPtWorld(d,e,which='z'){const z=which==='oz'?e.oz:e.z;return [-e.y,-e.x,z];}
 // Najde bod sítě nebo vyřazený či rozpracovaný bod do 12 px od kurzoru.
 function tpPtHit(d,x,y){
  const sc=TPLAN.scene;if(!d||!sc)return null;let best=null,dist=12;
  const hit=tpHit(x,y,d.key);
- if(hit&&!hit.q.p.synthetic){const p=hit.q.raw||hit.q.p,dd=Math.hypot(hit.x-x,hit.y-y);dist=dd;best={sel:p.ptEdit==='add'?{add:String(p.id)}:{y:p.y,x:p.x},breakVertex:!!p.breakVertex};}
- for(const e of d.pts){if(e.k==='z')continue;if(e.k==='add'&&tpPtBasePoint(d,e.y,e.x))continue;const q=sc.project(tpPtWorld(d,e,e.k==='off'?'oz':'z')),dd=Math.hypot(q.x-x,q.y-y);if(dd<dist){dist=dd;best={sel:e.k==='add'?{add:e.id}:{y:e.y,x:e.x}};}}
+ if(hit&&!hit.q.p.synthetic){const p=hit.q.raw||hit.q.p,dd=Math.hypot(hit.x-x,hit.y-y);dist=dd;const sel=tpPtSelection(d,p);if(sel||p.breakVertex)best={sel,breakVertex:!!p.breakVertex};else dist=12;}
+ for(const e of d.pts){if(e.k==='z')continue;if(e.k==='add'&&tpPtBasePoint(d,e.y,e.x))continue;const q=sc.project(tpPtWorld(d,e,e.k==='off'?'oz':'z')),dd=Math.hypot(q.x-x,q.y-y);if(dd<dist){dist=dd;best={sel:tpPtEditSelection(e)};}}
  return best;
 }
 function tpPtName(d){const used=new Set();for(const s of d.pointSources)for(const p of s.surface.points)used.add(String(p.id));for(const e of d.pts)if(e.k==='add')used.add(e.id);let n=1;for(const e of d.pts){const m=/^N(\d+)$/.exec(e.id||'');if(e.k==='add'&&m)n=Math.max(n,Number(m[1])+1);}while(used.has('N'+n))n++;return 'N'+n;}
@@ -8645,11 +8778,13 @@ function tpPtLocked(d,r){
  const p=TERRAIN[d.key].model;
  if(r.point?.breakVertex)return 'Vrchol povinné hrany z DXF není vstupní bod, upravit ho nelze.';
  const sources=d.pointSources;
- for(const l of p.breaks.lines){for(const ref of l.refs){const s=sources.find(s=>s.id===ref.source),q=s?.surface.points[trPtRefIndex(s?.surface.points,ref.index,ref.id)];if(q&&q.y===r.y&&q.x===r.x)return 'Bod je vrcholem povinné hrany „'+l.name+'“. Nejprve hranu upravte nebo odeberte.';}}
- const ref=p.volumeRef;if(ref?.kind==='point'&&String(ref.id)===r.id)return 'Bod je zvolený jako výška Z₀ pro kubatury. Nejprve zvolte jinou referenční výšku.';
+ for(const l of p.breaks.lines){for(const ref of l.refs){const s=sources.find(s=>s.id===ref.source),q=s?.surface.points[trPtRefIndex(s?.surface.points,ref,s?.originalPoints)];if(q&&s.id===r.source&&trPtKey(q)===r.sel.pointKey)return 'Bod je vrcholem povinné hrany „'+l.name+'“. Nejprve hranu upravte nebo odeberte.';}}
+ const ref=p.volumeRef;const v=ref?.kind==='point'?d.sources.find(s=>s.id===ref.source):null;
+ const q=v?.surface.points[trPtRefIndex(v?.surface.points,ref,v?.originalPoints)];
+ if(q&&v.id===r.source&&trPtKey(q)===r.sel.pointKey)return 'Bod je zvolený jako výška Z₀ pro kubatury. Nejprve zvolte jinou referenční výšku.';
  return '';
 }
-function tpPtSelect(d,sel){d.ptSel=sel;tpPtFormFill();}
+function tpPtSelect(d,sel){d.ptSel=tpPtResolve(d,sel)?.sel??null;tpPtFormFill();}
 function tpPtFormFill(){
  const d=TPLAN.tinDraft;if(!d)return;const r=tpPtResolve(d,d.ptSel),mode=tpPtMode();
  for(const id of ['tpTinPtY','tpTinPtX','tpTinPtZ']){gmNumericMark($(id),false);}
@@ -8686,35 +8821,55 @@ function tpPtToggle(d,r){
  if(!r.off){const lock=tpPtLocked(d,r);if(lock){tpTinUI(lock);return;}}
  tpTinPush(d);
  d.pts=d.pts.filter(e=>e!==r.entry);
- if(!r.off)d.pts.push({k:'off',y:r.y,x:r.x,oz:r.oz,id:r.id,code:r.code,source:d.pointSources[0]?.id||''});
- d.ptSel={y:r.y,x:r.x};
+ if(!r.off)d.pts.push({k:'off',y:r.y,x:r.x,oz:r.oz,id:r.id,code:r.code,source:r.source});
+ d.ptSel=r.sel;
  tpPtChanged(d,r.off?'Bod '+r.id+' vrácen do sítě.':'Bod '+r.id+' vyřazen'+(r.entry?.k==='z'?' (upravená výška zrušena)':'')+'. Síť se přepočítá po použití úprav.');
 }
+function tpPtRangeCheck(values){
+ const errors=[];
+ for(const [axis,value,limit] of values){
+  const field=$('tpTinPt'+axis),numeric=Number.isFinite(value),bad=!numeric||Math.abs(value)>limit;
+  gmNumericMark(field,bad);
+  if(!bad)continue;
+  const message=numeric?axis+' musí být v rozsahu −'+fmtCz(limit)+' až +'+fmtCz(limit)+' m.':'Zadejte číselnou hodnotu '+axis+' v metrech.';
+  field.setCustomValidity?.(message);
+  errors.push(message);
+ }
+ if(errors.length)tpTinUI(errors.join(' '));
+ return errors.length===0;
+}
 function tpPtSetZ(d,r,z){
+ if(!tpPtRangeCheck([['Z',z,Z_MAX]]))return;
  if(r.off){tpTinUI('Bod je vyřazený. Nejprve ho vraťte.');return;}
  if(r.added){if(z===r.entry.z)return;tpTinPush(d);d.pts=d.pts.map(e=>e===r.entry?{...e,z}:e);tpPtChanged(d,'Výška bodu '+r.id+' změněna na '+tpPtFmt(z)+' m.');return;}
  if(z===r.z)return;
  tpTinPush(d);d.pts=d.pts.filter(e=>e!==r.entry);
- if(z!==r.oz)d.pts.push({k:'z',y:r.y,x:r.x,oz:r.oz,z,id:r.id,code:r.code,source:d.pointSources[0]?.id||''});
+ if(z!==r.oz)d.pts.push({k:'z',y:r.y,x:r.x,oz:r.oz,z,id:r.id,code:r.code,source:r.source});
  tpPtChanged(d,z===r.oz?'Bod '+r.id+' má zpět původní výšku.':'Bod '+r.id+': Z '+tpPtFmt(z)+' m (ΔZ '+tpPtSigned(z-r.oz)+' m).');
 }
 function tpPtAdd(d,y,x,z,typedZ){
  if(!d.pointSources.length){tpTinUI('Přidat bod lze jen u sítě z bodových vstupů.');return;}
+ const coordinates=[['Y',y,YX_MAX],['X',x,YX_MAX]];
+ if(z!==null)coordinates.push(['Z',z,Z_MAX]);
+ if(!tpPtRangeCheck(coordinates))return;
  if(tpPtBasePoint(d,y,x)||d.pts.some(e=>tpPtSame(e,{y,x})&&e.k!=='off'))return tpTinUI('Ve stejné půdorysné poloze už bod je.');
  if(d.pts.length>=TR_PT_EDIT_MAX)return tpTinUI('Nejvýše '+TR_PT_EDIT_MAX+' úprav bodů.');
  const tin=tpPtTinZ(d,y,x);if(z===null)z=tin===null?null:tpPtRound(tin);
  if(z===null){$('tpTinPtY').value=tpPtFmt(y);$('tpTinPtX').value=tpPtFmt(x);$('tpTinPtZ').value='';d.ptSel=null;tpPtUI(d,!!TERRAIN.busy);$('tpTinPtZ').focus({preventScroll:true});tpTinUI('Bod leží mimo síť, výšku z TIN nelze dopočítat. Zadejte Z a stiskněte Enter.');return;}
+ if(!typedZ&&!tpPtRangeCheck([['Z',z,Z_MAX]]))return;
  const id=tpPtName(d),oz=tin===null?z:tpPtRound(tin);
- tpTinPush(d);d.pts.push({k:'add',y,x,oz,z,id,code:'',source:d.pointSources[0].id});d.ptSel={add:id};
+  const edit={k:'add',y,x,oz,z,id,code:'',source:d.pointSources[0].id};
+ tpTinPush(d);d.pts.push(edit);d.ptSel=tpPtEditSelection(edit);
  tpPtChanged(d,'Přidán bod '+id+' (Z '+tpPtFmt(z)+' m'+(typedZ||tin===null?'':' z TIN')+'). Síť se přepočítá po použití úprav.');
  if(!typedZ){$('tpTinPtZ').focus({preventScroll:true});$('tpTinPtZ').select?.();}
 }
 function tpPtPick(x,y){
  const d=TPLAN.tinDraft;if(!d||!TPLAN.scene)return;const mode=tpPtMode();
- if(mode==='add'){const w=tpPtScreenToWorld(d,x,y);if(!w)return;const hit=tpPtHit(d,x,y);if(hit&&hit.sel.add){tpPtSelect(d,hit.sel);tpTinDraw();return;}tpPtAdd(d,w.y,w.x,null,false);return;}
+ if(mode==='add'){const w=tpPtScreenToWorld(d,x,y);if(!w)return;const hit=tpPtHit(d,x,y);if(hit?.sel?.add){tpPtSelect(d,hit.sel);tpTinDraw();return;}tpPtAdd(d,w.y,w.x,null,false);return;}
  const hit=tpPtHit(d,x,y);if(!hit){tpTinUI('Klikněte blíž k bodu sítě.');return;}
- const r=tpPtResolve(d,hit.sel);if(!r)return;
  if(hit.breakVertex){tpTinUI('Vrchol povinné hrany z DXF není vstupní bod, upravit ho nelze.');return;}
+ const r=tpPtResolve(d,hit.sel);if(!r)return;
+ 
  if(mode==='off'){tpPtToggle(d,r);return;}
  tpPtSelect(d,hit.sel);tpTinDraw();
  if(!r.off){$('tpTinPtZ').focus({preventScroll:true});$('tpTinPtZ').select?.();}
@@ -8722,20 +8877,17 @@ function tpPtPick(x,y){
 }
 function tpPtCommit(){
  const d=TPLAN.tinDraft;if(!d||TERRAIN.busy)return;const mode=tpPtMode(),zRaw=$('tpTinPtZ').value.trim(),z=zRaw===''?null:gmDecimal(zRaw);
- if(z!==null&&!Number.isFinite(z)){gmNumericMark($('tpTinPtZ'),true);tpTinUI('Zadejte výšku Z v metrech.');return;}
  const r=tpPtResolve(d,d.ptSel);
  if(mode==='add'){
   const y=gmDecimal($('tpTinPtY').value),x=gmDecimal($('tpTinPtX').value);
-  if(!Number.isFinite(y)||!Number.isFinite(x)){gmNumericMark($(Number.isFinite(y)?'tpTinPtX':'tpTinPtY'),true);tpTinUI('Zadejte souřadnice Y a X v metrech.');return;}
-  if(r?.added&&y===r.y&&x===r.x){if(z===null){tpTinUI('Zadejte výšku Z.');return;}tpPtSetZ(d,r,z);return;}
+  if(r?.added&&y===r.y&&x===r.x&&Math.abs(y)<=YX_MAX&&Math.abs(x)<=YX_MAX){tpPtSetZ(d,r,z);return;}
   tpPtAdd(d,y,x,z,z!==null);return;
  }
  if(!r){tpTinUI('Nejprve klikněte na bod.');return;}
- if(z===null){gmNumericMark($('tpTinPtZ'),true);tpTinUI('Zadejte výšku Z v metrech.');return;}
  tpPtSetZ(d,r,z);
 }
-function tpPtRemove(i){const d=TPLAN.tinDraft,e=d?.pts[i];if(!e)return;tpTinPush(d);d.pts=d.pts.filter((_,j)=>j!==i);if(d.ptSel&&(e.k==='add'?d.ptSel.add===e.id:tpPtSame(e,d.ptSel)))d.ptSel=null;tpPtChanged(d,e.k==='z'?'Výška bodu '+(e.id||'')+' vrácena.':e.k==='off'?'Bod '+(e.id||'')+' vrácen do sítě.':'Přidaný bod '+e.id+' odebrán.');}
-function tpPtGo(i){const d=TPLAN.tinDraft,e=d?.pts[i];if(!e)return;if(tpTinTool()!=='pts')tpTinSetTool('pts');if(e.k==='add'&&tpPtMode()!=='add')TPLAN.tinPtMode='add';else if(e.k!=='add'&&tpPtMode()==='add')TPLAN.tinPtMode=e.k==='off'?'off':'z';tpPtSelect(d,e.k==='add'?{add:e.id}:{y:e.y,x:e.x});tpTinUI();tpTinDraw();}
+function tpPtRemove(i){const d=TPLAN.tinDraft,e=d?.pts[i];if(!e)return;tpTinPush(d);d.pts=d.pts.filter((_,j)=>j!==i);if(d.ptSel?.source===e.source&&d.ptSel.pointKey===trPtKey(e))d.ptSel=null;tpPtChanged(d,e.k==='z'?'Výška bodu '+(e.id||'')+' vrácena.':e.k==='off'?'Bod '+(e.id||'')+' vrácen do sítě.':'Přidaný bod '+e.id+' odebrán.');}
+function tpPtGo(i){const d=TPLAN.tinDraft,e=d?.pts[i];if(!e)return;if(tpTinTool()!=='pts')tpTinSetTool('pts');if(e.k==='add'&&tpPtMode()!=='add')TPLAN.tinPtMode='add';else if(e.k!=='add'&&tpPtMode()==='add')TPLAN.tinPtMode=e.k==='off'?'off':'z';tpPtSelect(d,tpPtEditSelection(e));tpTinUI();tpTinDraw();}
 // Značky upravených bodů: kosočtverec = nová výška, trojúhelník = přidaný, přeškrtnuté kolečko = vyřazený.
 function tpPtShape(kind,q,r=5){const out=[],seg=(a,b)=>out.push([a,b]);if(kind==='z'){const p=[[q.x,q.y-r-1],[q.x+r+1,q.y],[q.x,q.y+r+1],[q.x-r-1,q.y]];for(let i=0;i<4;i++)seg(p[i],p[(i+1)%4]);}else if(kind==='add'){const p=[[q.x,q.y-r-1.5],[q.x+r+1,q.y+r*.75],[q.x-r-1,q.y+r*.75]];for(let i=0;i<3;i++)seg(p[i],p[(i+1)%3]);}else{const n=14;for(let i=0;i<n;i++){const a=i/n*2*Math.PI,b=(i+1)/n*2*Math.PI;seg([q.x+r*Math.cos(a),q.y+r*Math.sin(a)],[q.x+r*Math.cos(b),q.y+r*Math.sin(b)]);}seg([q.x-r-2,q.y+r+2],[q.x+r+2,q.y-r-2]);}return out;}
 function tpPtDrawOverlay(ctx,d,P){
@@ -8747,7 +8899,7 @@ function tpPtDrawOverlay(ctx,d,P){
 // Upravené body mimo editor (plán, PDF, DXF): úpravy uložené u modelu, přiřazené k zobrazené skupině.
 function tpPtMarks(m){
  const out=[];if(TPLAN.tinDraft||!$('trPoints').checked)return out;
- for(const key of ['m','p']){const groups=m.groups.filter(g=>g.key===key);if(!groups.length)continue;for(const e of trPtEditsPrefs(TERRAIN[key].model?.tinPoints)){const group=groups.find(g=>g.sourceId&&g.sourceId===e.source)||(groups.some(g=>g.sourceId)?null:groups[0]);if(!group)continue;const shift=group.shift||0;out.push({e,group,world:[-e.y,-e.x,(e.k==='off'?e.oz:e.z)+shift],p:{y:e.y,x:e.x,z:(e.k==='off'?e.oz:e.z)+shift}});}}
+ for(const key of ['m','p']){const groups=m.groups.filter(g=>g.key===key);if(!groups.length)continue;for(const e of trPtEditsPrefs(TERRAIN[key].model?.tinPoints)){const group=groups.find(g=>g.sourceId===e.source||!g.sourceId&&TRMODEL[key]?.sources.some(s=>s.id===e.source));if(!group)continue;const shift=group.shift||0;out.push({e,group,world:[-e.y,-e.x,(e.k==='off'?e.oz:e.z)+shift],p:{y:e.y,x:e.x,z:(e.k==='off'?e.oz:e.z)+shift}});}}
  return out;
 }
 function tpPtFrameItems(m,project,pl){const items=[];for(const q of tpPtMarks(m)){const s=project(q.world);if(s.x<pl.x||s.x>pl.x+pl.w||s.y<pl.y||s.y>pl.y+pl.h)continue;for(const [a,b] of tpPtShape(q.e.k,s,5))items.push({t:'line',x1:a[0],y1:a[1],x2:b[0],y2:b[1],c:q.e.k==='off'?TP_PT_OFF:TP_PT_COLOR,sw:1.4,k:'point-edit'});}return items;}
@@ -8826,9 +8978,14 @@ function tpBreakStart(key,index=null,targetId=null){
   targets.find(t=>t.id===focus)||targets.find(t=>t.key===key);
  if(!target)return;
  key=target.key;tpTinCancel(false);if(TPLAN.domainDraft)tpDomainCancel(false);tpMeasureToggle(false);tp3Stop();TP3.yaw=TP3.pitch=TP3.roll=0;TP3.view=null;const raw=target.input||target.base;TPLAN.breakDraft={key,index,target,input:raw,refs:prior?prior.refs.map(r=>({...r})):[],future:[],model:trEvaluate(raw,TERRAIN[key].model.maxEdge,TERRAIN[key].model.minAngle)};TPLAN.history=[];TPLAN.future=[];TPLAN.cache=null;TRMODEL.view=null;$('trShow'+key).checked=true;$('tpBreakPanel').hidden=false;tpTinOptions($('tpBreakSurface'),targets,target.id);$('tpBreakSurface').disabled=index!==null||targets.length<2;$('tpBreakPanel').classList.toggle('pro',key==='p');$('tpBreakName').value=prior?.name||'Povinná hrana '+(TERRAIN[key].model.breaks.lines.length+1);$('tpBreakClosed').checked=prior?.closed||false;$('tpBreakSearch').value='';tpBreakUI();tpSetView(2);$('trCanvas').focus();}
-function tpBreakUI(message=''){tpSourcesClose();tpSourcesUI();const d=TPLAN.breakDraft;if(!d){$('tpBreakPanel').hidden=true;return;}const sources=tpBreakDraftSources(d),query=rvPointFold($('tpBreakSearch').value.trim()),matches=[],exact=[];outer:for(const s of sources)for(let i=0;i<s.surface.points.length;i++){const p=s.surface.points[i],name=rvPointFold(p.id);if(query&&!name.includes(query))continue;const q={ref:{source:s.id,index:i,id:p.id},label:p.id+' · '+s.label};if(query&&name===query){if(exact.length<100)exact.push(q);}else if(matches.length<100)matches.push(q);if(!query&&matches.length>=100)break outer;}const list=exact.concat(matches).slice(0,100);d.options=list;$('tpBreakPoint').innerHTML='<option value="">Vyberte bod…</option>'+list.map((q,i)=>'<option value="'+i+'">'+esc(q.label)+'</option>').join('');$('tpBreakTitle').textContent=(d.key==='m'?'Měření':'Reference')+' · povinná hrana';$('tpBreakStatus').textContent=message||('Vrcholů: '+d.refs.length+'. Klikněte na zobrazený vstupní bod nebo jej vyhledejte. Nabídka má nejvýše 100 výsledků.');$('tpBreakUndo').disabled=!d.refs.length;$('tpBreakApply').disabled=d.refs.length<2;$('tpBreakList').innerHTML=d.refs.map((ref,i)=>{try{const p=trBreakResolve(sources,ref);return '<div class="tr-check-row"><span>'+(i+1)+'. '+esc(p.id)+' · Y '+terrainFormat(p.y)+' · X '+terrainFormat(p.x)+' · '+(d.key==='p'&&tpReferenceShift()?'Z zdroje ':'Z ')+terrainFormat(p.z)+' m</span><button type="button" class="wi io" data-break-vertex="'+i+'" aria-label="Odebrat vrchol">×</button></div>';}catch(e){return '<p class="bad">'+esc(e.message)+'</p>';}}).join('');trDrawRequest();}
+function tpBreakUI(message=''){tpSourcesClose();tpSourcesUI();const d=TPLAN.breakDraft;if(!d){$('tpBreakPanel').hidden=true;return;}const sources=tpBreakDraftSources(d),query=rvPointFold($('tpBreakSearch').value.trim()),matches=[],exact=[];outer:for(const s of sources)for(let i=0;i<s.surface.points.length;i++){const p=s.surface.points[i],name=rvPointFold(p.id);if(query&&!name.includes(query))continue;const q={ref:trPtRef(s.id,i,p),label:p.id+' · '+s.label};if(query&&name===query){if(exact.length<100)exact.push(q);}else if(matches.length<100)matches.push(q);if(!query&&matches.length>=100)break outer;}const list=exact.concat(matches).slice(0,100);d.options=list;$('tpBreakPoint').innerHTML='<option value="">Vyberte bod…</option>'+list.map((q,i)=>'<option value="'+i+'">'+esc(q.label)+'</option>').join('');$('tpBreakTitle').textContent=(d.key==='m'?'Měření':'Reference')+' · povinná hrana';$('tpBreakStatus').textContent=message||('Vrcholů: '+d.refs.length+'. Klikněte na zobrazený vstupní bod nebo jej vyhledejte. Nabídka má nejvýše 100 výsledků.');$('tpBreakUndo').disabled=!d.refs.length;$('tpBreakApply').disabled=d.refs.length<2;$('tpBreakList').innerHTML=d.refs.map((ref,i)=>{try{const p=trBreakResolve(sources,ref);return '<div class="tr-check-row"><span>'+(i+1)+'. '+esc(p.id)+' · Y '+terrainFormat(p.y)+' · X '+terrainFormat(p.x)+' · '+(d.key==='p'&&tpReferenceShift()?'Z zdroje ':'Z ')+terrainFormat(p.z)+' m</span><button type="button" class="wi io" data-break-vertex="'+i+'" aria-label="Odebrat vrchol">×</button></div>';}catch(e){return '<p class="bad">'+esc(e.message)+'</p>';}}).join('');trDrawRequest();}
 function tpBreakAdd(ref){const d=TPLAN.breakDraft;if(!d)return;if(d.refs.length>=TR_BREAK_LIMIT.vertices){tpBreakUI('Nejvýše 4096 vrcholů hran.');return;}if(d.refs.length&&JSON.stringify(ref)===JSON.stringify(d.refs.at(-1))){tpBreakUI('Tento bod je již posledním vrcholem.');return;}d.future=[];d.refs.push({...ref});tpBreakUI();}
-function tpBreakPick(x,y){const d=TPLAN.breakDraft,hit=tpHit(x,y,d?.key);if(!hit||!d)return;const raw=hit.q.raw||hit.q.p;for(const s of tpBreakDraftSources(d)){let i=s.surface.points.indexOf(raw);if(i<0)i=s.surface.points.findIndex(p=>p.y===raw.y&&p.x===raw.x&&p.z===raw.z);if(i>=0){tpBreakAdd({source:s.id,index:i,id:s.surface.points[i].id});return;}}tpBreakUI('Vyberte bod z bodových vstupů této sekce; výpočetní vrcholy ořezu se nepoužijí.');}
+function tpBreakPick(x,y){
+ const d=TPLAN.breakDraft,hit=tpHit(x,y,d?.key);if(!hit||!d)return;
+ const ref=trPointSourceRef(tpBreakDraftSources(d),hit.q.raw||hit.q.p);
+ if(ref)tpBreakAdd(ref);
+ else tpBreakUI('Vyberte bod z bodových vstupů této sekce; výpočetní vrcholy ořezu se nepoužijí.');
+}
 function tpBreakStep(redo=false){const d=TPLAN.breakDraft;if(!d)return;if(redo){if(d.future.length)d.refs.push(d.future.pop());}else if(d.refs.length)d.future.push(d.refs.pop());tpBreakUI();}
 function tpBreakCancel(redraw=true){clearTimeout(TPLAN.breakSearchTimer);TPLAN.breakDraft=null;$('tpBreakPanel').hidden=true;tpSourcesUI();TPLAN.cache=null;if(redraw){tpGpuRelease();trDrawRequest();}}
 function tpBreakApply(){const d=TPLAN.breakDraft;if(!d||!terrainAdmin()||TERRAIN.busy)return;try{const sources=tpBreakDraftSources(d),closed=$('tpBreakClosed').checked,refs=d.refs.map(r=>({...r}));if(closed&&refs.length>2&&JSON.stringify(refs[0])===JSON.stringify(refs.at(-1)))refs.pop();if(refs.length<(closed?3:2))throw Error(closed?'Uzavřená linie potřebuje alespoň tři body.':'Linie potřebuje alespoň dva body.');for(let i=0;i<refs.length-(closed?0:1);i++){const a=trBreakResolve(sources,refs[i]),b=trBreakResolve(sources,refs[(i+1)%refs.length]);if(a.y===b.y&&a.x===b.x)throw Error('Dva sousední vrcholy mají stejnou půdorysnou polohu.');}const lines=TERRAIN[d.key].model.breaks.lines.slice(),line={name:$('tpBreakName').value.trim().replace(/[\x00-\x1f\x7f]/g,'').slice(0,80)||'Povinná hrana',enabled:true,closed,refs};if(d.index===null){if(lines.length>=TR_BREAK_LIMIT.manual)throw Error('Nejvýše 128 ručně zadaných linií.');lines.push(line);}else lines[d.index]=line;const key=d.key;TERRAIN[key].model=trPrefs({...TERRAIN[key].model,breaks:{enabled:true,lines}});tpBreakCancel(false);trModelRefresh();terrainSave(key);}catch(e){tpBreakUI(e.message);}}
