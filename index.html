@@ -373,7 +373,7 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-bar)
 
 #rvmncontrols .rvseg label{min-width:0;min-height:26px;padding:3px 10px;font-size:12px}#rvmncontrols select{font-size:12px;min-height:28px}#rvmncontrols{margin-bottom:6px}
 #zprt{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
-#sprt{border-width:2px}
+#sprt,#rvprt{border-width:2px}
 #zprt[hidden]{display:none}
 #zprt .rmb{flex-wrap:wrap}
 #zprtReset{margin-right:auto}
@@ -968,6 +968,7 @@ body.gm-tester .tr-tester-mark{position:absolute;inset:0;z-index:1;display:grid;
     <button class="wi" id="rvpdf3" hidden disabled type="button" disabled title="Uloží aktuální natočení, přiblížení a zvětšení odchylek do statického PDF 3D na stránce A3."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></svg>PDF 3D</button>
     <button class="wi rv-dxf" id="rvdxf" type="button" disabled title="Zkratka Shift+S. Uloží výkres do DXF pro CAD: měřené body (křížky jako bodové prvky – blok KRIZEK), odchylky ΔZ a názvy bodů v samostatných vrstvách. Texty mají velikost podle posuvníku velikosti písma. Stejné tlačítko je i v liště plánu."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></svg><span class="rv-dxf-label">DXF<span class="rv-dxf-dim"> 2D</span></span></button>
     <button class="wi rv-dxf rv-dxf-wall" id="rvdxf3" hidden disabled aria-label="DXF 3D JTSK" type="button" disabled title="Uloží DXF 3D JTSK: CAD X = −Y, CAD Y = −X, CAD Z = původní výška. Body a popisky ve skutečné poloze stěny."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></svg><span class="rv-dxf-label">DXF<span class="rv-dxf-dim"> 3D</span></span></button>
+  <button class="wi" id="rvprt" type="button" disabled title="Zkratka Shift+R. Protokol PDF: úvodní strana A4 s údaji zakázky, seznam odchylek bodů od roviny A4 a plán PDF 2D A3 (stejný jako tlačítko PDF). Údaje se doplní v okně před uložením a průběžně se ukládají v prohlížeči odděleně od ZSS pilot."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></svg><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Protokol PDF</button>
 </div></div></div>
 <div class="xzone rz" id="rvrzone" hidden><div class="rzh"><div class="xzl"><b>5. ODCHYLKY</b></div><div class="xzm"><div id="rvfbar" class="fbar"><label title="Filtr bodů: určuje, které body se zobrazí v tabulce a zkopírují do schránky. Podle tolerance: v toleranci (vyhovující), nad tolerancí (nevyhovující, včetně nad 150 %), nad 150 % tolerance a nevyhovující body nad rovinou (k odbourání) nebo pod rovinou (k doplnění). Podle polohy k rovině: nad, pod, v rovině, nejvyšší a nejnižší. Souhrn pod tabulkou platí vždy pro všechny zaškrtnuté body.">Filtr bodů <select id="rvflt"><option value="all">všechny body</option><optgroup label="Podle tolerance"><option value="in">jen v toleranci</option><option value="over">jen nad tolerancí</option><option value="hi">jen nad 150 % tolerance</option><option value="oup">nad tolerancí nad rovinou (k odbourání)</option><option value="odn">nad tolerancí pod rovinou (k doplnění)</option><option value="nol" hidden>jen bez latě</option></optgroup><optgroup label="Podle polohy k rovině"><option value="up">jen nad rovinou (ΔZ &gt; 0)</option><option value="dn">jen pod rovinou (ΔZ &lt; 0)</option><option value="eq">jen v rovině (ΔZ = 0)</option><option value="ext">jen nejvyšší a nejnižší</option></optgroup><optgroup label="Robustní filtrace"><option value="aut">jen odlehlé (automaticky vyřazené)</option></optgroup></select></label><span id="rvfcnt" class="fcnt" aria-live="polite"></span><span id="rvtsw" class="tsw"><input type="search" id="rvtsr" class="tsr" placeholder="Hledat v tabulce…" autocomplete="off" aria-label="Hledat v tabulce" title="Hledá v zobrazené tabulce bez ohledu na diakritiku a velikost písmen, nalezené zvýrazní zeleně. Enter nebo Tab = další nález, Shift+Enter nebo Shift+Tab = předchozí, Esc = smaže hledání. Hledání se uplatní na body, které prošly filtrem."><span id="rvtsc" class="tsc" aria-live="polite"></span></span></div>
 <div id="rvxr" class="xr">
@@ -1007,7 +1008,7 @@ body.gm-tester .tr-tester-mark{position:absolute;inset:0;z-index:1;display:grid;
     </div>
     <span id="rgchk">
     <span id="rgopt"><div class="plan-opt-group"><span class="gk" title="Měřené body v plánu">Body</span><span class="gi"><label title="Značky měřených bodů v plánu. Křížky (výchozí): kladná odchylka (bod nad rovinou) v základním odstínu, záporná (pod rovinou) v tmavším; nad 150 % tolerance silnější čára. Kolečka: kladná odchylka světlá výplň s barevným obrysem, záporná tmavá plná výplň; nad 150 % tolerance tmavý silný obrys."><svg class="gic" viewbox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5-4.5L4.5 4.5M-4.5 4.5L4.5-4.5" stroke="#3b8d56" stroke-width="1.8" fill="none"></path></svg><select id="rgmk" aria-label="Značky bodů"><option value="x" selected>křížky</option><option value="o">kolečka</option></select></label><label title="Zobrazí i body, které se do výpočtu nepočítají: ručně odškrtnuté (šedý prázdný kroužek) a automaticky vyřazené odlehlé (oranžový prázdný kroužek). Výchozí vypnuto."><input type="checkbox" id="rgus"> <svg class="gic" viewbox="-8 -8 16 16" aria-hidden="true"><circle r="5" fill="#fff" stroke="#8a8f98" stroke-width="1.5"></circle></svg>Odškrtnuté a odlehlé</label>
-    <label hidden title="Tři definiční body a přerušovaný trojúhelník roviny. Jsou zahrnuté do Celého výkresu; při vzdálených definičních bodech je lze skrýt."><input type="checkbox" id="rgref" checked> Rovina 1–2–3</label></span>
+    <label hidden title="Tři definiční body a přerušovaný trojúhelník roviny. Jsou zahrnuté do Celého výkresu; při vzdálených definičních bodech je lze skrýt."><input type="checkbox" id="rgref"> Rovina 1–2–3</label></span>
     </div><div class="plan-opt-group"><span class="gk" title="Popisky u bodů">Popisky</span><span class="gi"><label title="Popíše body názvem. Popisky se nepřekrývají: když není místo, popisek se vynechá (přiblížením se zobrazí další). Výchozí vypnuto."><input type="checkbox" id="rgnm"> Názvy</label><label title="Popíše body odchylkou ΔZ se znaménkem ve zvolených jednotkách a přesnosti (Nastavení). Když není místo, popisek se vynechá (přiblížením se zobrazí další). Výchozí zapnuto."><input type="checkbox" id="rgdz" checked> <span id="rgmetric">ΔZ</span></label><label title="Popíše body absolutní výškou Z v metrech na 3 desetinná místa (primárně pod značkou). Když není místo, popisek se vynechá (přiblížením se zobrazí další). V DXF vrstva BODY_vyska. Výchozí vypnuto."><input type="checkbox" id="rgzv"> Výšky</label></span>
     </div><div class="plan-opt-group"><span id="rgSurfaceLabel" class="gk" title="Plocha mezi body: mapa odchylek a vrstevnice z trojúhelníkové sítě (TIN) zaškrtnutých bodů">Plocha</span><span id="rgSurfaceControls" class="gi"><label title="Barevná mapa odchylek mezi body (lineární interpolace v trojúhelnících mezi zaškrtnutými body; odškrtnuté a odlehlé body se nepoužijí, v režimu latě jen body s latí). Třídy podle tolerance (výchozí): zeleně v toleranci (0 až + světlejší, − až 0 tmavší), oranžově nad tolerancí a červeně nad 150 % (k odbourání), světle modře pod tolerancí a tmavě modře pod 150 % (k doplnění). Plynulá škála: modrá – bílá – červená do ±2× tolerance. Legenda ukáže plochu tříd v m² a v %. Výchozí bez mapy."><select id="rgmp" aria-label="Mapa odchylek"><option value="cls">mapa: třídy</option><option value="cont">mapa: plynulá</option><option value="off" selected>bez mapy</option></select></label><label title="Vrstevnice odchylek: čára 0 (rovina, u latě h = 0) tlustě, hranice ±tolerance čárkovaně tmavě červeně, ostatní tence. Popisky ve směru čáry, kde je místo. Výchozí vypnuto."><input type="checkbox" id="rgct"> Vrstevnice</label><label title="Zobrazí trojúhelníkovou síť (TIN), ze které se mapa a vrstevnice počítají. Výchozí vypnuto."><input type="checkbox" id="rgtn"> TIN</label><button id="rgSurfaceToggle" type="button" class="plan-details-toggle" aria-expanded="false" aria-controls="rgSurfaceDetails">Podrobnosti plochy <svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></span>
     </div><div class="plan-opt-group"><span class="gk" title="Části výkresu mimo body">Výkres</span><span class="gi"><label title="Načtěte projekt DXF."><input type="checkbox" id="rgproject" disabled> Projekt DXF</label><label title="Souřadnicová mřížka ve 2D i 3D, také v PDF. Ve 2D popisy souřadnic na okraji zůstanou; ve 3D leží mřížka v referenční rovině a lze ji zobrazit i bez výplně roviny. Výchozí zapnuto."><input type="checkbox" id="rggr" checked> Mřížka</label><label title="Zobrazí / skryje legendu pod plánem (jen značky, které se v plánu vyskytují). Výchozí zapnuto."><input type="checkbox" id="rgll" checked> Legenda</label><label title="Doplní do legendy plánu, PDF a DXF kubatury vůči rovině (odbourání, doplnění, bilance, nad / pod tolerancí) a vyrovnanou výšku. Počítá se vždy z lineárního TIN zaškrtnutých bodů, i bez zapnuté mapy. Jen s legendou. Výchozí zapnuto."><input type="checkbox" id="rgvl" checked> Kubatury</label><label title="Zobrazí / skryje údaje o měření vpravo nahoře (soubor měření a datum) a autora s verzí dole vpravo. Po odškrtnutí zůstane mimo rám jen nadpis vlevo nahoře. Výchozí vypnuto."><input type="checkbox" id="rghd"> Hlavička</label></span>
@@ -1382,7 +1383,7 @@ function gmCameraFit(points,rotate,plot,minSpan,margin,depthMargin){
   depth:Math.max(1,depth*depthMargin)};
 }
 
-const GM_STABLE_MESSAGES={"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 10 souborů v jedné sekci.","en":"Each section accepts up to 10 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vlož do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vlož do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
+const GM_STABLE_MESSAGES={"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"report.flatness.title":{"cs":"Zaměření rovinnosti","en":"Flatness survey"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 10 souborů v jedné sekci.","en":"Each section accepts up to 10 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vlož do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vlož do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
 function gmT(id,params=[]){
     const entry=GM_STABLE_MESSAGES[id];
     if(!entry||!Object.hasOwn(GM_STABLE_MESSAGES,id))throw Error('Unknown translation ID: '+id);
@@ -3992,8 +3993,10 @@ $("gpdf").onclick=savePdf; $("spdf").onclick=savePdf;
 const saveDxf=()=>{ if(!needPiles()) return; gmPlanExport('DXF',()=>download(base()+"_plan.dxf",dxfOf(gOpts()),false)); };
 $("gdxf").onclick=saveDxf; $("sdxf").onclick=saveDxf;
 
-/* ---------- Protokol PDF (A4 úvodní strana, A4 seznam souřadnic, A3 plán beze změny) ---------- */
-const ZPRT_K="geomat.zss.protocol.v1";
+/* ---------- Protokol PDF (A4 úvodní strana, A4 seznam souřadnic, A3 plán beze změny) ----------
+   Společný základ pro moduly ZSS pilot a Rovinnost: okno s údaji, záhlaví, zápatí, úvodní strana a sestavení PDF.
+   Každý modul má vlastní režim (ZPRT_MODES): klíč úložiště, výchozí název, popis v okně, zdroj dat a obsah příloh. */
+const ZPRT_K="geomat.zss.protocol.v1", ZPRT_RV_K="geomat.rv.protocol.v1";
 const ZPRT_F=[["cislo",""],["nazev",""],["akce",""],["ku",""],["zak",""],["obj",""],["stav",""],["datum",""],["zamereno",""],["meril",""],["zprac",""],["pristroj",""],["zpusob","-"],["usek","-"],["sys","S-JTSK"],["vys","-"],["podklady","-"],["sxy","0,02"],["sz","0,03"],["pozn",""]];
 /* logo GK (GK_logo_01.pdf) a modré linky hlavičky a patičky jako vektory; souřadnice PDF strany A4 */
 const ZPRT_VEC={"logo": "q 0.0172550 0 0 0.0172550 48.3313 693.9651 cm 0.343994 0.539063 0.769531 rg 5 w 1 J 1 j 0.343994 0.539063 0.769531 RG 2612 6500.67 m 2412 4274.67 l 3071 4274.67 l 3168 4932.67 l 3529 4274.67 l 4317 4274.67 l 3789 5058.67 l 4574 6629.67 l 3658 6629.67 l 3263 5577.67 l 3400 6500.67 l 2612 6500.67 l S 3263 5577.67 m 3400 6500.67 l 2612 6500.67 l 2412 4274.67 l 3071 4274.67 l 3168 4932.67 l 3529 4274.67 l 4317 4274.67 l 3789 5058.67 l 4574 6629.67 l 3658 6629.67 l f* 1 w 3263 5577.67 m 3400 6500.67 l 2612 6500.67 l 2412 4274.67 l 3071 4274.67 l 3168 4932.67 l 3529 4274.67 l 4317 4274.67 l 3789 5058.67 l 4574 6629.67 l 3658 6629.67 l h S 2345 6629.67 m 2345 6629.67 l 2345 6629.67 l f* 2345 6629.67 m 2345 6629.67 l 2345 6629.67 l h S 1304 4380.67 m 1304 4380.67 l 1304 4380.67 l f* 1304 4380.67 m 1304 4380.67 l 1304 4380.67 l h S 2345 6629.67 m 1164 6629.67 l 1164 6629.67 l 1097 6583.67 l 1033 6534.67 l 971 6482.67 l 911 6427.67 l 855 6369.67 l 800 6309.67 l 749 6246.67 l 701 6181.67 l 656 6114.67 l 614 6045.67 l 575 5974.67 l 540 5901.67 l 508 5827.67 l 479 5751.67 l 454 5674.67 l 433 5596.67 l 416 5517.67 l 402 5437.67 l 392 5357.67 l 385 5276.67 l 383 5195.67 l 384 5114.67 l 389 5033.67 l 398 4953.67 l 410 4873.67 l 426 4794.67 l 446 4715.67 l 470 4638.67 l 497 4562.67 l 527 4487.67 l 562 4413.67 l 599 4341.67 l 640 4272.67 l 640 4272.67 l 1951 4272.67 l 2149 5455.67 l 1484 5455.67 l 1304 4380.67 l 1274 4454.67 l 1247 4529.67 l 1223 4606.67 l 1203 4684.67 l 1188 4762.67 l 1176 4841.67 l 1167 4921.67 l 1163 5001.67 l 1163 5081.67 l 1166 5161.67 l 1174 5241.67 l 1185 5321.67 l 1200 5399.67 l 1219 5477.67 l 1242 5554.67 l 1268 5630.67 l 1298 5704.67 l 1332 5777.67 l 1369 5848.67 l 1410 5917.67 l 1454 5984.67 l 1501 6049.67 l 1551 6111.67 l 1604 6171.67 l 1660 6228.67 l 1719 6283.67 l 1780 6335.67 l 1844 6383.67 l 1910 6428.67 l 1978 6471.67 l 2049 6509.67 l 2120 6545.67 l 2194 6576.67 l 2269 6604.67 l f* 2345 6629.67 m 1164 6629.67 l 1164 6629.67 l 1097 6583.67 l 1033 6534.67 l 971 6482.67 l 911 6427.67 l 855 6369.67 l 800 6309.67 l 749 6246.67 l 701 6181.67 l 656 6114.67 l 614 6045.67 l 575 5974.67 l 540 5901.67 l 508 5827.67 l 479 5751.67 l 454 5674.67 l 433 5596.67 l 416 5517.67 l 402 5437.67 l 392 5357.67 l 385 5276.67 l 383 5195.67 l 384 5114.67 l 389 5033.67 l 398 4953.67 l 410 4873.67 l 426 4794.67 l 446 4715.67 l 470 4638.67 l 497 4562.67 l 527 4487.67 l 562 4413.67 l 599 4341.67 l 640 4272.67 l 640 4272.67 l 1951 4272.67 l 2149 5455.67 l 1484 5455.67 l 1304 4380.67 l 1274 4454.67 l 1247 4529.67 l 1223 4606.67 l 1203 4684.67 l 1188 4762.67 l 1176 4841.67 l 1167 4921.67 l 1163 5001.67 l 1163 5081.67 l 1166 5161.67 l 1174 5241.67 l 1185 5321.67 l 1200 5399.67 l 1219 5477.67 l 1242 5554.67 l 1268 5630.67 l 1298 5704.67 l 1332 5777.67 l 1369 5848.67 l 1410 5917.67 l 1454 5984.67 l 1501 6049.67 l 1551 6111.67 l 1604 6171.67 l 1660 6228.67 l 1719 6283.67 l 1780 6335.67 l 1844 6383.67 l 1910 6428.67 l 1978 6471.67 l 2049 6509.67 l 2120 6545.67 l 2194 6576.67 l 2269 6604.67 l h S 5 w 1164 6629.67 m 1097 6583.67 l 1033 6534.67 l 971 6482.67 l 911 6427.67 l 855 6369.67 l 800 6309.67 l 749 6246.67 l 701 6181.67 l 656 6114.67 l 614 6045.67 l 575 5974.67 l 540 5901.67 l 508 5827.67 l 479 5751.67 l 454 5674.67 l 433 5596.67 l 416 5517.67 l 402 5437.67 l 392 5357.67 l 385 5276.67 l 383 5195.67 l 384 5114.67 l 389 5033.67 l 398 4953.67 l 410 4873.67 l 426 4794.67 l 446 4715.67 l 470 4638.67 l 497 4562.67 l 527 4487.67 l 562 4413.67 l 599 4341.67 l 640 4272.67 l S 2345 6629.67 m 2269 6604.67 l 2194 6576.67 l 2120 6545.67 l 2049 6509.67 l 1978 6471.67 l 1910 6428.67 l 1844 6383.67 l 1780 6335.67 l 1719 6283.67 l 1660 6228.67 l 1604 6171.67 l 1551 6111.67 l 1501 6049.67 l 1454 5984.67 l 1410 5917.67 l 1369 5848.67 l 1332 5777.67 l 1298 5704.67 l 1268 5630.67 l 1242 5554.67 l 1219 5477.67 l 1200 5399.67 l 1185 5321.67 l 1174 5241.67 l 1166 5161.67 l 1163 5081.67 l 1163 5001.67 l 1167 4921.67 l 1176 4841.67 l 1188 4762.67 l 1203 4684.67 l 1223 4606.67 l 1247 4529.67 l 1274 4454.67 l 1304 4380.67 l S 1951 4272.67 m 2149 5455.67 l S 1304 4380.67 m 1484 5455.67 l S 1951 4272.67 m 640 4272.67 l S 1484 5455.67 m 2149 5455.67 l S 1164 6629.67 m 2345 6629.67 l S Q", "head": "14.71 768.05 m 54.6 768.05 l 53.81 769.69 l 53.19 771.21 l 52.67 772.67 l 52.21 774.14 l 51.76 775.9 l 51.45 777.47 l 51.24 778.85 l 51.07 780.37 l 50.96 781.97 l 50.94 783.57 l 50.98 785.11 l 51.13 786.91 l 51.33 788.48 l 51.57 789.86 l 51.89 791.38 l 52.3 792.92 l 52.86 794.64 l 53.43 796.11 l 54.04 797.53 l 54.75 798.98 l 55.42 800.21 l 56.33 801.7 l 57.21 803.01 l 58.15 804.27 l 59.19 805.54 l 60.14 806.58 l 61.17 807.65 l 61.79 808.23 l 14.71 808.23 l S 133.99 768.05 m 127.79 768.05 l 118.68 781.57 l 132 808.23 l 539.68 808.23 l 547.6 791.45 l 536.33 768.05 l 346.6 768.05 l S", "sep": "417.02 800.17 m 417.02 776.36 l S", "foot": "570.45 52.48 m 36.67 52.48 l 19.28 31.99 l 31.06 17.88 l S"};
@@ -4008,11 +4011,22 @@ function zprtDateOption(key,date){
   option.value=date.toLocaleDateString("cs-CZ");
   list.appendChild(option);
 }
-function zprtTitle(value){
-  const {cs,en}=GM_STABLE_MESSAGES["report.piles.title"];
-  return typeof value!=="string"||value===cs||value===en?gmT("report.piles.title"):value;
+let zprtMode="zss";
+const ZPRT_NOTE_ZSS=(()=>{ const n=document.querySelector("#zprt .zprt-note"); return n?(globalThis.GeoMATLanguage?.original(n)??n.textContent):""; })();
+const ZPRT_MODES={
+  zss:{key:ZPRT_K,title:"report.piles.title",note:ZPRT_NOTE_ZSS,kind:"ZSS_pilot",doc:[" – ZSS pilot"," – ABS piles"],
+    can:()=>needPiles(),files:()=>measFiles,render:()=>{ if(!$("gm").hidden) gRender(); },
+    pdf:v=>zprtPdf(v),done:name=>flash(gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]))},
+  rv:{key:ZPRT_RV_K,title:"report.flatness.title",note:"Protokol tvoří úvodní strana A4 s těmito údaji, seznam odchylek bodů od roviny A4 (všechny použité body bez ohledu na filtr tabulky; sloupce podle typu roviny, při latích i h) a plán PDF 2D A3 (stejný jako tlačítko PDF: aktuální typ roviny, filtr, mapa, vrstevnice a legenda podle voleb plánu). Všechna pole kromě poznámky jsou povinná. Údaje se ukládají v prohlížeči odděleně od protokolu ZSS pilot, takže se zavřením okna neztratí. Vyplněná Akce nahradí ve druhém řádku nadpisu názvy souborů také v plánu, PDF a DXF Rovinnosti.",kind:"rovinnost",doc:[" – rovinnost"," – flatness"],
+    can:()=>rgExportCan(),files:()=>RV.files||[],render:()=>{ if(!$("rgm").hidden) rgRender(); },
+    pdf:v=>rvPrtPdf(v),done:name=>{ $("rvstf").textContent=gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]); }}};
+const zprtM=()=>ZPRT_MODES[zprtMode];
+function zprtTitle(value,mode){
+  const id=ZPRT_MODES[mode||zprtMode].title, {cs,en}=GM_STABLE_MESSAGES[id];
+  return typeof value!=="string"||value===cs||value===en?gmT(id):value;
 }
-function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(ZPRT_K)||"{}")||{}; }catch(e){ o={}; }
+function zprtNoteTx(){ const n=document.querySelector("#zprt .zprt-note"); if(n) n.textContent=gmPreviewText(zprtM().note); }
+function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().key)||"{}")||{}; }catch(e){ o={}; }
   ZPRT_F.forEach(([k,d])=>{
     const field=$("zp_"+k);
     field.value=k==="nazev"?zprtTitle(o[k]):typeof o[k]==="string"?((k==="sxy"||k==="sz")?o[k].replace(/\s*m$/i,""):o[k]):d;   // směr. odchylka: jednotka [m] je v popisu pole
@@ -4020,12 +4034,12 @@ function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(ZPRT_K)||"
   });
   const today=new Date();
   zprtDateOption("datum",today);
-  zprtDateOption("zamereno",new Date(measFiles.at(-1)?.lastModified));
+  zprtDateOption("zamereno",new Date(zprtM().files().at(-1)?.lastModified));
   if(typeof o.datum!=="string") $("zp_datum").value=today.toLocaleDateString("cs-CZ"); }
 function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=$("zp_"+k).value.trim(); }); return o; }
-function zprtSave(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=$("zp_"+k).value; }); writeStorage(ZPRT_K,JSON.stringify(o)); }
+function zprtSave(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=$("zp_"+k).value; }); writeStorage(zprtM().key,JSON.stringify(o)); }
 let zprtOpener=null;
-function zprtOpen(){ if(!needPiles()) return; zprtOpener=document.activeElement; zprtLoad(); $("zprt").hidden=false; $("zp_cislo").focus({preventScroll:true}); }
+function zprtOpen(mode){ zprtMode=mode==="rv"?"rv":"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; zprtNoteTx(); zprtLoad(); $("zprt").hidden=false; $("zp_cislo").focus({preventScroll:true}); }
 function zprtClose(){ $("zprt").hidden=true; if(zprtOpener&&zprtOpener.focus) zprtOpener.focus({preventScroll:true}); }
 /* kreslení: souřadnice y shora (jako ve scénách plánu), převod na PDF uvnitř */
 function zprtCanvas(W,H){
@@ -4059,7 +4073,8 @@ function zprtFooter(cv,page,total){
 }
 /* texty protokolu podle jazyka aplikace (záhlaví a zápatí firmy zůstávají vždy česky) */
 const zprtEn=()=>globalThis.GeoMATLanguage?.get?.()==="en", zprtL=(cs,en)=>zprtEn()?en:cs;
-function zprtCover(v,total){
+function zprtCover(v,total,att){
+  att=att||[["Seznam souřadnic středů pilot","List of pile centre coordinates"],["Plán skutečného stavu pilot","As-built plan of piles"]];
   const cv=zprtCanvas(595.28,841.89), L=27.3, R=cv.W-27.3, d=s=>s||"-";
   zprtHeader(cv);
   cv.text(cv.W/2,122,zprtL("PROTOKOL","REPORT")+(v.cislo?"  "+v.cislo:""),26,{b:true,a:"c"});
@@ -4086,9 +4101,8 @@ function zprtCover(v,total){
   cv.rect(L,top,R-L,y-top,"#000000",1.2);
   y+=30;
   cv.text(L,y,zprtL("Přílohy","Attachments"),11,{b:true});
-  cv.text(L+10,y+16,"1.  "+zprtL("Seznam souřadnic středů pilot","List of pile centre coordinates"),9.5);
-  cv.text(L+10,y+30,"2.  "+zprtL("Plán skutečného stavu pilot","As-built plan of piles"),9.5);
-  y+=50;
+  att.forEach(([cs,en],k)=>cv.text(L+10,y+16+k*14,(k+1)+".  "+zprtL(cs,en),9.5));
+  y+=22+att.length*14;
   if(v.pozn){ cv.text(L,y+4,zprtL("Poznámka","Note"),11,{b:true}); let yy=y+20;
     for(const par of v.pozn.split(/\r?\n/)) for(const ln of zprtWrap(cv,par,9.5,false,R-L-10)){ if(yy>640) break; cv.text(L+10,yy,ln,9.5); yy+=12.5; } }
   cv.text(L,660,zprtL("Protokol má náležitosti technické zprávy.","This report meets the requirements of a technical report."),8);
@@ -4127,7 +4141,7 @@ function zprtTable(v,chunk,page,total,first,last,lim){
   zprtFooter(cv,page,total);
   return cv;
 }
-function zprtChunks(list){ const per=44, lastMax=40, out=[]; let i=0;
+function zprtChunks(list,per=44,lastMax=40){ const out=[]; let i=0;
   while(list.length-i>per){ out.push(list.slice(i,i+per)); i+=per; }
   const rest=list.slice(i); if(rest.length>lastMax){ out.push(rest.slice(0,lastMax)); out.push(rest.slice(lastMax)); } else out.push(rest);
   return out; }
@@ -4135,7 +4149,11 @@ function zprtPdf(v){
   const lim=gmDecimal($("lim").value)||0, chunks=zprtChunks(piles.filter(p=>!p.dupRef)), total=2+chunks.length;
   const pages=[zprtCover(v,total)];
   chunks.forEach((ch,k)=>pages.push(zprtTable(v,ch,2+k,total,k===0,k===chunks.length-1,lim)));
-  const plan=pdfA3({...gOpts(),head2:v.akce||""}), pp=plan.page||plan;
+  return zprtDoc(v,pages,pdfA3({...gOpts(),head2:v.akce||""}),ZPRT_MODES.zss.doc);
+}
+/* společné sestavení PDF protokolu: strany A4 (zprtCanvas) + plán A3 (scéna pro pdfContent); doc = dovětek titulku dokumentu [cs, en] */
+function zprtDoc(v,pages,plan,doc){
+  const pp=plan.page||plan;
   const enc="/Encoding << /Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences [15 /lessequal /greaterequal 1 /ccaron /Ccaron /ecaron /Ecaron /rcaron /Rcaron /uring /Uring /tcaron /Tcaron /dcaron /Dcaron /ncaron /Ncaron] >>";
   const objs=["","<< /Type /Catalog /Pages 2 0 R >>","",
     `<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /FirstChar 0 /LastChar 255 /Widths [${PDF_W.join(" ")}] ${enc} >>`,
@@ -4154,17 +4172,17 @@ function zprtPdf(v){
   let pdf="%PDF-1.4\n"; const off=[];
   for(let i=1;i<objs.length;i++){ off[i]=pdf.length; pdf+=`${i} 0 obj\n${objs[i]}\nendobj\n`; }
   const xr=pdf.length;
-  pdf+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length} /Root 1 0 R /Info << /Title (${pdfEsc(pdfTxt(zprtL("Protokol ","Report ")+(v.cislo||"")+zprtL(" – ZSS pilot"," – ABS piles")))}) /Producer (GeoMAT ${APP_VERSION}) >> >>\nstartxref\n${xr}\n%%EOF`;
+  pdf+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length} /Root 1 0 R /Info << /Title (${pdfEsc(pdfTxt(zprtL("Protokol ","Report ")+(v.cislo||"")+zprtL(doc[0],doc[1])))}) /Producer (GeoMAT ${APP_VERSION}) >> >>\nstartxref\n${xr}\n%%EOF`;
   return pdf;
 }
 // název souboru: Protokol_RRRR_ČČČ_-_ZSS_pilot_-_Akce.pdf; z čísla protokolu „27/2026“ je rok za lomítkem a číslo před ním (1–2 číslice doplněné nulami na 3: 027)
 const zprtSafe=t=>String(t||"").normalize("NFC").replace(/[\\/:*?"<>|\u0000-\u001f]+/g," ").trim().replace(/\s+/g,"_").replace(/^[_.]+|[_.]+$/g,"");
-const zprtFile=v=>{ const raw=String(v.cislo||"").trim(), i=raw.indexOf("/");
+const zprtFile=(v,kind)=>{ const raw=String(v.cislo||"").trim(), i=raw.indexOf("/");
   let num=i<0?raw:raw.slice(0,i).trim(), year=i<0?"":raw.slice(i+1).trim();
   if(/^\d{1,2}$/.test(num)) num=num.padStart(3,"0");
   const head=[year,num].map(zprtSafe).filter(Boolean).join("_"), akce=zprtSafe(v.akce);
-  return "Protokol"+(head?"_"+head:"")+"_-_ZSS_pilot"+(akce?"_-_"+akce:"")+".pdf"; };
-$("sprt").onclick=zprtOpen;
+  return "Protokol"+(head?"_"+head:"")+"_-_"+(kind||ZPRT_MODES.zss.kind)+(akce?"_-_"+akce:"")+".pdf"; };
+$("sprt").onclick=()=>zprtOpen("zss");
 $("zprtReset").onclick=()=>{
   ZPRT_F.forEach(([key])=>{
     const field=$("zp_"+key);
@@ -4172,7 +4190,7 @@ $("zprtReset").onclick=()=>{
     field.removeAttribute("aria-invalid");
   });
   zprtSave();
-  if(!$("gm").hidden) gRender();
+  zprtM().render();
   $("zp_cislo").focus({preventScroll:true});
 };
 $("zprtCancel").onclick=zprtClose; $("zprtX").onclick=zprtClose;
@@ -4184,7 +4202,7 @@ $("zprt").addEventListener("keydown",e=>{
 $("zprtForm").addEventListener("input",e=>{
   if(e.target.value?.trim())e.target.removeAttribute("aria-invalid");
   zprtSave();
-  if(e.target.id==="zp_akce"&&!$("gm").hidden) gRender();   // druhý řádek nadpisu plánu se řídí polem Akce
+  if(e.target.id==="zp_akce") zprtM().render();   // druhý řádek nadpisu plánu se řídí polem Akce
 });
 function zprtValidate(values){
   let firstMissing=null;
@@ -4202,14 +4220,15 @@ function zprtValidate(values){
 { const zprtCancelTx=()=>{ $("zprtCancel").textContent=window.GeoMATLanguage?.get()==="en"?"Cancel":"Zrušit"; };
   window.GeoMATLanguage?.onChange(()=>{
     zprtCancelTx();
+    if(!$("zprt").hidden) zprtNoteTx();
     const field=$("zp_nazev");
     field.value=zprtTitle(field.value);
   }); zprtCancelTx(); }
-$("zprtForm").addEventListener("submit",e=>{ e.preventDefault(); if(!needPiles()) return;
+$("zprtForm").addEventListener("submit",e=>{ e.preventDefault(); const M=zprtM(); if(!M.can()) return;
   const v=zprtValues();
   if(!zprtValidate(v))return;
   zprtSave();
-  gmPlanExport('PDF',()=>{ download(zprtFile(v),zprtPdf(v),false,"application/pdf"); zprtClose(); flash(gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[zprtFile(v)])); }); });
+  gmPlanExport('PDF',()=>{ const name=zprtFile(v,M.kind); download(name,M.pdf(v),false,"application/pdf"); zprtClose(); M.done(name); }); });
 window.addEventListener("resize",gRequestRender);
 document.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented||document.body.classList.contains("mrov")||$("gm").hidden)return;
   if(["rm","im","im2","cadImport","zprt"].some(id=>!$(id).hidden))return;
@@ -4306,7 +4325,7 @@ document.addEventListener("keydown",e=>{
   if(e.code==="KeyS"&&e.shiftKey){ e.preventDefault(); if(piles.length) $("gdxf").onclick(); }
   if(e.code==="KeyC"&&e.shiftKey){ e.preventDefault(); if(piles.length) $("scsv").click(); }   // CSV (tlačítko je zašedlé, dokud není co uložit)
   if(e.code==="KeyT"&&e.shiftKey){ e.preventDefault(); if(piles.length) $("sstx").click(); }
-  if(e.code==="KeyR"&&e.shiftKey){ e.preventDefault(); if(piles.length) zprtOpen(); }   // Protokol PDF (okno s údaji)
+  if(e.code==="KeyR"&&e.shiftKey){ e.preventDefault(); if(piles.length) zprtOpen("zss"); }   // Protokol PDF (okno s údaji)
 });
 // hledání v popisu aplikace: bez diakritiky a bez ohledu na velikost písmen, nalezené se zvýrazní zeleně (<mark class="hl">)
 const imFold=t=>{ let o=""; for(let i=0;i<t.length;i++){ const c=t[i]; o+=((c.normalize("NFD")[0]||c).toLowerCase()[0]||c); } return o; };   // 1 znak = 1 znak, aby seděly pozice v původním textu
@@ -6098,7 +6117,8 @@ const rgFs=(W,H)=>Math.min(1.5,Math.max(0.75,Math.min(W,H)/600))*rgPct()/100;   
 // nadpis vlevo nahoře jako v ZSS pilot, jen 2 řádky: „Zaměření rovinnosti:“ a název souboru měření bez přípony; velikost nezávisí na posuvníku Písmo
 const RG_HEAD1="Zaměření rovinnosti:";
 const rgHs=(W,H)=>Math.min(1.25,Math.min(1.5,Math.max(0.75,Math.min(W,H)/600)));
-const rgHead2=()=>listName((RV.files||[]).map(f=>({n:noExt(f.n)})),70);
+function rvAkce(){ try{ const o=JSON.parse(localStorage.getItem("geomat.rv.protocol.v1")||"{}"); return typeof o?.akce==="string"?o.akce.trim():""; }catch(e){ return ""; } }
+const rgHead2=()=>rvAkce()||listName((RV.files||[]).map(f=>({n:noExt(f.n)})),70);   // druhý řádek: pole Akce z Protokolu PDF Rovinnosti, jinak názvy souborů měření
 function rgWallNote(){ if(rvLM()) return gmPreviewText("Lať ⟦0⟧ m⟦1⟧: h [⟦2⟧], + hrb před lať, − prohlubeň za lať; tolerance latě ⟦3⟧.", [fmtCz(RV.set.L.toFixed(2)), RV.set.lv==="dn"?gmPreviewText(" (jen prohlubeň)"):"", RV.set.u, rvTolTxtE()]); return gmPreviewText("d [⟦0⟧]: + před rovinou, − za rovinou; ⟦1⟧tolerance ⟦2⟧.", [RV.set.u, RV.set.pn===false?"":gmPreviewText("kladná světlejší, záporná tmavší; "), rvTolTxt()]); }
 function rgWrapText(text,width,charWidth){ const lines=[]; let line=""; for(const word of text.split(" ")){ if(line&&(line+" "+word).length*charWidth>width){ lines.push(line); line=word; } else line+=(line?" ":"")+word; } if(line) lines.push(line); return lines; }
 // Shared legend layout for floor and wall: measure complete text and wrap oversized items.
@@ -6647,6 +6667,7 @@ function rvPlanSync(){
   $("rvgbs").disabled=planButton.disabled=!has;
   if(has&&wasOff) nudge(planButton); else if(!has) planButton.classList.remove("shine");
   const canExport=rgExportCan();
+  { const b=$("rvprt"); if(b.dataset.t0===undefined) b.dataset.t0=globalThis.GeoMATLanguage?.original(b,'title')??b.title; b.disabled=!canExport; b.title=gmPreviewText(canExport?b.dataset.t0:"V aktuálním výběru není žádný zobrazený bod pro export. Změňte filtr nebo zapněte odškrtnuté a odlehlé body."); }
   ["rvpdf","rvdxf","rvdxf3","rgpdf","rgdxf","rgdxf3"].forEach(id=>{ const b=$(id); if(b.dataset.t0===undefined) b.dataset.t0=globalThis.GeoMATLanguage?.original(b,'title')??b.title; b.disabled=!canExport; b.title=!canExport?gmPreviewText("V aktuálním výběru není žádný zobrazený bod pro export. Změňte filtr nebo zapněte odškrtnuté a odlehlé body."):unavailable?(id.endsWith("pdf")?gmPreviewText("Shift+P: celý pohled na stěnu na PDF A3, včetně zvolené mapy, vrstevnic a legendy."):id.endsWith("dxf3")?gmPreviewText("DXF 3D JTSK: skutečná poloha stěny. CAD X = −Y, CAD Y = −X, CAD Z = původní výška. Oba definiční body jsou v záhlaví."):gmPreviewText("Shift+S: DXF 2D – pohled na stěnu. CAD X = staničení s, CAD Y = výška Z, CAD Z = 0. Oba definiční body jsou v záhlaví.")):id.endsWith("dxf3")?gmPreviewText("DXF 3D JTSK: skutečná poloha bodů a plochy. CAD X = −Y, CAD Y = −X, CAD Z = skutečná výška. Nezávisí na natočení ani zvětšení ΔZ."):gmPreviewText(b.dataset.t0); });
   if(RV.plane==="o"){
     const used=!!RV.defOk&&(RV.view||[]).some(r=>r.use);
@@ -6788,6 +6809,70 @@ function rgDxfOf(mode="local"){   // rozvržení stejné jako v grafu (stejné p
   h(0,"SECTION"); h(2,"ENTITIES");
   return projectCADAttachDXF(hd.join("\n")+"\n"+e.join("\n")+"\n0\nENDSEC\n0\nEOF\n",'rv',spatial);
 }
+/* Protokol PDF Rovinnosti (krok 2: úvodní strana A4 + plán A3 stejný jako tlačítko PDF; společný základ s protokolem ZSS pilot) */
+/* krok 3: seznam odchylek bodů A4 – všechny použité body (zaškrtnuté, bez automaticky vyřazených odlehlých) v původním pořadí, nezávisle na filtru tabulky */
+function rvPrtCols(){
+  const lat=rvLM(), u=RV.set.u==="m"?"m":"mm", P=RV.plane, num=v=>zprtNum(Number(v)), st=v=>zprtNum(Math.abs(v)<0.0005?0:v);
+  const ev=r=>lat&&!r.lat?["bez latě","no straightedge",0]:rvHiE(r)?["nad 150 % tol.","over 150 % tol.",2]:rvOvE(r)?["nad tolerancí","over tolerance",1]:["v toleranci","within tolerance",0];
+  const c=[{t:["Bod","Point"],w:70,a:"l",v:r=>r.id,b:true},{t:["Y [m]","Y [m]"],w:78,a:"r",v:r=>num(r.y)},{t:["X [m]","X [m]"],w:82,a:"r",v:r=>num(r.x)},{t:["Z [m]","Z [m]"],w:58,a:"r",v:r=>num(r.z)}];
+  if(P==="v") c.push({t:["s [m]","s [m]"],w:58,a:"r",v:r=>st(r.s)});
+  if(P==="o") c.push({t:["x' [m]","x' [m]"],w:56,a:"r",v:r=>st(r.xp)},{t:["y' [m]","y' [m]"],w:56,a:"r",v:r=>st(r.yp)});
+  c.push({t:[(P==="h"?"dZ":"d")+" ["+u+"]",(P==="h"?"dZ":"d")+" ["+u+"]"],w:56,a:"r",v:r=>rvDS(r.d),red:!lat});
+  if(lat) c.push({t:["h ["+u+"]","h ["+u+"]"],w:56,a:"r",v:r=>r.lat?rvDS(r.h):"–",red:true});
+  c.push({t:["Vyhodnocení","Evaluation"],w:84,a:"l",v:r=>{ const e=ev(r); return zprtL(e[0],e[1]); },red:true,ev});
+  const sum=c.reduce((a,x)=>a+x.w,0), k=Math.min(1,540/sum); c.forEach(x=>x.w*=k);
+  return {cols:c,ev,size:c.length>7?8:9};
+}
+function rvPrtHead(){   // jeden řádek pod nadpisem: rovina a tolerance
+  const P=RV.plane, lat=rvLM(), pid=(a,i)=>a[i]&&a[i].pid?" ("+a[i].pid+")":"";
+  const pl=P==="h"?zprtL("Vodorovná rovina Z = ","Horizontal plane Z = ")+rvPtFmt(rvDefParse("z",RV.def.h[0].z).v)+" m"
+    :P==="v"?zprtL("Svislá rovina daná body 1","Vertical plane defined by points 1")+pid(RV.def.v,0)+zprtL(" a 2"," and 2")+pid(RV.def.v,1)
+    :zprtL("Obecná rovina daná body 1","General plane defined by points 1")+pid(RV.def.o,0)+", 2"+pid(RV.def.o,1)+zprtL(" a 3"," and 3")+pid(RV.def.o,2);
+  const tol=lat?zprtL("rovinnost latí ","straightedge ")+fmtCz(RV.set.L.toFixed(2))+" m"+(RV.set.lv==="dn"?zprtL(" (jen prohlubeň)"," (dips only)"):"")+zprtL(", tolerance latě ±",", straightedge tolerance ±")+rvTolTxtE():zprtL("tolerance ±","tolerance ±")+rvTolTxtE();
+  return pl+" · "+tol;
+}
+function rvPrtNotes(n){
+  const P=RV.plane, lat=rvLM(), u=RV.set.u==="m"?"m":"mm", t=rvTolTxtE(), en=zprtEn(), out=[];
+  out.push(en?"Number of points: "+n+". The list contains all points used in the evaluation (checked, excluding automatically rejected outliers) in their original order, regardless of the table filter.":"Počet bodů: "+n+". Seznam obsahuje všechny body použité ve vyhodnocení (zaškrtnuté, bez automaticky vyřazených odlehlých) v původním pořadí, bez ohledu na filtr tabulky.");
+  if(P==="h") out.push(en?"dZ – vertical deviation of the point from the horizontal plane (Z − plane height); + above the plane, − below.":"dZ – svislá odchylka bodu od vodorovné roviny (Z − výška roviny); + nad rovinou, − pod rovinou.");
+  if(P==="v") out.push(en?"s – chainage from point 1 towards point 2; d – perpendicular deviation from the vertical plane; + to the right of 1 → 2 seen from above (in front of the plane), − to the left (behind).":"s – staničení od bodu 1 ve směru k bodu 2; d – kolmá odchylka od svislé roviny; + vpravo od směru 1 → 2 při pohledu shora (před rovinou), − vlevo (za rovinou).");
+  if(P==="o") out.push(en?"x' – local axis from point 1 towards point 2, y' – perpendicular to x' within the plane; d – perpendicular deviation from the plane; + in the direction of the normal, − opposite.":"x' – místní osa od bodu 1 k bodu 2, y' – kolmo k x' v rovině; d – kolmá odchylka od roviny; + ve směru normály, − opačně.");
+  if(lat) out.push(en?"h – deviation from a straightedge of "+fmtCz(RV.set.L.toFixed(2))+" m (governing position of the straightedge at the point); + bump, − dip; – = no straightedge position found. The evaluation uses h and the straightedge tolerance ±"+t+"; d is informative.":"h – odchylka od latě "+fmtCz(RV.set.L.toFixed(2))+" m (rozhodující poloha latě u bodu); + hrb, − prohlubeň; – = poloha latě nenalezena. Vyhodnocení podle h a tolerance latě ±"+t+"; d je informativní.");
+  out.push(en?"Evaluation against the tolerance ±"+t+" (limit value included); over tolerance in red, over 150 % shown as „over 150 % tol.“. Deviations in "+u+".":"Vyhodnocení vůči toleranci ±"+t+" (mezní hodnota vyhovuje); nad tolerancí červeně, nad 150 % jako „nad 150 % tol.“. Odchylky v "+u+".");
+  return out.map(x=>x.replace(/→/g,"->"));
+}
+function rvPrtTable(chunk,page,total,last,C,notes){
+  const cv=zprtCanvas(595.28,841.89), TW=C.cols.reduce((a,c)=>a+c.w,0), L=(cv.W-TW)/2, fs=C.size, rh=13.6;
+  zprtHeader(cv);
+  cv.text(L,108,zprtL("Seznam odchylek bodů od roviny","List of point deviations from the plane"),14,{b:true});
+  const hd=rvPrtHead().replace(/→/g,"->"); cv.text(L,124,zprtWrap(cv,hd,8.5,false,TW)[0],8.5,{c:ZP_GRAY});
+  const fit=(t,w,size,b)=>{ t=String(t); if(cv.width(t,size,b)<=w) return t; while(t.length>1&&cv.width(t+"…",size,b)>w) t=t.slice(0,-1); return t+"…"; };
+  let y=136;
+  cv.fill(L,y,TW,18,ZP_HEAD);
+  let x=L; C.cols.forEach(c=>{ const t=fit(zprtL(c.t[0],c.t[1]),c.w-10,fs,true); c.a==="l"?cv.text(x+5,y+12.3,t,fs,{b:true}):cv.text(x+c.w-6,y+12.3,t,fs,{b:true,a:"r"}); x+=c.w; });
+  cv.line(L,y,L+TW,y,"#000000",0.9); cv.line(L,y+18,L+TW,y+18,"#000000",0.9); y+=18;
+  chunk.forEach((r,k)=>{ const yy=y+k*rh, lvl=C.ev(r)[2];
+    if(k%2===1) cv.fill(L,yy,TW,rh,ZP_ZEB);
+    let xx=L; C.cols.forEach(c=>{ const red=c.red&&lvl>0, o={b:!!c.b||red,c:red?ZP_RED:"#000000"}, t=fit(c.v(r),c.w-10,fs,o.b);
+      c.a==="l"?cv.text(xx+5,yy+rh-4.1,t,fs,o):cv.text(xx+c.w-6,yy+rh-4.1,t,fs,{...o,a:"r"}); xx+=c.w; });
+    cv.line(L,yy+rh,L+TW,yy+rh,ZP_GRID,0.4); });
+  const yb=y+chunk.length*rh; cv.line(L,yb,L+TW,yb,"#000000",0.9);
+  if(last){ let yy=yb+16; notes.forEach(t=>{ for(const ln of zprtWrap(cv,t,8,false,TW)){ cv.text(L,yy,ln,8,{c:ZP_GRAY}); yy+=10.5; } }); }
+  zprtFooter(cv,page,total);
+  return cv;
+}
+function rvPrtPdf(v){
+  const list=(RV.rows||[]).filter(r=>r.use), C=rvPrtCols(), notes=rvPrtNotes(list.length);
+  const probe=zprtCanvas(595.28,841.89), TW=C.cols.reduce((a,c)=>a+c.w,0), nl=notes.reduce((a,t)=>a+zprtWrap(probe,t,8,false,TW).length,0);
+  const per=44, lastMax=Math.max(1,Math.min(per,Math.floor((764-154-16-nl*10.5)/13.6)));   // poslední strana: místo pro vysvětlivky nad zápatím
+  const chunks=list.length?zprtChunks(list,per,lastMax):[[]], total=2+chunks.length;
+  const att=[["Seznam odchylek bodů od roviny","List of point deviations from the plane"],["Plán odchylek od roviny","Plane deviation plan"]];
+  const pages=[zprtCover(v,total,att)];
+  chunks.forEach((ch,k)=>pages.push(rvPrtTable(ch,2+k,total,k===chunks.length-1,C,notes)));
+  return zprtDoc(v,pages,rgPdfA3(),ZPRT_MODES.rv.doc);
+}
+$("rvprt").onclick=()=>zprtOpen("rv");
+globalThis.GeoMATLanguage?.onChange(()=>{ const b=$("rvprt"); if(b.dataset.t0!==undefined) b.title=gmPreviewText(!rgExportCan()?"V aktuálním výběru není žádný zobrazený bod pro export. Změňte filtr nebo zapněte odškrtnuté a odlehlé body.":b.dataset.t0); });   // popis tlačítka po přepnutí jazyka
 const rvSavePdf=()=>{ if(!rgExportCan()) return; gmPlanExport('PDF',()=>download(rvBase()+(RV.plane==='o'?"_rovinnost_pohled_xp_yp_A3.pdf":RV.plane==="v"?"_rovinnost_pohled_A3.pdf":"_rovinnost_plan_A3.pdf"),pdfOf([rgPdfA3()]),false,"application/pdf"));
   $("rvstf").textContent=RV.plane==='o'?gmPreviewText("Uloženo PDF 2D: místní pohled na obecnou rovinu A3."):RV.plane==="v"?gmPreviewText("Uloženo PDF: pohled na stěnu A3."):gmPreviewText("Uloženo PDF: plán bodů A3."); };
 // Capture the same GPU frame immediately after drawing; labels remain vector text.
@@ -6910,7 +6995,7 @@ document.addEventListener("keydown",e=>{
   rgSelect(keys[n],"key"); });
 // Reset modulu: zavře plán a vrátí jeho volby a poměr rozdělení na výchozí hodnoty
 function rgReset(){ rg3Release();RGTIN=RGMAP=RGCT=RGVT=RGVOL=null;RGTIN_SRC=RGVT_SRC=null;RGTIN_OPT=RGVT_OPT=""; $("rg3plane").checked=true;rg3Factor=1;RG3.surface=null;RG3.scene=null;RG3.visibility=null; RG3.yaw=RG3.pitch=RG3.roll=0;RG3.view=null;RG3.model=null; rgPend=false; rgSetView(0); RGV=null; RGZ=null; RGSIG=""; setRsp(50);
-  $("rgref").checked=true;$("rgnm").checked=false; $("rgzv").checked=false; $("rgdz").checked=true; $("rgus").checked=false; $("rgll").checked=true; $("rggr").checked=true; $("rghd").checked=false; $("rgfs").value=100; $("rgmk").value="x"; $("rgmp").value="off"; $("rgct").checked=false; $("rgcs").value="a"; $("rgop").value="60"; $("rgsm").value="1"; $("rgtn").checked=false; $("rgvl").checked=true; $("rgem").value=""; rgOptSync();
+  $("rgref").checked=false;$("rgnm").checked=false; $("rgzv").checked=false; $("rgdz").checked=true; $("rgus").checked=false; $("rgll").checked=true; $("rggr").checked=true; $("rghd").checked=false; $("rgfs").value=100; $("rgmk").value="x"; $("rgmp").value="off"; $("rgct").checked=false; $("rgcs").value="a"; $("rgop").value="60"; $("rgsm").value="1"; $("rgtn").checked=false; $("rgvl").checked=true; $("rgem").value=""; rgOptSync();
   try{ [RGK,RSK,ROK].forEach(k=>removeStorage(k)); }catch(e){} }
 
 /* ---------- Rovinnost: „i“ (popis modulu) a Reset v hlavičce – stejné chování jako v ZSS pilot ---------- */
@@ -6935,7 +7020,7 @@ $('im2').addEventListener('click',e=>{if(e.target===$('im2'))gmInfoClose();});
 // zkratka I jen v modulu Rovinnost (v ZSS pilot má vlastní)
 document.addEventListener("keydown",e=>{
   if(!document.body.classList.contains("mrov")) return;
-  if(e.ctrlKey||e.altKey||e.metaKey||e.repeat||!$("rm").hidden) return;
+  if(e.ctrlKey||e.altKey||e.metaKey||e.repeat||!$("rm").hidden||!$("zprt").hidden) return;
   const t=e.target, tag=t&&t.tagName; if((tag==="INPUT"&&!/^(checkbox|radio|range|button|file)$/.test(t.type))||tag==="TEXTAREA"||tag==="SELECT"||(t&&t.isContentEditable)) return;
   if(e.code==="KeyI"&&!e.shiftKey){ e.preventDefault(); gmInfoToggle("im2"); return; }
   if(!$("im2").hidden) return;   // při otevřeném popisu ostatní zkratky nefungují
@@ -6943,7 +7028,8 @@ document.addEventListener("keydown",e=>{
   if(e.code==="KeyT"&&e.shiftKey){ e.preventDefault(); if(!$("rvstx").disabled) $("rvstx").click(); }   // STX s ΔZ místo Z
   if(e.code==="KeyC"&&e.shiftKey){ e.preventDefault(); if(!$("rvcsv").disabled) $("rvcsv").click(); }   // CSV (stejně jako v ZSS pilot)
   if(e.code==="KeyP"&&e.shiftKey){ e.preventDefault(); if(rgCan()) rvSavePdf(); }   // PDF plánu (stejně jako v ZSS pilot)
-  if(e.code==="KeyS"&&e.shiftKey){ e.preventDefault(); if(rgCan()) rvSaveDxf(); } });   // DXF plánu (stejně jako v ZSS pilot)
+  if(e.code==="KeyS"&&e.shiftKey){ e.preventDefault(); if(rgCan()) rvSaveDxf(); }   // DXF plánu (stejně jako v ZSS pilot)
+  if(e.code==="KeyR"&&e.shiftKey){ e.preventDefault(); if(!$("rvprt").disabled) zprtOpen("rv"); } });   // Protokol PDF (okno s údaji, stejně jako v ZSS pilot)
 // Reset modulu Rovinnost: měření, PD, typ a zadání roviny, odškrtnuté body, filtr, řazení, hledání a uložená nastavení modulu; ZSS pilot se nemění
 function rvReset(){planMeasureClear("rv");
   projectFilesBeginReset('rv');
@@ -6955,7 +7041,7 @@ function rvReset(){planMeasureClear("rv");
   ["h","v","o"].forEach(t=>RV.def[t].forEach(pt=>RV_FLD[t].forEach(c=>pt[c]=""))); RV.def.h[0].s="";
   RV.off.clear(); RV.sort.k=""; RV.sort.dir=1; $("rvflt").value="all"; $("rvtsr").value=""; $("rvstf").textContent=""; $("rvlogd").open=false;
   RV.set=Object.assign({u:"mm",t:RV_TD,p:"1",rob:true,rk:null,c:true,pn:true,m:"pl"},RV_LD); $("rvcomma").checked=true; $("rvpn").checked=true; rvLatUi(); RV.keep.clear(); rvKeepSave(); $("rvrob").checked=true; $("rvrobk").value=""; rvRobHint(); rvTolUpd(); rvUnitApply(); rvPrecApply();rvCodeRender();   // nastavení odchylek: výchozí jednotky mm, přesnost 1 mm, tolerance 10 mm = 0,010 m
-  try{ [FK_RD,FK_RP,FK_RVOFF,FK_RVS,FK_RVKEEP].forEach(k=>removeStorage(k)); }catch(e){}
+  try{ [FK_RD,FK_RP,FK_RVOFF,FK_RVS,FK_RVKEEP,ZPRT_RV_K].forEach(k=>removeStorage(k)); }catch(e){}
   rvPlaneSet("h",false); rvDefRender(); rvResRender();
   return projectFilesResetResult('rv'); }
 // potvrzovací okno je společné s ZSS pilot, text a akce se nastaví podle modulu
@@ -10333,6 +10419,8 @@ globalThis.GeoMATLanguage?.onChange(()=>{
  "Směrodatná odchylka zaměření – výška [m]": "Survey standard deviation – vertical [m]",
  "Poznámka (nepovinná)": "Note (optional)",
  "Uložit protokol PDF": "Save PDF report",
+ "Zkratka Shift+R. Protokol PDF: úvodní strana A4 s údaji zakázky, seznam odchylek bodů od roviny A4 a plán PDF 2D A3 (stejný jako tlačítko PDF). Údaje se doplní v okně před uložením a průběžně se ukládají v prohlížeči odděleně od ZSS pilot.": "Shortcut Shift+R. PDF report: A4 cover page with job details, A4 list of point deviations from the plane and the A3 2D PDF plan (same as the PDF button). Fill in the details in the window before saving; they are stored in the browser separately from ABS piles.",
+ "Protokol tvoří úvodní strana A4 s těmito údaji, seznam odchylek bodů od roviny A4 (všechny použité body bez ohledu na filtr tabulky; sloupce podle typu roviny, při latích i h) a plán PDF 2D A3 (stejný jako tlačítko PDF: aktuální typ roviny, filtr, mapa, vrstevnice a legenda podle voleb plánu). Všechna pole kromě poznámky jsou povinná. Údaje se ukládají v prohlížeči odděleně od protokolu ZSS pilot, takže se zavřením okna neztratí. Vyplněná Akce nahradí ve druhém řádku nadpisu názvy souborů také v plánu, PDF a DXF Rovinnosti.": "The report consists of an A4 cover page with these details, an A4 list of point deviations from the plane (all used points regardless of the table filter; columns depend on the plane type, with h for straightedge evaluation) and the A3 2D PDF plan (same as the PDF button: current plane type, filter, map, contours and legend according to the plan options). All fields except the note are required. The details are stored in the browser separately from the ABS piles report, so closing the window does not lose them. A filled-in Project name replaces the file names in the second heading line of the Flatness plan, PDF and DXF as well.",
  "Uloženo: Protokol PDF (⟦0⟧).": "Saved: PDF report (⟦0⟧).",
  "Moduly": "Modules",
  "Modul ZSS pilot: výpočet středů pilot ze zaměřených bodů a porovnání s projektem. Zkratka: Shift+1.": "ABS piles (as-built survey of pile locations). Calculates pile centres from surveyed points and compares them with the design. Shortcut: Shift+1.",
