@@ -4057,21 +4057,23 @@ function zprtFooter(cv,page,total){
   ["c1","c2","c3"].forEach((n,k)=>cv.img(n,430.9+k*36.3,794.55,31.75,31.75));
   cv.text(cv.W-28,778,page+"/"+total,7.5,{a:"r",c:ZP_GRAY});
 }
+/* texty protokolu podle jazyka aplikace (záhlaví a zápatí firmy zůstávají vždy česky) */
+const zprtEn=()=>globalThis.GeoMATLanguage?.get?.()==="en", zprtL=(cs,en)=>zprtEn()?en:cs;
 function zprtCover(v,total){
   const cv=zprtCanvas(595.28,841.89), L=27.3, R=cv.W-27.3, d=s=>s||"-";
   zprtHeader(cv);
-  cv.text(cv.W/2,122,"PROTOKOL"+(v.cislo?"  "+v.cislo:""),26,{b:true,a:"c"});
+  cv.text(cv.W/2,122,zprtL("PROTOKOL","REPORT")+(v.cislo?"  "+v.cislo:""),26,{b:true,a:"c"});
   cv.text(cv.W/2,158,v.nazev||zprtTitle(),12.5,{b:true,a:"c",c:"#222222"});   // pod nadpisem PROTOKOL jeden prázdný řádek
   const cw=[111,149.7,111]; cw.push(R-L-cw[0]-cw[1]-cw[2]);
-  const rows=[["Akce:",d(v.akce)],
-    ["Katastrální území:",d(v.ku),"Objednatel:",d(v.obj)],
-    ["Číslo zakázky:",d(v.zak),"Staveniště:",d(v.stav)],
-    ["Datum:",d(v.datum),"Zaměřil:",d(v.meril)],
-    ["Zaměřeno:",d(v.zamereno),"Zpracoval:",d(v.zprac)],
-    ["Přístroj:",d(v.pristroj),"Podklady vyhotovil:",d(v.podklady)],
-    ["Způsob označení:",d(v.zpusob),"V úseku:",d(v.usek)],
-    ["Souřadnicový systém:",d(v.sys),"Výškový systém:",d(v.vys)],
-    ["Směrodatná odchylka zaměření – poloha [m]:",d(String(v.sxy||"").replace(/\s*m$/i,"")),"Směrodatná odchylka zaměření – výška [m]:",d(String(v.sz||"").replace(/\s*m$/i,""))]];   // jednotka je v popisu, starší uložené „0,02 m“ se zkrátí
+  const rows=[[zprtL("Akce:","Project name:"),d(v.akce)],
+    [zprtL("Katastrální území:","Cadastral area:"),d(v.ku),zprtL("Objednatel:","Client:"),d(v.obj)],
+    [zprtL("Číslo zakázky:","Job number:"),d(v.zak),zprtL("Staveniště:","Construction site:"),d(v.stav)],
+    [zprtL("Datum:","Date:"),d(v.datum),zprtL("Zaměřil:","Surveyed by:"),d(v.meril)],
+    [zprtL("Zaměřeno:","Surveyed on:"),d(v.zamereno),zprtL("Zpracoval:","Processed by:"),d(v.zprac)],
+    [zprtL("Přístroj:","Instrument:"),d(v.pristroj),zprtL("Podklady vyhotovil:","Source data prepared by:"),d(v.podklady)],
+    [zprtL("Způsob označení:","Marking method:"),d(v.zpusob),zprtL("V úseku:","Section:"),d(v.usek)],
+    [zprtL("Souřadnicový systém:","Coordinate system:"),d(v.sys),zprtL("Výškový systém:","Height system:"),d(v.vys)],
+    [zprtL("Směrodatná odchylka zaměření – poloha [m]:","Survey standard deviation – horizontal [m]:"),d(String(v.sxy||"").replace(/\s*m$/i,"")),zprtL("Směrodatná odchylka zaměření – výška [m]:","Survey standard deviation – vertical [m]:"),d(String(v.sz||"").replace(/\s*m$/i,""))]];   // jednotka je v popisu, starší uložené „0,02 m“ se zkrátí
   const top=176; let y=top;
   rows.forEach(r=>{
     const cells=r.length===2?[[r[0],cw[0],false,9],[r[1],R-L-cw[0],true,10]]:[[r[0],cw[0],false,9],[r[1],cw[1],true,10],[r[2],cw[2],false,9],[r[3],cw[3],true,10]];
@@ -4083,29 +4085,29 @@ function zprtCover(v,total){
     y+=rh; });
   cv.rect(L,top,R-L,y-top,"#000000",1.2);
   y+=30;
-  cv.text(L,y,"Přílohy",11,{b:true});
-  cv.text(L+10,y+16,"1.  Seznam souřadnic středů pilot",9.5);
-  cv.text(L+10,y+30,"2.  Plán skutečného stavu pilot",9.5);
+  cv.text(L,y,zprtL("Přílohy","Attachments"),11,{b:true});
+  cv.text(L+10,y+16,"1.  "+zprtL("Seznam souřadnic středů pilot","List of pile centre coordinates"),9.5);
+  cv.text(L+10,y+30,"2.  "+zprtL("Plán skutečného stavu pilot","As-built plan of piles"),9.5);
   y+=50;
-  if(v.pozn){ cv.text(L,y+4,"Poznámka",11,{b:true}); let yy=y+20;
+  if(v.pozn){ cv.text(L,y+4,zprtL("Poznámka","Note"),11,{b:true}); let yy=y+20;
     for(const par of v.pozn.split(/\r?\n/)) for(const ln of zprtWrap(cv,par,9.5,false,R-L-10)){ if(yy>640) break; cv.text(L+10,yy,ln,9.5); yy+=12.5; } }
-  cv.text(L,660,"Protokol má náležitosti technické zprávy.",8);
-  cv.text(L,672,"Náležitostmi a přesností odpovídá právním předpisům a podmínkám písemně dohodnutým s objednatelem.",8);
-  cv.text(L,698,"Ověřil dne:",9); cv.text(366.2,698,"Převzal dne:",9); cv.text(L,720,"Pod č. j.",9);
+  cv.text(L,660,zprtL("Protokol má náležitosti technické zprávy.","This report meets the requirements of a technical report."),8);
+  cv.text(L,672,zprtL("Náležitostmi a přesností odpovídá právním předpisům a podmínkám písemně dohodnutým s objednatelem.","Its content and accuracy comply with legal regulations and the conditions agreed in writing with the client."),8);
+  cv.text(L,698,zprtL("Ověřil dne:","Verified on:"),9); cv.text(366.2,698,zprtL("Převzal dne:","Received on:"),9); cv.text(L,720,zprtL("Pod č. j.","Ref. No."),9);
   [[88,236,700],[428,568,700],[88,236,722],[88,236,752],[428,568,752]].forEach(([a,b,yy])=>cv.line(a,yy,b,yy,"#000000",0.6,[0.6,1.4]));
-  cv.text(162,762,"podpis",9,{a:"c"}); cv.text(498,762,"podpis",9,{a:"c"});
+  cv.text(162,762,zprtL("podpis","signature"),9,{a:"c"}); cv.text(498,762,zprtL("podpis","signature"),9,{a:"c"});
   zprtFooter(cv,1,total);
   return cv;
 }
-const ZP_COLS=[["Střed ZSS",92,"l"],["Y [m]",98,"r"],["X [m]",98,"r"],["Z [m]",80,"r"],["Odch. PD [mm]",88,"r"]];
+const ZP_COLS=[["Střed ZSS",92,"l","Pile centre"],["Y [m]",98,"r","Y [m]"],["X [m]",98,"r","X [m]"],["Z [m]",80,"r","Z [m]"],["Odch. PD [mm]",88,"r","Design dev. [mm]"]];   // 4. položka = anglický popis
 const zprtNum=v=>{ const [i,f]=Math.abs(v).toFixed(3).split("."); return (v<0?"−":"")+i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+","+f; };
 function zprtTable(v,chunk,page,total,first,last,lim){
   const cv=zprtCanvas(595.28,841.89), TW=ZP_COLS.reduce((a,c)=>a+c[1],0), L=(cv.W-TW)/2;
   zprtHeader(cv);
-  cv.text(L,108,"Seznam souřadnic středů pilot",14,{b:true});   // stejný nadpis na všech stranách, bez dovětku a bez řádku akce · zakázka · systém
+  cv.text(L,108,zprtL("Seznam souřadnic středů pilot","List of pile centre coordinates"),14,{b:true});   // stejný nadpis na všech stranách, bez dovětku a bez řádku akce · zakázka · systém
   let y=136, rh=13.6;
   cv.fill(L,y,TW,18,ZP_HEAD);
-  let x=L; ZP_COLS.forEach(([t,w,a])=>{ a==="l"?cv.text(x+6,y+12.3,t,9,{b:true}):cv.text(x+w-8,y+12.3,t,9,{b:true,a:"r"}); x+=w; });
+  let x=L; ZP_COLS.forEach(([tc,w,a,te])=>{ const t=zprtL(tc,te); a==="l"?cv.text(x+6,y+12.3,t,9,{b:true}):cv.text(x+w-8,y+12.3,t,9,{b:true,a:"r"}); x+=w; });
   cv.line(L,y,L+TW,y,"#000000",0.9); cv.line(L,y+18,L+TW,y+18,"#000000",0.9); y+=18;
   chunk.forEach((p,k)=>{ const yy=y+k*rh;
     if(k%2===1) cv.fill(L,yy,TW,rh,ZP_ZEB);
@@ -4115,9 +4117,12 @@ function zprtTable(v,chunk,page,total,first,last,lim){
     cv.line(L,yy+rh,L+TW,yy+rh,ZP_GRID,0.4); });
   const yb=y+chunk.length*rh; cv.line(L,yb,L+TW,yb,"#000000",0.9);
   if(last){ let yy=yb+16;
+    (zprtEn()?["Pile centre – pile name taken from the design (PD); applies to piles surveyed by points on the shaft and to directly surveyed centres.",
+     "A pile without an assigned design point keeps its own name and no deviation is given (–).",
+     "Design dev. – horizontal distance of the as-built centre from the design centre"+(lim>0?"; deviations above the limit of "+fmtCz(String(lim))+" mm are shown in red.":".")]:
     ["Střed ZSS – název piloty převzatý z PD; platí pro piloty zaměřené body na plášti i pro přímo zaměřené středy.",
      "Pilota bez přiřazeného bodu PD má vlastní název a odchylka se neuvádí (–).",
-     "Odch. PD – vodorovná vzdálenost středu ZSS od projektovaného středu"+(lim>0?"; červeně odchylka nad mezí "+fmtCz(String(lim))+" mm.":".")].forEach(t=>{
+     "Odch. PD – vodorovná vzdálenost středu ZSS od projektovaného středu"+(lim>0?"; červeně odchylka nad mezí "+fmtCz(String(lim))+" mm.":".")]).forEach(t=>{
       for(const ln of zprtWrap(cv,t,8,false,TW)){ cv.text(L,yy,ln,8,{c:ZP_GRAY}); yy+=10.5; } }); }
   zprtFooter(cv,page,total);
   return cv;
@@ -4149,7 +4154,7 @@ function zprtPdf(v){
   let pdf="%PDF-1.4\n"; const off=[];
   for(let i=1;i<objs.length;i++){ off[i]=pdf.length; pdf+=`${i} 0 obj\n${objs[i]}\nendobj\n`; }
   const xr=pdf.length;
-  pdf+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length} /Root 1 0 R /Info << /Title (${pdfEsc(pdfTxt("Protokol "+(v.cislo||"")+" – ZSS pilot"))}) /Producer (GeoMAT ${APP_VERSION}) >> >>\nstartxref\n${xr}\n%%EOF`;
+  pdf+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length} /Root 1 0 R /Info << /Title (${pdfEsc(pdfTxt(zprtL("Protokol ","Report ")+(v.cislo||"")+zprtL(" – ZSS pilot"," – ABS piles")))}) /Producer (GeoMAT ${APP_VERSION}) >> >>\nstartxref\n${xr}\n%%EOF`;
   return pdf;
 }
 // název souboru: Protokol_RRRR_ČČČ_-_ZSS_pilot_-_Akce.pdf; z čísla protokolu „27/2026“ je rok za lomítkem a číslo před ním (1–2 číslice doplněné nulami na 3: 027)
@@ -10306,7 +10311,7 @@ globalThis.GeoMATLanguage?.onChange(()=>{
  "Číslo protokolu": "Report number",
  "např. 27/2026": "e.g. 27/2026",
  "Název protokolu": "Report title",
- "Nadpis pod slovem PROTOKOL na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název.": "Heading below the word PROTOKOL on the cover page. Prefilled, can be overwritten; the reset button restores the default title.",
+ "Nadpis pod slovem PROTOKOL na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název.": "Heading below the word REPORT on the cover page. Prefilled, can be overwritten; the reset button restores the default title.",
  "Akce": "Project name",
  "Katastrální území": "Cadastral area",
  "Číslo zakázky": "Job number",
