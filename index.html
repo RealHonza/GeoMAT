@@ -1625,7 +1625,7 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.327", APP_DATE="21. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.330", APP_DATE="21. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -3635,6 +3635,14 @@ function fitView(W,H,gl,o){
   const wy=Math.max((b[1]-b[0])*(1+2*m),0.5), wx=Math.max((b[3]-b[2])*(1+2*m),0.5);
   return {cy:(b[0]+b[1])/2, cx:(b[2]+b[3])/2, s:Math.min(pl.w/wy,pl.h/wx)};
 }
+// Test the actual rotated text rectangles after the spatial grid has found nearby candidates.
+function pileTextOverlap(a,b){
+  const dx=b.cx-a.cx,dy=b.cy-a.cy,c=Math.abs(a.co*b.co+a.si*b.si),s=Math.abs(a.co*b.si-a.si*b.co);
+  return Math.abs(dx*a.co+dy*a.si)<a.w+b.w*c+b.h*s&&
+         Math.abs(dy*a.co-dx*a.si)<a.h+b.w*s+b.h*c&&
+         Math.abs(dx*b.co+dy*b.si)<b.w+a.w*c+a.h*s&&
+         Math.abs(dy*b.co-dx*b.si)<b.h+a.w*s+a.h*c;
+}
 function buildScene(W,H,v,o){
   const pl=plotRect(W,H,headTop(W,H,o)), pl0=plotRect(W,H), s=v.s, ccx=pl.x+pl.w/2, ccy=pl.y+pl.h/2;
   // velikost písma i šipek se odvozuje z velikosti výkresu (plochy grafu) a z rozestupu pilot v datech
@@ -3668,26 +3676,31 @@ function buildScene(W,H,v,o){
   // --- hledání volného místa pro popisky, aby se texty nepřekrývaly ---
   const tw=(t,sz)=>pdfWidth(pdfTxt(t),sz)*1.04, GS=48, grid=new Map();
   const cells=(x0,y0,x1,y1,f)=>{ for(let gx=Math.floor(x0/GS);gx<=Math.floor(x1/GS);gx++) for(let gy=Math.floor(y0/GS);gy<=Math.floor(y1/GS);gy++) f(gx*100003+gy); };
-  const addR=(x0,y0,x1,y1,own)=>{ const r={x0,y0,x1,y1,own}; cells(x0,y0,x1,y1,k=>{ let L=grid.get(k); if(!L){L=[];grid.set(k,L);} L.push(r); }); return r; };
-  const overlap=(x0,y0,x1,y1,skip)=>{
+  const addR=(x0,y0,x1,y1,own,box,shaft=false)=>{ const r={x0,y0,x1,y1,own,box,shaft}; cells(x0,y0,x1,y1,k=>{ let L=grid.get(k); if(!L){L=[];grid.set(k,L);} L.push(r); }); return r; };
+  const removeR=r=>cells(r.x0,r.y0,r.x1,r.y1,k=>{const bucket=grid.get(k);bucket.splice(bucket.indexOf(r),1);});
+  const overlap=(x0,y0,x1,y1,skip,box)=>{
     let a=0; const seen=new Set();
     cells(x0,y0,x1,y1,k=>{ const L=grid.get(k); if(!L) return;
       for(const r of L){ if(seen.has(r)||r.own===skip) continue; seen.add(r);
-        const w=Math.min(x1,r.x1)-Math.max(x0,r.x0), h=Math.min(y1,r.y1)-Math.max(y0,r.y0); if(w>0&&h>0) a+=w*h; } });
-    if(x0<pl.x||x1>pl.x+pl.w||y0<pl.y||y1>pl.y+pl.h) a+=800;
+        const w=Math.min(x1,r.x1)-Math.max(x0,r.x0), h=Math.min(y1,r.y1)-Math.max(y0,r.y0); if(w>0&&h>0){
+          if(box&&r.box){if(pileTextOverlap(box,r.box))a+=1e4+Math.min(w*h,box.w*box.h,r.box.w*r.box.h);}
+          else a+=w*h*(box&&r.shaft?2:1);
+        } } });
+    if(x0<pl.x||x1>pl.x+pl.w||y0<pl.y||y1>pl.y+pl.h)
+      a+=box?5e4+100*(Math.max(0,pl.x-x0)+Math.max(0,x1-pl.x-pl.w)+Math.max(0,pl.y-y0)+Math.max(0,y1-pl.y-pl.h)):800;
     return a;
   };
   const near=(x,y,m)=>x>=pl.x-m&&x<=pl.x+pl.w+m&&y>=pl.y-m&&y<=pl.y+pl.h+m;
-  // body PD, ke kterým nebyla nalezena pilota (jen název)
+  // Unmatched project crosses are fixed; their names are placed after the surveyed piles.
+  const projectLabels=[];
   if(refs.length&&o.nop!==false){
-    const matched=new Set(gPiles().map(p=>p.ref).filter(Boolean)), sz=12*fs;
+    const matched=new Set(gPiles().map(p=>p.ref).filter(Boolean));
     refs.forEach(r=>{ if(matched.has(r)||fltRefs.has(r)) return; const px=SX(r.y), py=SY(r.x);
       if(!near(px,py,30)) return;
       it.push({t:"line",x1:px-cd,y1:py-cd,x2:px+cd,y2:py+cd,c:GC.gray,sw:1.2*fs,k:"nopile",z:r.z});
       it.push({t:"line",x1:px-cd,y1:py+cd,x2:px+cd,y2:py-cd,c:GC.gray,sw:1.2*fs,k:"nopile",z:r.z});
-      it.push({t:"text",x:px+8*fs,y:py-5*fs,s:r.id,size:sz,c:GC.gray,a:"start",k:"nopile"});
-      addR(px-cd,py-cd,px+cd,py+cd,-3);
-      addR(px+8*fs,py-5*fs-sz,px+8*fs+tw(r.id,sz),py-5*fs+0.25*sz,-3); });
+      projectLabels.push({s:r.id,px,py});
+      addR(px-cd,py-cd,px+cd,py+cd,-3); });
   }
   // nepoužité body (nepatří k žádné kružnici ani středu): oranžový ×
   if(o.allp) unusedPts.forEach(q=>{ const qx=SX(q.y), qy=SY(q.x); if(!near(qx,qy,20)) return;
@@ -3720,8 +3733,10 @@ function buildScene(W,H,v,o){
     if(o.ctr!==false||p.centresOnly){   // vypočtený nebo přímo zaměřený střed: křížek × (volitelné)
       it.push({t:"line",x1:tx-cd,y1:ty-cd,x2:tx+cd,y2:ty+cd,c:pileCol(p),sw:1.4*fs,z:p.z,...(p.centresOnly?{k:"directcentre"}:{})});
       it.push({t:"line",x1:tx-cd,y1:ty+cd,x2:tx+cd,y2:ty-cd,c:pileCol(p),sw:1.4*fs,z:p.z,...(p.centresOnly?{k:"directcentre"}:{})}); }
-    const n=Math.min(120,Math.max(8,Math.ceil(2*Math.PI*rr/7)));
-    for(let k=0;k<n;k++){ const f=2*Math.PI*k/n, cx=px+rr*Math.cos(f), cy=py+rr*Math.sin(f); addR(cx-3,cy-3,cx+3,cy+3,-3); }
+    if(o.circ!==false&&rr>0){
+      const n=Math.min(120,Math.max(8,Math.ceil(2*Math.PI*rr/7)));
+      for(let k=0;k<n;k++){ const f=2*Math.PI*k/n, cx=px+rr*Math.cos(f), cy=py+rr*Math.sin(f); addR(cx-3,cy-3,cx+3,cy+3,-3); }
+    }
     if(p.ref){
       const d=Math.hypot(p.dy,p.dx);
       it.push({t:"line",x1:px-cd,y1:py-cd,x2:px+cd,y2:py+cd,c:GC.ref,sw:1.2*fs,z:p.ref.z});
@@ -3729,66 +3744,128 @@ function buildScene(W,H,v,o){
       addR(px-cd,py-cd,px+cd,py+cd,-3);
       if(d>0.0005){
         v.arrow=true; v.ux=-p.dy/d; v.uy=p.dx/d;
-        arrow(it,px,py,px+v.ux*AL,py+v.uy*AL,col,1.8*fs*Math.sqrt(ax),ax);
-        for(let q=0;q<=AL;q+=6){ const ax=px+v.ux*q, ay=py+v.uy*q; addR(ax-3,ay-3,ax+3,ay+3,v.id); }
+        // Base shaft length on the distance to the nearest pile in crowded rows.
+        v.len=Math.min(AL,Math.max(26*fs,1.20*p.nn*s||0)*ax);
+        const first=it.length;
+        arrow(it,px,py,px+v.ux*v.len,py+v.uy*v.len,col,1.8*fs*Math.sqrt(ax),ax);
+        for(let i=first;i<it.length;i++){
+          const {x1,y1,x2,y2}=it[i],n=Math.max(1,Math.ceil(Math.hypot(x2-x1,y2-y1)/5));
+          for(let j=0;j<=n;j++){
+            const x=x1+(x2-x1)*j/n,y=y1+(y2-y1)*j/n;
+            addR(x-2.6,y-2.6,x+2.6,y+2.6,v.id,null,true);
+          }
+        }
       }
     }
     vis.push(v);
   });
-  // text s odchylkou podél šipky (hledá volné místo podél šipky, nad ní i pod ní)
-  vis.forEach(v=>{
-    if(!v.p.ref) return;
-    const p=v.p, mm=Math.round(p.rd*1000)+" mm", sz=12*fs, w=tw(mm,sz), h=sz*1.1;
-    if(!v.arrow){ it.push({t:"text",x:v.px+8*fs,y:v.py-6*fs,s:mm,size:sz,c:v.col,a:"start",k:"odch"}); addR(v.px+8*fs,v.py-6*fs-sz,v.px+8*fs+w,v.py-6*fs+0.25*sz,-3); return; }
-    let th=Math.atan2(v.uy,v.ux)*180/Math.PI; if(th>90||th<-90) th+=th>0?-180:180;
-    const tr=th*Math.PI/180, co=Math.cos(tr), si=Math.sin(tr), nx=si, ny=-co;
-    const ex=Math.abs(co)*w/2+Math.abs(si)*h/2, ey=Math.abs(si)*w/2+Math.abs(co)*h/2, off=5*fs;
-    let best=null;
-    for(const t of [0.55,0.4,0.7,0.3,0.8]) for(const sd of [1,-1]){
-      const mx=v.px+v.ux*AL*t, my=v.py+v.uy*AL*t, k=sd*(off+0.45*sz);
-      const cx=mx+nx*k, cy=my+ny*k, sc=overlap(cx-ex,cy-ey,cx+ex,cy+ey,v.id)+(best?0.01*best.n:0);
-      if(!best||sc<best.sc){ best={sc,cx,cy,n:(best?best.n:0)+1}; }
-      if(sc<=0.01) break;
+  // Both important labels share the same grid. Revisit blocked positions once after both sets have been placed.
+  const tasks=[], pad=1.4*fs;
+  const labelBox=(cx,cy,w,h,co=1,si=0)=>{
+    w=w/2+pad;h=h/2+pad;
+    const ex=Math.abs(co)*w+Math.abs(si)*h,ey=Math.abs(si)*w+Math.abs(co)*h;
+    return {cx,cy,w,h,co,si,x0:cx-ex,y0:cy-ey,x1:cx+ex,y1:cy+ey};
+  };
+  const points=(v,w,sz,radii,base)=>function*(){
+    const h=1.15*sz;
+    for(const R of radii)for(const step of [0,1,-1,2,-2,3,-3,4,-4,5,-5,6,-6,7,-7,8]){
+      const f=base+step*Math.PI/8,c=Math.cos(f),sn=Math.sin(f);
+      const x=v.px+c*R,y=v.py+sn*R,a=c>.35?'start':c<-.35?'end':'middle';
+      const bl=y+(sn>.35?.95:sn<-.35?-.2:.35)*sz;
+      yield {x,y:bl,a,R,anchorX:x,anchorY:y,box:labelBox(x+(a==='start'?w/2:a==='end'?-w/2:0),bl-.35*sz,w,h)};
     }
-    // (první nalezené nulové překrytí vyhrává, jinak nejmenší překrytí)
-    it.push({t:"text",x:best.cx-nx*0.35*sz,y:best.cy-ny*0.35*sz,s:mm,size:sz,c:v.col,a:"middle",rot:th,k:"odch"});
-    addR(best.cx-ex,best.cy-ey,best.cx+ex,best.cy+ey,-3);
-  });
-  // název piloty (číslo bodu PD) – nejlépe na straně opačné než šipka, jinak nejbližší volné místo
-  const CG=60, cgrid=new Map();   // mřížka středů pilot pro rychlé hledání sousedů
-  vis.forEach(v=>{ const k=Math.floor(v.px/CG)*100003+Math.floor(v.py/CG); let L=cgrid.get(k); if(!L){L=[];cgrid.set(k,L);} L.push(v); });
-  vis.forEach(v=>{
-    const name=v.p.name, sz=13*fs, w=tw(name,sz), h=sz*1.15, R0=Math.max(v.rr,6*fs)+5*fs;
-    const base=v.arrow?Math.atan2(-v.uy,-v.ux):0;
-    const angs=[0,Math.PI,-Math.PI/2,Math.PI/2,Math.PI/4,-Math.PI/4,3*Math.PI/4,-3*Math.PI/4,
-        Math.PI/8,-Math.PI/8,7*Math.PI/8,-7*Math.PI/8,3*Math.PI/8,-3*Math.PI/8,5*Math.PI/8,-5*Math.PI/8]
-      .sort((a,b)=>Math.abs(Math.atan2(Math.sin(a-base),Math.cos(a-base)))-Math.abs(Math.atan2(Math.sin(b-base),Math.cos(b-base))));
-    let best=null, n=0;
-    outer: for(const R of [R0,R0+14*fs,R0+28*fs,R0+42*fs]) for(const f of angs){
-      const c=Math.cos(f), sn=Math.sin(f), Px=v.px+c*R, Py=v.py+sn*R;
-      const a=c>0.35?"start":(c<-0.35?"end":"middle");
-      const x0=a==="start"?Px:(a==="end"?Px-w:Px-w/2);
-      let y0,bl; if(sn>0.35){y0=Py;bl=Py+0.95*sz;} else if(sn<-0.35){y0=Py-h;bl=Py-0.2*sz;} else {y0=Py-h/2;bl=Py+0.35*sz;}
-      // číslo musí být nejblíž ke středu své piloty: žádný střed jiné piloty nesmí být k popisku blíž než ten vlastní
-      const dr=(qx,qy)=>Math.hypot(Math.max(x0-qx,0,qx-(x0+w)),Math.max(y0-qy,0,qy-(y0+h)));   // vzdálenost bodu od obdélníku popisku
-      const dOwn=dr(v.px,v.py); let worst=0;
-      // cizí střed může být blíž jen tehdy, leží-li do vzdálenosti dOwn od popisku → stačí projít buňky v tomto okolí
-      for(let gx=Math.floor((x0-dOwn)/CG);gx<=Math.floor((x0+w+dOwn)/CG);gx++) for(let gy=Math.floor((y0-dOwn)/CG);gy<=Math.floor((y0+h+dOwn)/CG);gy++){
-        const L=cgrid.get(gx*100003+gy); if(!L) continue;
-        for(const u of L){ if(u===v) continue; const e=dOwn-dr(u.px,u.py); if(e>worst) worst=e; } }
-      const pen=worst>0?1e5+worst*1e3:0;
-      const sc=overlap(x0,y0,x0+w,y0+h,-1)+0.01*(n++)+pen;
-      if(!best||sc<best.sc) best={sc,x:Px,y:bl,a,x0,y0,R,Px,Py};
-      if(sc<=0.05*1) break outer;
+  };
+  // Place more constrained arrow labels first. Sliding along the shaft is preferred to moving away.
+  for(const v of vis){
+    if(!v.p.ref)continue;
+    const s=Math.round(v.p.rd*1000)+" mm",size=12*fs,w=tw(s,size),r=Math.max(o.circ!==false?v.rr:0,6*fs)+5*fs;
+    let candidates=points(v,w,size,[r,r+10*fs,r+20*fs],-Math.PI/4);
+    if(v.arrow){
+      let rot=Math.atan2(v.uy,v.ux)*180/Math.PI;
+      if(rot>90||rot<-90)rot+=rot>0?-180:180;
+      const angle=rot*Math.PI/180,co=Math.cos(angle),si=Math.sin(angle),h=size*1.1;
+      candidates=function*(){
+        for(const gap of [4,7,11,16,22,30])for(const t of [.56,.35,.76,.18,.94,1.15])for(const side of [1,-1]){
+          const offset=side*(gap*fs+h/2),mx=v.px+v.ux*v.len*t,my=v.py+v.uy*v.len*t;
+          const cx=mx+si*offset,cy=my-co*offset;
+          const at=Math.min(t,1),anchorX=v.px+v.ux*v.len*at,anchorY=v.py+v.uy*v.len*at;
+          const penalty=((gap-4)*.75+Math.abs(t-.56)*2.5+(t>1?3:0))*fs;
+          yield {x:cx-si*.35*size,y:cy+co*.35*size,a:'middle',rot,penalty,link:gap>=11||t>1?{x1:anchorX,y1:anchorY,x2:mx+si*side*(gap-2)*fs,y2:my-co*side*(gap-2)*fs}:null,box:labelBox(cx,cy,w,h,co,si)};
+        }
+      };
     }
-    if(best.R>R0+1){   // spojnice názvu se středem: decentní čárkovaná čára (tenká, šedá), kreslí se pod šipkami a texty
-      const k0=0.5*ch/best.R, lx1=v.px+(best.Px-v.px)*k0, ly1=v.py+(best.Py-v.py)*k0,   // začíná u křížku (středu), ne na kružnici
-         ll=Math.hypot(best.Px-lx1,best.Py-ly1), da=3*fs, dg=2.5*fs;
-      if(ll>0.5) for(let q=0;q<ll;q+=da+dg){ const q2=Math.min(ll,q+da), f0=q/ll, f1=q2/ll;
-        it.push({t:"line",x1:lx1+(best.Px-lx1)*f0,y1:ly1+(best.Py-ly1)*f0,x2:lx1+(best.Px-lx1)*f1,y2:ly1+(best.Py-ly1)*f1,c:GC.gray,sw:0.5*fs,k:"lead"}); } }
-    it.push({t:"text",x:best.x,y:best.y,s:name,size:sz,c:v.col,a:best.a,k:"nazev"});
-    addR(best.x0,best.y0,best.x0+w,best.y0+h,-3);
-  });
+    tasks.push({v,s,size,k:'odch',skip:v.arrow?v.id:0,candidates,choice:null});
+  }
+  const CG=60,cgrid=new Map();
+  for(const v of vis){
+    const key=Math.floor(v.px/CG)*100003+Math.floor(v.py/CG);
+    if(!cgrid.has(key))cgrid.set(key,[]);
+    cgrid.get(key).push(v);
+  }
+  function association(v,b){
+    const {x0,y0,x1,y1}=b;
+    const distance=u=>Math.hypot(Math.max(x0-u.px,0,u.px-x1),Math.max(y0-u.py,0,u.py-y1));
+    const own=distance(v);let worst=0;
+    for(let gx=Math.floor((x0-own)/CG);gx<=Math.floor((x1+own)/CG);gx++)
+      for(let gy=Math.floor((y0-own)/CG);gy<=Math.floor((y1+own)/CG);gy++)
+        for(const u of cgrid.get(gx*100003+gy)||[])if(u!==v)worst=Math.max(worst,own-distance(u));
+    return worst;
+  }
+  for(const v of vis){
+    const s=v.p.name,size=13*fs,w=tw(s,size),r=Math.max(o.circ!==false?v.rr:0,6*fs)+5*fs,base=v.arrow?Math.atan2(-v.uy,-v.ux):0;
+    tasks.push({v,s,size,k:'nazev',skip:0,r,candidates:points(v,w,size,[r,r+12*fs,r+24*fs,r+38*fs,r+54*fs],base),choice:null});
+  }
+  function score(task,choice){
+    const b=choice.box;
+    return overlap(b.x0,b.y0,b.x1,b.y1,task.skip,b)+choice.penalty;
+  }
+  function place(task,revisit){
+    if(revisit){
+      removeR(task.region);
+      if(score(task,task.choice)<1e4){
+        const b=task.choice.box;
+        task.region=addR(b.x0,b.y0,b.x1,b.y1,-3,b);
+        return;
+      }
+    }
+    let best=task.choice,cost=best?score(task,best):Infinity,n=0;
+    for(const candidate of task.candidates()){
+      candidate.relation=task.k==='nazev'?association(task.v,candidate.box):0;
+      candidate.penalty=(candidate.penalty||0)+n++*.22+(candidate.relation>0?35+candidate.relation*4:0);
+      const test=score(task,candidate);
+      if(test<cost){best=candidate;cost=test;}
+      if(cost<=n*.22)break;
+    }
+    const b=best.box;
+    task.choice=best;task.region=addR(b.x0,b.y0,b.x1,b.y1,-3,b);
+  }
+  for(const task of tasks)place(task,false);
+  for(let i=tasks.length-1;i>=0;i--)place(tasks[i],true);
+  for(const task of tasks)place(task,true);
+  for(const task of tasks){
+    const {v,s,size,k,choice:p}=task;
+    if(p.link)it.push({t:'line',...p.link,c:GC.gray,sw:.45*fs,k:'lead'});
+    if(k==='nazev'&&(p.R>task.r+1||p.relation>0)){
+      const start=Math.min(.5,.5*ch/p.R),x1=v.px+(p.anchorX-v.px)*start,y1=v.py+(p.anchorY-v.py)*start;
+      const len=Math.hypot(p.anchorX-x1,p.anchorY-y1),dash=3*fs;
+      for(let d=0;d<len;d+=dash+2.5*fs){
+        const a=d/len,b=Math.min(len,d+dash)/len;
+        it.push({t:"line",x1:x1+(p.anchorX-x1)*a,y1:y1+(p.anchorY-y1)*a,x2:x1+(p.anchorX-x1)*b,y2:y1+(p.anchorY-y1)*b,c:GC.gray,sw:.5*fs,k:"lead"});
+      }
+    }
+    it.push({t:"text",x:p.x,y:p.y,s,size,c:v.col,a:p.a,rot:p.rot,k});
+  }
+  // Fit project-only names into the remaining gaps without disturbing measured labels.
+  for(const v of projectLabels){
+    const size=12*fs,w=tw(v.s,size),r=Math.max(cd+3*fs,6*fs),task={v,s:v.s,size,k:'nopile',skip:0,candidates:points(v,w,size,[r,r+5*fs,r+11*fs,r+18*fs],-Math.PI/4),choice:null};
+    place(task,false);
+    const p=task.choice;
+    if(p.R>r+1){
+      const t=cd/p.R;
+      it.push({t:'line',x1:v.px+(p.anchorX-v.px)*t,y1:v.py+(p.anchorY-v.py)*t,x2:p.anchorX,y2:p.anchorY,c:GC.gray,sw:.4*fs,k:'lead'});
+    }
+    it.push({t:'text',x:p.x,y:p.y,s:v.s,size,c:GC.gray,a:p.a,k:'nopile'});
+  }
   // popis měřených bodů (volitelný): číslo bodu vedle křížku, nejlépe na vnější straně od středu piloty, jinak nejbližší volné místo
   const lblPt=(q,off,px0,py0,col)=>{
     const label=[o.lbl&&q.id?String(q.id):"",o.zlbl&&Number.isFinite(q.z)?"Z "+gmDec(q.z.toFixed(3)):""].filter(Boolean).join(" / ");
@@ -10984,13 +11061,13 @@ for(const key of ['m','p']){TERRAIN[key].model=trPrefs();$('tr'+key+'Source').on
 
 function tp3Goto(target,animate=false,enqueue=false,remember=true){if(tpEditing()&&Math.abs(target.yaw)+Math.abs(target.pitch)+Math.abs(target.roll)>1e-9){toast(gmPreviewText("Vymezení se zadává v 2D půdorysu."));return;}if(!tp3Can())return;if(enqueue&&TP3.transition){TP3.pending.push(target);return;}const from=tp3Axes(),home=Math.abs(target.yaw)+Math.abs(target.pitch)+Math.abs(target.roll)<1e-9;if(!home&&!tp3Ensure()){toast(gmT("camera.error.webgl"));return;}if(remember)tpRemember();tp3Stop();$('tptip').hidden=true;const to=tp3Axes(target.yaw,target.pitch,target.roll),same=['r','u','n'].every(k=>from[k].every((x,i)=>Math.abs(x-to[k][i])<1e-9)),reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;if(!animate||same||reduced){Object.assign(TP3,target);TP3.view=null;trDraw();return;}const transition={target,targetAxes:to,from:tp3Quaternion(from),to:tp3Quaternion(to),start:performance.now(),frame:null};TP3.transition=transition;const tick=()=>{if(TP3.transition!==transition||!tp3State())return;const t=Math.min(1,Math.max(0,(performance.now()-transition.start)/220)),ease=t*t*(3-2*t);if(t>=1){const pending=TP3.pending.slice();TP3.pending=[];TP3.transition=null;Object.assign(TP3,target);TP3.view=null;trDraw();if(pending.length){const next=pending.shift();tp3Goto(next,true,false,false);if(TP3.transition)TP3.pending=pending;else for(const pose of pending)tp3Goto(pose,false,false,false);}return;}Object.assign(TP3,tp3Angles(tp3QuaternionAxes(tp3Slerp(transition.from,transition.to,ease))));TP3.view=null;trDraw();transition.frame=requestAnimationFrame(tick);};tick();}
 const TP_DEF_OPTIONS=[['tpShowm',true],['tpShowp',true],['tpPoints',false],['tpEdges',false],['tpOutline',true],['tpGrid',true],['tpNames',false],['tpFill',true],['tpSourceColors',true],['tpContours',true],['tpHContours',false],['tpZero',false],['tpAudit',true],['tpParts',false],['tpDomainShow',true],['tpBreakShow',false],['tpHeights',false],['tpCodes',false],['tpLegend',true],['tpHeader',false],['tpLogo',false]];
-function tpDefaultsSync(){const b=$('tpdef');if(!b)return;let ok=false;try{const p=tpReadPrefs(),s=p.surface;ok=s.style==='off'&&s.smooth==='1'&&s.step==='a'&&s.hcModel==='m'&&s.hcStep==='a'&&s.hcMajor==='5'&&p.refOpacity==='75'&&!p.hiddenSources.length&&Number(p.font)===100&&TP_DEF_OPTIONS.every(([id,v])=>p.options[id]===v);}catch{}gmResetIdle(b,ok,"Volby plánu už jsou na výchozích hodnotách, není co vracet.");}
+function tpDefaultsSync(){const b=$('tpdef');if(!b)return;let ok=false;try{const p=tpReadPrefs(),s=p.surface;ok=s.style==='off'&&s.smooth==='1'&&s.step==='a'&&s.hcModel==='m'&&s.hcStep==='a'&&s.hcMajor==='5'&&p.refOpacity==='75'&&!p.hiddenSources.length&&Number(p.font)===100&&TP_DEF_OPTIONS.every(([id,v])=>p.options[TP_PREF_KEYS[id]||id]===v);}catch{}gmResetIdle(b,ok,"Volby plánu už jsou na výchozích hodnotách, není co vracet.");}
 function tpDefaults(){tpTinCancel(false);$("tpDeltaStyle").value="off";TPLAN.deltaLast='shade';$("tpRefAlpha").value="75";$("tpDeltaSmooth").value="1";$("tpContourStep").value="a";$("tpHcModel").value="m";$("tpHcStep").value="a";$("tpHcMajor").value="5";$("tpSurfaceDetails").hidden=true;$("tpSurfaceToggle").setAttribute("aria-expanded","false");tpSourcesClose();TPLAN.hiddenSources.clear();if(TPLAN.breakDraft)tpBreakCancel(false);if(TPLAN.domainDraft)tpDomainCancel(false);for(const [id,value] of TP_DEF_OPTIONS)$(id).checked=value;TPLAN.font=100;$('tpFont').value=100;$('tpFontRange').value=50;TPLAN.measure={on:false,a:null,b:null};TPLAN.measureList=null;$("tpMeasureSearch").value="";tpMeasureUI();TRMODEL.view=null;tpInvalidate();trDrawRequest();tpSavePrefs();}
 // Saved plan options keep their original keys (IDs before the 4.1 rename).
 const TP_PREF_KEYS={tpShowm:'trShowm',tpShowp:'trShowp',tpPoints:'trPoints',tpEdges:'trEdges',tpGrid:'trGrid',tpNames:'trNames'};
 function tpReadPrefs(){const options={};for(const id of ['tpShowm','tpShowp','tpPoints','tpEdges','tpOutline','tpGrid','tpNames','tpFill','tpSourceColors','tpContours','tpHContours','tpZero','tpAudit','tpParts','tpDomainShow','tpBreakShow','tpHeights','tpCodes','tpLegend','tpHeader','tpLogo'])options[TP_PREF_KEYS[id]||id]=$(id).checked;return {surface:{style:$("tpDeltaStyle").value,last:TPLAN.deltaLast||'shade',smooth:$("tpDeltaSmooth").value,step:$("tpContourStep").value,hcModel:$("tpHcModel").value,hcStep:$("tpHcStep").value,hcMajor:$("tpHcMajor").value,details:!$("tpSurfaceDetails").hidden},refOpacity:$("tpRefAlpha").value,options,hiddenSources:Array.from(TPLAN.hiddenSources),font:TPLAN.font,split:TPLAN.split,ratio:TPLAN.ratio,view:TPLAN.open?(TPLAN.split?1:2):TPLAN.restoreView};}
 function tpSavePrefs(){if(terrainAdmin())writeStorage(TP_PREFS_K,JSON.stringify(tpReadPrefs()));tpDefaultsSync();}
-function tpRestorePrefs(snapshot){try{const p=snapshot??JSON.parse(localStorage.getItem(TP_PREFS_K));if(!p)return;{const st=p.surface?.style,old=p.options?.tpDelta;TPLAN.deltaLast=[...TP_DELTA_STYLES,'z','zr'].includes(p.surface?.last)?p.surface.last:[...TP_DELTA_STYLES,'z','zr'].includes(st)?st:'shade';if(st==='off'||[...TP_DELTA_STYLES,'z','zr'].includes(st))$('tpDeltaStyle').value=typeof old==='boolean'?(old&&st!=='off'?st:'off'):st;}if(['1','2','4','8'].includes(p.surface?.smooth))$('tpDeltaSmooth').value=p.surface.smooth;if(p.surface?.step==='a'||Array.from($('tpContourStep').options).some(o=>o.value===p.surface?.step))$('tpContourStep').value=p.surface.step;for(const [id,k] of [['tpHcModel','hcModel'],['tpHcStep','hcStep'],['tpHcMajor','hcMajor']])if(Array.from($(id).options).some(o=>o.value===p.surface?.[k]))$(id).value=p.surface[k];if(['0','25','50','75','100'].includes(p.refOpacity))$('tpRefAlpha').value=p.refOpacity;$('tpSurfaceDetails').hidden=p.surface?.details!==true;$('tpSurfaceToggle').setAttribute('aria-expanded',String(!$('tpSurfaceDetails').hidden));TPLAN.hiddenSources=new Set(Array.isArray(p.hiddenSources)?p.hiddenSources.filter(id=>typeof id==='string'):[]);for(const id of ['tpShowm','tpShowp','tpPoints','tpEdges','tpOutline','tpGrid','tpNames','tpFill','tpSourceColors','tpContours','tpHContours','tpZero','tpAudit','tpParts','tpDomainShow','tpBreakShow','tpHeights','tpCodes','tpLegend','tpHeader','tpLogo']){const k=TP_PREF_KEYS[id]||id;if(typeof p.options?.[k]==='boolean')$(id).checked=p.options[k];}if(Number.isFinite(p.font))TPLAN.font=Math.max(25,Math.min(300,p.font));TPLAN.split=p.split===true;TPLAN.restoreView=[1,2].includes(p.view)?p.view:0;if(Number.isFinite(p.ratio))TPLAN.ratio=Math.max(25,Math.min(85,p.ratio));$('tpFont').value=TPLAN.font;$('tpFontRange').value=TPLAN.font<=100?(TPLAN.font-25)*50/75:50+(TPLAN.font-100)/4;}catch{}tpDefaultsSync();}
+function tpRestorePrefs(snapshot){try{const p=snapshot??JSON.parse(localStorage.getItem(TP_PREFS_K));if(!p){tpDefaultsSync();return;}{const st=p.surface?.style,old=p.options?.tpDelta;TPLAN.deltaLast=[...TP_DELTA_STYLES,'z','zr'].includes(p.surface?.last)?p.surface.last:[...TP_DELTA_STYLES,'z','zr'].includes(st)?st:'shade';if(st==='off'||[...TP_DELTA_STYLES,'z','zr'].includes(st))$('tpDeltaStyle').value=typeof old==='boolean'?(old&&st!=='off'?st:'off'):st;}if(['1','2','4','8'].includes(p.surface?.smooth))$('tpDeltaSmooth').value=p.surface.smooth;if(p.surface?.step==='a'||Array.from($('tpContourStep').options).some(o=>o.value===p.surface?.step))$('tpContourStep').value=p.surface.step;for(const [id,k] of [['tpHcModel','hcModel'],['tpHcStep','hcStep'],['tpHcMajor','hcMajor']])if(Array.from($(id).options).some(o=>o.value===p.surface?.[k]))$(id).value=p.surface[k];if(['0','25','50','75','100'].includes(p.refOpacity))$('tpRefAlpha').value=p.refOpacity;$('tpSurfaceDetails').hidden=p.surface?.details!==true;$('tpSurfaceToggle').setAttribute('aria-expanded',String(!$('tpSurfaceDetails').hidden));TPLAN.hiddenSources=new Set(Array.isArray(p.hiddenSources)?p.hiddenSources.filter(id=>typeof id==='string'):[]);for(const id of ['tpShowm','tpShowp','tpPoints','tpEdges','tpOutline','tpGrid','tpNames','tpFill','tpSourceColors','tpContours','tpHContours','tpZero','tpAudit','tpParts','tpDomainShow','tpBreakShow','tpHeights','tpCodes','tpLegend','tpHeader','tpLogo']){const k=TP_PREF_KEYS[id]||id;if(typeof p.options?.[k]==='boolean')$(id).checked=p.options[k];}if(Number.isFinite(p.font))TPLAN.font=Math.max(25,Math.min(300,p.font));TPLAN.split=p.split===true;TPLAN.restoreView=[1,2].includes(p.view)?p.view:0;if(Number.isFinite(p.ratio))TPLAN.ratio=Math.max(25,Math.min(85,p.ratio));$('tpFont').value=TPLAN.font;$('tpFontRange').value=TPLAN.font<=100?(TPLAN.font-25)*50/75:50+(TPLAN.font-100)/4;}catch{}tpDefaultsSync();}
 function tpGroupDXFPrefix(group){if(!group.sourceId)return group.key==='m'?'MERENI':'PROJEKT';const style=tpSourceStyle(group.sourceId),name=dxfAscii(JSON.parse(group.sourceId)[0]).replace(/[^A-Za-z0-9_-]/g,'_').slice(0,10);return 'M'+String(style.index+1).padStart(3,'0')+'_'+name;}
 function tpGroupVolume(group){
  const state=TR_MEAS_BATCH.state;
@@ -11624,10 +11701,10 @@ globalThis.GeoMATLanguage?.onChange(()=>{
    <p class="gm-auth-hint" id="gmAuthHint">Číslo popisné našich kanceláří je heslem pro přihlášení</p>
    <p id="gmAuthError" role="status" aria-live="polite" hidden></p>
   </form>
-  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.327 · Autor: Jan Bartůněk"><span>v<span id="gmAuthVersion">1.327</span></span><span>Jan Bartůněk</span></span></div>
+  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.330 · Autor: Jan Bartůněk"><span>v<span id="gmAuthVersion">1.330</span></span><span>Jan Bartůněk</span></span></div>
  </div>
 </div>
-<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.327 · Autor: Jan Bartůněk"><span>v<span id="gmAuthAccountVersion">1.327</span></span><span>Jan Bartůněk</span></span></div></div></div>
+<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.330 · Autor: Jan Bartůněk"><span>v<span id="gmAuthAccountVersion">1.330</span></span><span>Jan Bartůněk</span></span></div></div></div>
 <div id="gmLogoView" role="dialog" aria-modal="true" aria-label="Logo GeoMAT" hidden><button type="button" id="gmLogoViewClose" aria-label="Zavřít logo" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><svg class="gm-logo-art" id="gmLogoArt" viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet" role="img" aria-label="GeoMAT"><g id="gmLogoArtBody"><g id="gmLogoArtMark" transform="translate(100 0) scale(5)"><rect id="gmLogoArtTile" width="24" height="24" rx="5" fill="#fff"/><g fill="none" stroke="#2f855a" stroke-width="2.08" stroke-linecap="round"><circle cx="12" cy="12" r="5.2"/><path d="M12 4v4.8M12 15.2V20M4 12h4.8M15.2 12H20"/></g></g><text id="gmLogoArtText" x="160" y="205" text-anchor="middle" font-family="Orbitron, Arial, Helvetica, sans-serif" font-size="56" font-weight="800" letter-spacing="1.1"><tspan fill="#2f855a">Geo</tspan><tspan fill="#000">MAT</tspan></text></g></svg></div>
 <div id="gmAuthNotice" role="status" hidden></div>
 
@@ -15224,7 +15301,7 @@ globalThis.GeoMATLanguage?.onChange(()=>{
  "body": "points",
  "Použít bod ⟦0⟧": "Include point ⟦0⟧",
  "rozdíl největší a nejmenší kolmé odchylky": "difference between the maximum and minimum perpendicular deviations",
- "GeoMAT verze 1.327 · Autor: Jan Bartůněk": "GeoMAT version 1.327 · Author: Jan Bartůněk",
+ "GeoMAT verze 1.330 · Autor: Jan Bartůněk": "GeoMAT version 1.330 · Author: Jan Bartůněk",
  "Tažením změníte poměr rozdělení. Dvojklik obnoví 50:50.": "Drag to resize the split view. Double-click to restore 50:50.",
  "Vyhlazení vytvořilo neplatný vrchol. Použijte lineární TIN.": "Smoothing produced an invalid vertex. Use linear TIN.",
  " Pozor: bod je výškou Z₀ pro kubatury, po použití úprav bude Z₀ = ⟦0⟧ m.": " Note: this point is the Z₀ height for volumes; after applying edits Z₀ = ⟦0⟧ m.",
