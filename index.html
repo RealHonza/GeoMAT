@@ -1245,6 +1245,7 @@ body.gm-tester .tr-tester-mark{position:absolute;inset:0;z-index:1;display:grid;
 <h3>Způsob zaměření</h3><p>V kartě Body a výstup jsou tři režimy. Automaticky zachovává současné vyhodnocení obvodových bodů i středů. Pouze středy bere každý vybraný bod jako samostatný přímo zaměřený střed, bez hledání kružnic, slučování souřadnic a průměrování. Platí filtr názvů/kódů, přiřazení k PD, mezní odchylka, ΔZ a ruční výběr. Bez jediného ručně zadaného typického průměru se vykreslí pouze střed a průměr v tabulce i CSV zůstane neurčený. Opakované názvy a více bodů u stejného PD se označí k prověření. Pouze obvod určuje středy pouze z kružnic; zaměřené středy nepřebírá ani neváží. Nepoužitelné volby jsou zašedlé a zachovávají hodnoty pro návrat do jiného režimu. Režim se pamatuje; Výchozí hodnoty vrátí Automaticky.</p>
 <h3>Rozsah názvů měřených bodů</h3><p>Ve skupině Body a výstup jsou pod kódy textová pole Od a Do. Hranice jsou včetně; prázdná hranice je neomezená a obě prázdné filtr vypnou. Používá se přirozené pořadí: oddělovače před číslicemi 0–9, číslice před písmeny; číselné části se porovnávají jako čísla i při velmi dlouhých názvech. Velikost písmen a úvodní nuly v číslech nerozhodují. Při shodném začátku je kratší název první, např. A, A2, A10, AA, AA2, AB, B1. Rozsah 10 až A100 zahrne 9999 a A50, nikoli 5, A200 nebo B1. Ostatní znaky mají pevné pořadí nezávislé na nastavení prohlížeče; české znaky se řadí za odpovídající základní písmeno. Změnu potvrdí Enter nebo opuštění pole; neplatné pořadí či řídicí znaky ponechají dosavadní výběr. Ikona obnovení vymaže pouze rozsah. Výběr kódů a rozsah platí současně, také při zapnuté volbě Všechny body. Filtr se použije před výpočty a robustní filtrací; ovlivní tabulku, MNČ z měření, plány, histogramy i exporty. V ZSS pilot může vynechat část obvodových bodů piloty. Původní měření i projektové body a DXF zůstanou zachované. Rozsah se pamatuje samostatně pro každý modul a Výchozí hodnoty jej vymažou.</p><h3>Histogram odchylek od projektu</h3><p>Pod souhrnem výsledků lze rozbalit histogram velikosti vodorovné odchylky středu od přiřazeného projektového bodu. Osa v mm začíná nulou; výška sloupce je počet pilot. Zahrnuje všechny použité platně vyhodnocené piloty s přiřazeným projektem, nezávisle na filtru zobrazení tabulky; neplatné a odškrtnuté piloty se vynechají. Počet pilot bez projektu se uvede zvlášť. Zelená je do nastavené mezní odchylky včetně, oranžová do 150 % mezní odchylky včetně, červená nad 150 %. Pro zařazení se použije skutečná odchylka se stejnou numerickou rezervou jako v tabulce, nikoli odchylka zaokrouhlená na celé mm. Najetí na sloupec ukáže interval, počet a procento pilot; dostupné je i ovládání klávesou Tab. Histogram je výchozně zavřený.</p><h3>Prostorový plán ZSS pilot</h3><p>Krychle N/E/S/W, stěny, hrany a rohy ovládají 3D pohled. Dvě zahnuté šipky otáčejí v rovině aktuálního pohledu po 90°, bez změny směru pohledu. Tlačítko Půdorys je v záhlaví vpravo nad kostkou. Světové strany označují směry souřadnicových os, nikoli zeměpisný sever; přesný směr je v tooltipu. Půdorys, dvojklik na krychli nebo Home vrátí původní 2D plán. Tažení krychle nebo Shift + tažení výkresu natáčí; běžné tažení posouvá, kolečko přibližuje, F přizpůsobí celý výkres. Zobrazují se skutečné výšky bez zvětšování. Vyhodnocené středy jsou ve 3D vždy označeny; měřené body, kružnice, PD bez piloty a popisky respektují volby plánu. Kružnice jsou vodorovné průřezy ve výšce příslušného středu, nikoli válce pilot.</p><p>PD s výškou 0 je skutečný prostorový bod. PD bez výšky je šedá projekce v popsané pomocné rovině, nepoužije se pro prostorovou spojnici ani ΔZ a v DXF 3D se vynechá. PDF 3D uloží aktuální pohled na A3; DXF 3D uloží skutečné souřadnice CAD X = −Y, CAD Y = −X, CAD Z = Z. Původní PDF a DXF zachovávají půdorys bez vlivu natočení. Bodové prvky půdorysného DXF si ponechávají výšky podle popisu exportu. DXF 3D obsahuje také hroty šipek od PD ke skutečnosti a popisky dp, dY, dX, dZ v mm. U PD bez Z se uvedou jen polohové odchylky u skutečného středu, bez prostorové šipky. Kliknutí na bod se známou pilotou propojí pohled s tabulkou; tooltip ukazuje skutečné hodnoty.</p>
 <h3>Upravit popisky</h3><p>Tlačítko Upravit popisky ve skupině Nástroje plánu zapne ruční posun popisků odchylek (mm), aby se v hustých místech nepřekrývaly. Popisek uchopte myší a přetáhněte; ostatní popisky (názvy pilot) se mu automaticky vyhnou. Posunutý popisek je v režimu úprav orámovaný oranžově a se šipkou ho spojí tenká šedá čára. Dvojklik na popisek vrátí jeho automatickou polohu, tlačítko Obnovit automatické polohy vrátí všechny. Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky, Escape režim ukončí. Posun se ukládá v prohlížeči, platí pro 2D plán, PDF 2D, DXF 2D i protokol PDF a vymaže ho Reset. Poloha je uložená vůči šipce v jednotkách písma, takže při přiblížení zůstává popisek u své šipky. Hodnoty odchylek ani výpočet se nemění; ve 3D pohledu se popisky neposouvají.</p>
+<h3>Opravit odchylky</h3><p>Tlačítko Opravit odchylky ve skupině Nástroje plánu slouží k opravě špatně změřeného středu piloty. Dvojklikem na popisek odchylky otevřete zadání nové hodnoty (jen celé číslo v mm). Střed se posune po směru šipky k bodu PD na zadanou vzdálenost; přepočítají se souřadnice Y a X středu, ΔY, ΔX a Δp, šipka a barva podle mezní odchylky. Výška Z a ΔZ se nemění. Opravený popisek je v režimu úprav orámovaný fialově. Tlačítko Vrátit měřenou v okně zadání vrátí změřený střed (stejně pomůže zadat původní hodnotu), Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky, Vrátit všechny opravy zruší všechny úpravy a vymaže je Reset. Oprava se ukládá v prohlížeči a platí v tabulce, plánu, PDF, DXF i uložených souborech. U piloty se změřenou odchylkou 0 mm opravu zadat nelze, protože směr posunu středu není určen. Oprava je vázaná na složení bodů piloty: po vyřazení nebo vrácení bodu se přestane uplatňovat a platí znovu vypočtený střed. Opravu je vhodné použít až poté, co nelze špatný bod vyřadit v tabulce a střed nechat znovu spočítat.</p>
 <h3>1. Měření</h3>
 <ul><li>Soubor STX přetáhněte do zeleného okna nebo ho načtěte tlačítkem; tlačítkem „Zrušit měření“ s ikonou zaměření ho zase odeberete (u projektu „Zrušit projekt“ s ikonou listu). Sloupce vždy v tomto pořadí: 1. název bodu, 2. Y, 3. X, 4. Z (povinné), 5. kód (volitelný). Souřadnice v metrech, JTSK i místní systém. Plán zachovává orientaci Y doleva a X dolů pro obvyklé kladné souřadnice JTSK; jde o souřadnicové směry. U místní soustavy platí její vlastní orientace. Záporné hodnoty EPSG:5514 se automaticky nepřevádějí na kladné Y, X JTSK.</li>
 <li>Povolené přípony souborů: STX, TXT, CSV. Oddělovač může být mezera, tabulátor nebo středník, desetinná tečka i čárka. Pozor: čárka jako oddělovač sloupců společně s desetinnou čárkou je nejednoznačné (řádek „A,1,5,2,3“ se chápe jako 5 sloupců) – u desetinné čárky proto radši použijte středník nebo mezeru. Řádky s málo sloupci, nečíselnými souřadnicemi nebo bez Z se přeskočí, výpis je v logu pod tabulkou. Povolený rozsah souřadnic (měření i projekt): Y a X od −9 999 999,999 do 9 999 999,999 m, Z od −9 999,999 do 9 999,999 m; řádek mimo rozsah se přeskočí a vyskočí varovací toast. Název bodu s mezerou je možný jen při oddělovači středník nebo tabulátor.</li>
@@ -1444,6 +1445,7 @@ body.gm-tester .tr-tester-mark{position:absolute;inset:0;z-index:1;display:grid;
     <div class="plan-opt-group plan-tools" role="group" aria-labelledby="gToolsTitle"><span class="gk" id="gToolsTitle">Nástroje</span><span class="gi">
     <button type="button" class="wi measure-toggle" id="gMeasure" aria-pressed="false" aria-controls="gMeasurePanel" title="Měření mezi body (M). Vyberte A a B kliknutím nebo podle názvu. Escape měření vypne."><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12zM7 11l3 3m1-7 3 3m1-7 3 3"></path></svg><span data-gm-text="Nástroj Měření">Měření</span></button>
     <button type="button" class="wi measure-toggle tin-toggle" id="gLabelEdit" aria-pressed="false" aria-controls="gLabelPanel" title="Upravit popisky: posun popisků odchylek ve 2D plánu, aby se nepřekrývaly. Platí i pro PDF 2D, DXF 2D a protokol."><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M8.5 5v9"></path><path d="m14 14 6 6m0-4.5V20h-4.5"></path></svg>Upravit popisky</button>
+    <button type="button" class="wi measure-toggle tin-toggle" id="gFixEdit" aria-pressed="false" aria-controls="gFixPanel" title="Opravit odchylky: dvojklik na popisek odchylky umožní přepsat hodnotu (mm) u špatně změřeného středu. Střed se posune po směru šipky k bodu PD a přepočtou se souřadnice, ΔY, ΔX a vyhodnocení."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg>Opravit odchylky</button>
     </span></div>
     <div class="gsl">
     <label title="Velikost popisků v plánu a v exportech (PDF, DXF). Dvojklik na posuvník vrátí výchozí velikost."><span style="min-width:3.4em">Písmo</span> <small style="color:var(--mut)">25 %</small> <input type="range" id="gt" min="0" max="100" step="any" value="50" style="width:160px" title="Velikost písma popisků. Dvojklik = výchozí velikost (střed)."> <small style="color:var(--mut)">300 %</small> <input type="number" id="gtn" min="25" max="300" step="5" value="100" style="width:68px" title="Velikost písma v procentech. Lze zadat číslem, posuvník se přizpůsobí. Klik na „%“ vrátí 100 %."> <span id="gtp" class="pctr" role="button" tabindex="0" title="Klik vrátí velikost na výchozích 100 %.">%</span></label>
@@ -1471,6 +1473,15 @@ body.gm-tester .tr-tester-mark{position:absolute;inset:0;z-index:1;display:grid;
  <div class="tin-foot">
   <p id="gLabelStatus" class="hp" role="status" aria-live="polite"></p>
   <span class="tin-acts"><button type="button" class="wi" id="gLabelUndo" title="Vrátit poslední krok (Ctrl+Z)">Zpět</button><button type="button" class="wi" id="gLabelRedo" title="Znovu provést krok (Ctrl+Y)">Znovu</button><button type="button" class="wi" id="gLabelReset" title="Vrátí všem popiskům odchylek automatickou polohu">Obnovit automatické polohy</button></span>
+ </div>
+</div><div id="gFixPanel" class="measure-panel tin-panel" hidden role="region" aria-label="Opravit odchylky">
+ <button type="button" class="measure-close" id="gFixClose" aria-label="Zavřít opravy odchylek (Escape)" title="Zavřít (Escape)">×</button>
+ <div class="tin-head"><strong>Opravit odchylky</strong><span class="tin-count" id="gFixCount"></span></div>
+ <div class="tin-ctx"><div class="tin-pane"><span class="hp" id="gFixHint">Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Opravený popisek je orámovaný fialově. Používejte jen pro špatně změřené středy.</span>
+  <div id="gFixEd" style="display:none;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px"><label>Pilota <b id="gFixName"></b>: odchylka <input type="text" id="gFixVal" inputmode="numeric" maxlength="4" size="5" autocomplete="off" aria-label="Nová odchylka v mm"> mm</label><span class="hp" id="gFixOrig"></span><button type="button" class="wi" id="gFixOk">Použít</button><button type="button" class="wi" id="gFixRev" title="Vrátí hodnotu změřeného středu">Vrátit měřenou</button><button type="button" class="wi" id="gFixCancel">Storno</button></div></div></div>
+ <div class="tin-foot">
+  <p id="gFixStatus" class="hp" role="status" aria-live="polite"></p>
+  <span class="tin-acts"><button type="button" class="wi" id="gFixUndo" title="Vrátit poslední krok (Ctrl+Z)">Zpět</button><button type="button" class="wi" id="gFixRedo" title="Znovu provést krok (Ctrl+Y)">Znovu</button><button type="button" class="wi" id="gFixReset" title="Vrátí všem pilotám změřené odchylky">Vrátit všechny opravy</button></span>
  </div>
 </div><div id="pgtip" hidden></div>
   <div id="gtip" hidden></div>
@@ -1637,7 +1648,7 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.331", APP_DATE="21. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.332", APP_DATE="21. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -1808,6 +1819,10 @@ const PLK=GM_KEY("geomat.zss.plan.v1");
 const GLBL_K=GM_KEY("geomat.zss.labels.v1");
 let GLBL={on:false,map:{},hist:[],fut:[],labels:[],drag:null,hover:null,msg:""};
 try{ const v=JSON.parse(localStorage.getItem(GLBL_K)||"null"); if(v&&typeof v==="object"&&!Array.isArray(v)) for(const [k,o] of Object.entries(v)) if(o&&[o.t,o.n].every(Number.isFinite)||o&&[o.x,o.y].every(Number.isFinite)) GLBL.map[k]=o; }catch(e){}   // uložený pohled plánu: přiblížení vůči „celému výkresu“ a střed
+// ruční opravy odchylek (Plán → Opravit odchylky): klíč piloty → nová odchylka od PD v mm; měřený střed se nemění, oprava se aplikuje po výpočtu
+const FIX_K=GM_KEY("geomat.zss.fix.v1");
+let FIX={on:false,map:{},hist:[],fut:[],sel:null,msg:"",lastDown:null};
+try{ const v=JSON.parse(localStorage.getItem(FIX_K)||"null"); if(v&&typeof v==="object"&&!Array.isArray(v)) for(const [k,o] of Object.entries(v)) if(o&&Number.isInteger(o.mm)&&o.mm>=0&&o.mm<=9999&&typeof o.sig==="string") FIX.map[k]={mm:o.mm,sig:o.sig}; }catch(e){}
 let GVZ=null; try{ const v=JSON.parse(localStorage.getItem(PLK)||"null"); if(v&&v.z>0&&isFinite(v.cy)&&isFinite(v.cx)) GVZ=v; }catch(e){}
 function clearView(){ GVZ=null; try{ removeStorage(PLK); }catch(e){} }   // zapomene přiblížení a posun plánu (plán se příště otevře jako celý výkres)
 let gvT=0;
@@ -2510,7 +2525,20 @@ function cmpVals(a,b){ if(a===null&&b===null) return 0; if(a===null) return 1; i
 const off=new Set(), skip=new Set(), expanded=new Set(), skipSig=new Map();   // off = vypnuté body, skip = pilotu nepoužít ve výstupech
 let diaNote="", lastDia="zssrmin";   // které pole průměru (rmin / rmax) uživatel naposledy upravil
 let rcTimer=0;   // čekající přepočet po psaní do číselného pole
-const sigOf=p=>p.mem.map(m=>m.key).join(",");   // složení piloty (včetně ručně vypnutých bodů)
+const sigOf=p=>p.mem.map(m=>m.key).join(",");
+const fixKey=p=>JSON.stringify([p.first,p.ref?p.ref.id:""]);
+// ruční oprava odchylky: střed se posune po směru ref → střed na zadanou délku; Z a odchylka kružnice (dev) zůstávají; p.fix drží měřené hodnoty
+function fixApplyAll(rows){
+  for(const p of rows){
+    if(p.fix){ p.y=p.fix.y; p.x=p.fix.x; p.rd=p.fix.rd; p.dy=p.fix.dy; p.dx=p.fix.dx; if(p.fix.cNew){ delete p.cy; delete p.cx; } delete p.fix; }
+    if(p.invalid||!p.ref) continue;
+    const f=FIX.map[fixKey(p)]; if(!f||f.sig!==sigOf(p)||mmv(p.rd)===0) continue;   // změřená odchylka 0 mm: směr posunu není určen, oprava se neuplatní
+    const L=f.mm/1000, k=L/p.rd, cNew=p.cy===undefined;
+    p.fix={y:p.y,x:p.x,rd:p.rd,dy:p.dy,dx:p.dx,cNew};
+    if(cNew){ p.cy=p.y; p.cx=p.x; }   // skutečná kružnice z měřených bodů zůstane na měřeném místě
+    p.dy*=k; p.dx*=k; p.y=p.ref.y+p.dy; p.x=p.ref.x+p.dx; p.rd=L;
+  }
+}   // složení piloty (včetně ručně vypnutých bodů)
 const skipAdd=k=>{ skip.add(k); const p=allRows.find(q=>q.first===k); if(p) skipSig.set(k,sigOf(p)); };
 const skipDel=k=>{ skip.delete(k); skipSig.delete(k); };
 const skipClear=()=>{ skip.clear(); skipSig.clear(); };
@@ -2565,6 +2593,7 @@ function recalc(extra=""){
 
   const nameSelected=points.filter(q=>gmNameRangePass('zss',q.id));
   const r=gmEvaluateZss(nameSelected,rmin,rmax,!$("zssallp").checked,tol,r0list.map(v=>v/2),dvv/100,refs,rdist,$("zssronly").checked&&refs.length>0,off,ddist,$("zssoo").checked,limv,{measureMode:$("zssMeasureMode").value,cMode:$("zsscmode").value,repMode:$("zssrmode").value,sigC:csigv});
+  fixApplyAll(r.all);
   if(gmNameRangeActive('zss'))r.log.unshift(gmPreviewText("Rozsah názvů: ")+(GM_NAME_RANGES.zss.from||gmPreviewText("bez dolní meze"))+gmPreviewText(" až ")+(GM_NAME_RANGES.zss.to||gmPreviewText("bez horní meze"))+gmPreviewText(" (včetně); názvům vyhovuje ")+nameSelected.length+' z '+points.length+gmPreviewText(" bodů."));
   showAuto(r.autoV);
   const fv=$("zssflt").value; fltRefs=new Set();
@@ -2794,7 +2823,7 @@ $("zsstw").querySelector("thead").addEventListener("click",e=>{
   renderTable();
 });
 $("zssflt").addEventListener("change",()=>{ if(points.length) recalc(lastExtra); else renderTable(); });
-function clearMeasurement(preserveSaved){planMeasureClear("zss");GSEL=null;if(PG3){pg3Release();if(preserveSaved!==true)PG3.yaw=PG3.pitch=PG3.roll=0;} if(!RESTORING) clearView();   // úplné odebrání měření: data, odškrtnutí, tabulka, log i stavy
+function clearMeasurement(preserveSaved){planMeasureClear("zss");GSEL=null;if(!RESTORING&&preserveSaved!==true){ FIX.map={};FIX.hist=[];FIX.fut=[];try{ removeStorage(FIX_K); }catch(e){} }if(PG3){pg3Release();if(preserveSaved!==true)PG3.yaw=PG3.pitch=PG3.roll=0;} if(!RESTORING) clearView();   // úplné odebrání měření: data, odškrtnutí, tabulka, log i stavy
   if(preserveSaved!==true)projectSaveText('zss',false,[]);
   zssHistogramClear();
   points=[]; piles=[]; unusedPts=[]; allRows=[]; lastExtra=""; lastWarn=""; lastInfo=""; parseLog=[];gmZssEvaluation=null;gmZssEvaluationLog=[];gmZssSelectionLog=[]; fname=""; measFiles=[];coordCheckRefresh('zss');
@@ -3884,7 +3913,7 @@ function buildScene(W,H,v,o){
     if(p.link)it.push({t:'line',...p.link,c:GC.gray,sw:.45*fs,k:'lead'});
     if(k==='odch'){
       const b=p.box;labels.push({key:task.key,box:b,v:{px:v.px,py:v.py,ux:v.ux,uy:v.uy,len:v.len,arrow:v.arrow},F:task.frame,fs,manual:!!task.man,name:v.p.name});
-      if(o.labelEdit){ const hot=o.labelHot===task.key,c=hot?'#2563eb':task.man?'#d97706':'#94a3b8',pts=[];
+      if(o.labelEdit||o.fixEdit){ const hot=o.labelHot===task.key,c=hot?'#2563eb':o.fixEdit?(o.fixKeys&&o.fixKeys.has(task.key)?'#7c3aed':'#94a3b8'):task.man?'#d97706':'#94a3b8',pts=[];
         for(const [lx,ly] of [[-1,-1],[1,-1],[1,1],[-1,1],[-1,-1]])pts.push(b.cx+lx*b.w*b.co-ly*b.h*b.si,b.cy+lx*b.w*b.si+ly*b.h*b.co);
         it.push({t:'pl',p:pts,c,sw:hot?1.6:1,dash:hot?null:[3,2]}); }
     }
@@ -4274,10 +4303,11 @@ function gRender(){
   const box=$("gsvg"), W=box.clientWidth, H=box.clientHeight;
   if(PG3){pg3Ui();if(pg3Active()&&pg3Render(W,H)){GLBL.labels=[];if(GLBL.on)gLabelUI();return;}}
   if(!GV){ GV=fitView(W,H,0,gOpts(1)); if(GVZ){ GV.s*=GVZ.z; GV.cy=GVZ.cy; GV.cx=GVZ.cx; } }
-  const sc=buildScene(W,H,GV,Object.assign(gOpts(1),{sel:GSEL,fcol:true,labelEdit:GLBL.on,labelHot:GLBL.drag?.key||GLBL.hover}));
+  const sc=buildScene(W,H,GV,Object.assign(gOpts(1),{sel:GSEL,fcol:true,labelEdit:GLBL.on,labelHot:GLBL.drag?.key||GLBL.hover,fixEdit:FIX.on,fixKeys:FIX.on?new Set(gPiles().filter(p=>p.fix).map(gLabelKey)):null}));
   GLBL.labels=sc.labels||[];
   box.innerHTML=svgOf(planScreenScene(sc,"g"));
   if(GLBL.on)gLabelUI();
+  if(FIX.on)fixUI();
 }
 $("zssgb").onclick=()=>{ if(!needPiles()) return; $("gm").classList.remove("split"); $("gm").hidden=false; syncSplit(); GV=null; gRender(); };
 /* Plán ZSS → Upravit popisky: ruční posun popisků odchylek (jen text, výpočet se nemění). */
@@ -4294,6 +4324,7 @@ function gLabelUI(msg){
 }
 function gLabelOpen(){
  if(GLBL.on)return;
+ if(FIX.on)fixClose(false);
  if(!gPiles().some(p=>p.ref)){ toast(gmPreviewText("Úprava popisků je dostupná, až budou v plánu odchylky od projektu (PD).")); return; }
  if(planMeasureState("zss")?.on)planMeasureClear("zss");
  if(PG3&&pg3Active())pg3Face(pg3Home());
@@ -4320,7 +4351,7 @@ function gLabelOffset(L,cx,cy){
  if(v.arrow&&v.len>0)return {t:r(((cx-v.px)*v.ux+(cy-v.py)*v.uy)/v.len),n:r(((cx-v.px)*F.si-(cy-v.py)*F.co)/fs)};
  return {x:r((cx-v.px)/fs),y:r((cy-v.py)/fs)};
 }
-planMeasureToggle=(o=>function(module){ if(module==='zss'&&GLBL.on&&!planMeasureState('zss')?.on)gLabelClose(false); return o.apply(this,arguments); })(planMeasureToggle);
+planMeasureToggle=(o=>function(module){ if(module==='zss'&&GLBL.on&&!planMeasureState('zss')?.on)gLabelClose(false); if(module==='zss'&&FIX.on&&!planMeasureState('zss')?.on)fixClose(false); return o.apply(this,arguments); })(planMeasureToggle);
 (()=>{
  const box=$('gsvg'),edit=()=>GLBL.on&&!(PG3&&pg3Active())&&!$('gm').hidden;
  $('gLabelEdit').addEventListener('click',()=>{ if(GLBL.on)gLabelClose(); else gLabelOpen(); });
@@ -4351,6 +4382,81 @@ planMeasureToggle=(o=>function(module){ if(module==='zss'&&GLBL.on&&!planMeasure
  window.addEventListener('keydown',e=>{ if(!GLBL.on||$('gm').hidden||!(e.ctrlKey||e.metaKey)||e.altKey)return; const t=e.target,tag=t&&t.tagName; if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t?.isContentEditable)return;
   const k=e.key.toLowerCase(); if(k==='z'&&!e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); gLabelUndo(false); } else if(k==='y'||k==='z'&&e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); gLabelUndo(true); } },true);
 })();
+
+/* Plán ZSS → Opravit odchylky: přepis odchylky od PD (celé mm) u špatně změřeného středu; střed se posune po směru šipky. */
+function fixSave(){ if(Object.keys(FIX.map).length) writeStorage(FIX_K,JSON.stringify(FIX.map)); else removeStorage(FIX_K); }
+function fixCopy(){ return JSON.parse(JSON.stringify(FIX.map)); }
+function fixPile(L){ return gPiles().find(p=>p.ref&&gLabelKey(p)===L.key); }
+function fixUI(msg){
+ if(msg!==undefined)FIX.msg=msg;
+ const n=allRows.filter(p=>p.fix).length;
+ $('gFixCount').innerHTML=n?gmPreviewText("Opravené odchylky: <b>⟦0⟧</b>",[n]):esc(gmPreviewText("Žádná odchylka není ručně opravená."));
+ $('gFixUndo').disabled=!FIX.hist.length; $('gFixRedo').disabled=!FIX.fut.length; $('gFixReset').disabled=!Object.keys(FIX.map).length;
+ $('gFixStatus').textContent=(PG3&&pg3Active())?gmPreviewText("Odchylky lze opravovat jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home."):FIX.msg||'';
+}
+function fixApplyNow(msg){ fixSave(); if(points.length)recalc(lastExtra); else renderTable(); fixUI(msg); }
+function fixChange(before,msg){ FIX.hist.push(before); if(FIX.hist.length>200)FIX.hist.shift(); FIX.fut=[]; fixApplyNow(msg); }
+function fixUndo(redo){ const from=redo?FIX.fut:FIX.hist,to=redo?FIX.hist:FIX.fut; if(!from.length)return; to.push(fixCopy()); FIX.map=from.pop(); fixEdClose(); fixApplyNow(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
+function fixOpen(){
+ if(FIX.on)return;
+ if(!gPiles().some(p=>p.ref)){ toast(gmPreviewText("Oprava odchylek je dostupná, až budou v plánu odchylky od projektu (PD).")); return; }
+ if(GLBL.on)gLabelClose(false);
+ if(planMeasureState("zss")?.on)planMeasureClear("zss");
+ if(PG3&&pg3Active())pg3Face(pg3Home());
+ FIX.on=true; FIX.hist=[]; FIX.fut=[]; FIX.sel=null; FIX.msg=''; GLBL.hover=null;
+ $('gFixPanel').hidden=false; $('gFixEdit').setAttribute('aria-pressed','true'); $('gtip').hidden=true;
+ gRender(); fixUI();
+}
+function fixClose(redraw=true){
+ if(!FIX.on)return;
+ FIX.on=false; FIX.sel=null; FIX.hist=[]; FIX.fut=[]; FIX.msg=''; GLBL.hover=null; FIX.lastDown=null;
+ $('gFixEd').style.display='none'; $('gFixPanel').hidden=true; $('gFixEdit').setAttribute('aria-pressed','false'); $('gsvg').style.cursor='';
+ if(redraw&&!$('gm').hidden){ gRender(); $('gFixEdit').focus({preventScroll:true}); }
+}
+function fixEdClose(){ FIX.sel=null; $('gFixEd').style.display='none'; $('gFixVal').removeAttribute('aria-invalid'); }
+function fixEdOpen(p){
+ const orig=p.fix?p.fix.rd:p.rd;
+ if(mmv(orig)===0){ fixEdClose(); fixUI(gmPreviewText("Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.",[p.name])); return; }
+ FIX.sel={key:fixKey(p),k:gLabelKey(p),name:p.name};
+ $('gFixName').textContent=p.name; $('gFixVal').value=String(mmv(p.rd)); $('gFixVal').removeAttribute('aria-invalid');
+ $('gFixOrig').textContent=gmPreviewText("změřeno ⟦0⟧ mm",[mmv(orig)]);
+ $('gFixRev').disabled=!p.fix;
+ $('gFixEd').style.display='flex'; fixUI(''); $('gFixVal').focus(); $('gFixVal').select();
+}
+function fixEdCommit(){
+ const s=FIX.sel; if(!s)return;
+ const p=gPiles().find(q=>q.ref&&fixKey(q)===s.key); if(!p){ fixEdClose(); return; }
+ const v=$('gFixVal').value.trim();
+ if(!/^\d{1,4}$/.test(v)){ $('gFixVal').setAttribute('aria-invalid','true'); fixUI(gmPreviewText("Zadejte celé číslo 0 až 9999 (mm).")); $('gFixVal').focus(); return; }
+ const mm=parseInt(v,10), orig=mmv(p.fix?p.fix.rd:p.rd), before=fixCopy();
+ if(mm===orig){ if(!FIX.map[s.key]){ fixEdClose(); fixUI(''); return; } delete FIX.map[s.key]; }
+ else FIX.map[s.key]={mm,sig:sigOf(p)};
+ fixEdClose(); fixChange(before,gmPreviewText("Odchylka ⟦0⟧: ⟦1⟧ → ⟦2⟧ mm.",[s.name,orig,mm]));
+}
+(()=>{
+ const box=$('gsvg'),on=()=>FIX.on&&!(PG3&&pg3Active())&&!$('gm').hidden;
+ $('gFixEdit').addEventListener('click',()=>{ if(FIX.on)fixClose(); else fixOpen(); });
+ $('gFixClose').addEventListener('click',()=>fixClose());
+ $('gFixUndo').addEventListener('click',()=>fixUndo(false));
+ $('gFixRedo').addEventListener('click',()=>fixUndo(true));
+ $('gFixReset').addEventListener('click',()=>{ if(!Object.keys(FIX.map).length)return; const before=fixCopy(); FIX.map={}; fixEdClose(); fixChange(before,gmPreviewText("Všem pilotám se vrátily změřené odchylky.")); });
+ $('gFixOk').addEventListener('click',fixEdCommit);
+ $('gFixCancel').addEventListener('click',()=>{ fixEdClose(); fixUI(''); });
+ $('gFixRev').addEventListener('click',()=>{ const s=FIX.sel; if(!s||!FIX.map[s.key])return; const before=fixCopy(); delete FIX.map[s.key]; fixEdClose(); fixChange(before,gmPreviewText("Odchylka ⟦0⟧: vrácena změřená hodnota.",[s.name])); });
+ $('gFixVal').addEventListener('input',e=>{ const c=e.target.value.replace(/\D/g,''); if(c!==e.target.value)e.target.value=c; e.target.removeAttribute('aria-invalid'); });
+ $('gFixVal').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); fixEdCommit(); } });
+ box.addEventListener('pointerdown',e=>{ if(!on()||e.button!==0)return; const L=gLabelAt(e.clientX,e.clientY); if(!L)return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  const now=Date.now(),last=FIX.lastDown; FIX.lastDown={key:L.key,t:now,x:e.clientX,y:e.clientY};   // dvojklik se rozpoznává zde: plán se mezi kliknutími překresluje
+  if(last&&last.key===L.key&&now-last.t<450&&Math.hypot(e.clientX-last.x,e.clientY-last.y)<6){ FIX.lastDown=null; const p=fixPile(L); if(p)fixEdOpen(p); } },true);
+ box.addEventListener('pointermove',e=>{ if(!on()||e.buttons)return; const L=gLabelAt(e.clientX,e.clientY),key=L?L.key:null;
+  if(L){ e.stopImmediatePropagation(); box.style.cursor='pointer'; $('gtip').hidden=true; } else if(GLBL.hover) box.style.cursor='';
+  if(key!==GLBL.hover){ GLBL.hover=key; gRequestRender(); } },true);
+ box.addEventListener('pointerleave',()=>{ if(FIX.on&&GLBL.hover){ GLBL.hover=null; gRequestRender(); } });
+ box.addEventListener('dblclick',e=>{ if(!on())return; if(!gLabelAt(e.clientX,e.clientY))return; e.preventDefault(); e.stopImmediatePropagation(); },true);
+ window.addEventListener('keydown',e=>{ if(!FIX.on||$('gm').hidden||!(e.ctrlKey||e.metaKey)||e.altKey)return; const t=e.target,tag=t&&t.tagName; if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t?.isContentEditable)return;
+  const k=e.key.toLowerCase(); if(k==='z'&&!e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); fixUndo(false); } else if(k==='y'||k==='z'&&e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); fixUndo(true); } },true);
+})();
 // rozdělená obrazovka (svislá jako v Rovinnosti): vpravo plán (50 % šířky), vlevo tabulka; plán na celou obrazovku zůstává beze změny
 const IC_SPLIT='<rect x="3" y="3.5" width="18" height="17" rx="2" stroke-width="1.8"/><path d="M3 12h18" stroke-width="1.8"/><rect x="5.5" y="14.2" width="13" height="4" rx=".6" fill="currentColor" stroke="none" opacity=".55"/>',
   ZSS_IC_SPLIT='<rect x="3.5" y="3" width="17" height="18" rx="2" stroke-width="1.8"/><path d="M12 3v18" stroke-width="1.8"/><rect x="14.2" y="5.5" width="4" height="13" rx=".6" fill="currentColor" stroke="none" opacity=".55"/>',
@@ -4366,7 +4472,7 @@ function syncSplit(remember=true){ const st=viewState(), on=st===1; document.bod
   $("zssgbs").dataset.t=VT[st]; if(!$("zssgbs").disabled) $("zssgbs").title=gmPreviewText(VT[st]); $("gsp").title=gmPreviewText(VT[st]); }
 function setView(n){
   if(PROJECT_FILES_BOOTING&&!RESTORING)PROJECT_FILE_VIEW_TOUCHED=true;
-  if(n===0){ planMeasureClear("zss");gLabelClose(false);if(PG3)pg3Stop();const selected=GSEL!==null;GSEL=null;$("gm").hidden=true;syncSplit();if(selected)renderTable();return; }
+  if(n===0){ planMeasureClear("zss");gLabelClose(false);fixClose(false);if(PG3)pg3Stop();const selected=GSEL!==null;GSEL=null;$("gm").hidden=true;syncSplit();if(selected)renderTable();return; }
   $("gm").classList.toggle("split",n===1); $("gm").hidden=false; syncSplit(); GV=null; gRender();
   if(n===1) $("zssfbar").scrollIntoView({block:"start"}); }
 // táhlo na levém okraji plánu v rozdělené obrazovce: poměr tabulka : plán od 20 : 80 do 80 : 20 (podíl plánu v % šířky okna v proměnné --sp), dvojklik = 50 : 50
@@ -4703,6 +4809,7 @@ window.addEventListener("resize",gRequestRender);
 document.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented||document.body.classList.contains("mrov")||$("gm").hidden)return;
   if(["rm","zssInfo","rvInfo","cadImport","zprt"].some(id=>!$(id).hidden))return;
   if(planMeasureState("zss")?.on){e.preventDefault();e.stopImmediatePropagation();planMeasureToggle("zss");return;}
+  if(FIX.on){e.preventDefault();e.stopImmediatePropagation();if(FIX.sel)fixEdClose();else fixClose();return;}
   if(GLBL.on){e.preventDefault();e.stopImmediatePropagation();gLabelClose();return;}
   e.preventDefault();setView(0);
 });
@@ -4755,13 +4862,13 @@ document.querySelectorAll("[data-d]").forEach(e=>{ const el=$(e.dataset.d); if(!
   v*=parseFloat(e.dataset.k||1); e.textContent=gmDec(Math.round(v*1e6)/1e6); });
 document.querySelectorAll(".ver").forEach(e=>{ e.textContent=(e.tagName==="SMALL"?"GeoMAT verze ":"")+APP_VERSION+" ("+APP_DATE+")"; });
 // Reset: odebere načtené soubory a ruční výběr, vrátí parametry, volby plánu, filtr, řazení i poměr rozdělení na výchozí hodnoty a smaže uložené nastavení
-function doReset(){planMeasureClear("zss");gLabelClose(false);GLBL.map={};
+function doReset(){planMeasureClear("zss");gLabelClose(false);fixClose(false);GLBL.map={};FIX.map={};FIX.hist=[];FIX.fut=[];
   projectFilesBeginReset('zss');
   $("zsshist").open=false;
   clearMeasurement(); $("zssrclr").onclick(); $("zsspdef").onclick(); $("gdef").onclick();
   [$("gt"),$("ga")].forEach(e=>{ e.value=50; e.dispatchEvent(new Event("input")); });
   foldMode=0; applyFold(); $("zssadv").open=false; $("zssflt").value="all"; sortCol=null; sortDir=1; GSEL=null; GV=null; clearView(); $("zsstw").scrollTop=0; $("zsstw").scrollLeft=0; $("zsslogd").open=false; setSp(50);
-  try{ [LSK,SPK,ZPRT_K,GLBL_K].forEach(k=>removeStorage(k)); }catch(e){}
+  try{ [LSK,SPK,ZPRT_K,GLBL_K,FIX_K].forEach(k=>removeStorage(k)); }catch(e){}
   renderTable(); syncSplit();return projectFilesResetResult('zss'); }
 // vlastní okno pro potvrzení resetu (místo systémového confirm): výchozí fokus na „Zrušit“, Esc nebo klik mimo okno zavře
 function gmResetButton(){return $(rmMode==="rov"?"rvResetAll":rmMode==="terrain"?"trResetAll":"zssResetAll");}
@@ -11819,10 +11926,10 @@ globalThis.GeoMATLanguage?.onChange(()=>{
    <p class="gm-auth-hint" id="gmAuthHint">Číslo popisné našich kanceláří je heslem pro přihlášení</p>
    <p id="gmAuthError" role="status" aria-live="polite" hidden></p>
   </form>
-  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.331 · Autor: Jan Bartůněk"><span>v<span id="gmAuthVersion">1.331</span></span><span>Jan Bartůněk</span></span></div>
+  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.332 · Autor: Jan Bartůněk"><span>v<span id="gmAuthVersion">1.332</span></span><span>Jan Bartůněk</span></span></div>
  </div>
 </div>
-<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.331 · Autor: Jan Bartůněk"><span>v<span id="gmAuthAccountVersion">1.331</span></span><span>Jan Bartůněk</span></span></div></div></div>
+<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.332 · Autor: Jan Bartůněk"><span>v<span id="gmAuthAccountVersion">1.332</span></span><span>Jan Bartůněk</span></span></div></div></div>
 <div id="gmLogoView" role="dialog" aria-modal="true" aria-label="Logo GeoMAT" hidden><button type="button" id="gmLogoViewClose" aria-label="Zavřít logo" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><svg class="gm-logo-art" id="gmLogoArt" viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet" role="img" aria-label="GeoMAT"><g id="gmLogoArtBody"><g id="gmLogoArtMark" transform="translate(100 0) scale(5)"><rect id="gmLogoArtTile" width="24" height="24" rx="5" fill="#fff"/><g fill="none" stroke="#2f855a" stroke-width="2.08" stroke-linecap="round"><circle cx="12" cy="12" r="5.2"/><path d="M12 4v4.8M12 15.2V20M4 12h4.8M15.2 12H20"/></g></g><text id="gmLogoArtText" x="160" y="205" text-anchor="middle" font-family="Orbitron, Arial, Helvetica, sans-serif" font-size="56" font-weight="800" letter-spacing="1.1"><tspan fill="#2f855a">Geo</tspan><tspan fill="#000">MAT</tspan></text></g></svg></div>
 <div id="gmAuthNotice" role="status" hidden></div>
 
@@ -15419,7 +15526,7 @@ globalThis.GeoMATLanguage?.onChange(()=>{
  "body": "points",
  "Použít bod ⟦0⟧": "Include point ⟦0⟧",
  "rozdíl největší a nejmenší kolmé odchylky": "difference between the maximum and minimum perpendicular deviations",
- "GeoMAT verze 1.331 · Autor: Jan Bartůněk": "GeoMAT version 1.331 · Author: Jan Bartůněk",
+ "GeoMAT verze 1.332 · Autor: Jan Bartůněk": "GeoMAT version 1.332 · Author: Jan Bartůněk",
  "Tažením změníte poměr rozdělení. Dvojklik obnoví 50:50.": "Drag to resize the split view. Double-click to restore 50:50.",
  "Vyhlazení vytvořilo neplatný vrchol. Použijte lineární TIN.": "Smoothing produced an invalid vertex. Use linear TIN.",
  " Pozor: bod je výškou Z₀ pro kubatury, po použití úprav bude Z₀ = ⟦0⟧ m.": " Note: this point is the Z₀ height for volumes; after applying edits Z₀ = ⟦0⟧ m.",
@@ -15588,6 +15695,30 @@ globalThis.GeoMATLanguage?.onChange(()=>{
  "DXF „⟦0⟧“ je načtené jako podklad – pro tvorbu DMT se nepoužije.": "DXF “⟦0⟧” is loaded as an underlay – it will not be used to build the DTM.",
  "Vyberte jednotky m, mm nebo ft.": "Select units m, mm or ft.",
  "Pozor: hlavička DXF uvádí ": "Note: the DXF header specifies ",
+ "Opravit odchylky": "Correct deviations",
+ "Opravit odchylky: dvojklik na popisek odchylky umožní přepsat hodnotu (mm) u špatně změřeného středu. Střed se posune po směru šipky k bodu PD a přepočtou se souřadnice, ΔY, ΔX a vyhodnocení.": "Correct deviations: double-click a deviation label to overwrite its value (mm) for a wrongly measured centre. The centre moves along the arrow towards the PD point and the coordinates, ΔY, ΔX and the evaluation are recalculated.",
+ "Zavřít opravy odchylek (Escape)": "Close deviation corrections (Escape)",
+ "Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Opravený popisek je orámovaný fialově. Používejte jen pro špatně změřené středy.": "Double-click a deviation label to enter a new value (number only, mm). The pile centre moves along the arrow towards the PD point; the centre coordinates, ΔY, ΔX and the evaluation against the tolerance are recalculated. Height Z does not change. A corrected label has a purple frame. Use only for wrongly measured centres.",
+ "Pilota": "Pile",
+ ": odchylka": ": deviation",
+ "Nová odchylka v mm": "New deviation in mm",
+ "Použít": "Apply",
+ "Vrátit měřenou": "Restore measured",
+ "Vrátí hodnotu změřeného středu": "Restores the value of the measured centre",
+ "Storno": "Cancel",
+ "Vrátí všem pilotám změřené odchylky": "Restores the measured deviations of all piles",
+ "Vrátit všechny opravy": "Undo all corrections",
+ "Tlačítko Opravit odchylky ve skupině Nástroje plánu slouží k opravě špatně změřeného středu piloty. Dvojklikem na popisek odchylky otevřete zadání nové hodnoty (jen celé číslo v mm). Střed se posune po směru šipky k bodu PD na zadanou vzdálenost; přepočítají se souřadnice Y a X středu, ΔY, ΔX a Δp, šipka a barva podle mezní odchylky. Výška Z a ΔZ se nemění. Opravený popisek je v režimu úprav orámovaný fialově. Tlačítko Vrátit měřenou v okně zadání vrátí změřený střed (stejně pomůže zadat původní hodnotu), Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky, Vrátit všechny opravy zruší všechny úpravy a vymaže je Reset. Oprava se ukládá v prohlížeči a platí v tabulce, plánu, PDF, DXF i uložených souborech. U piloty se změřenou odchylkou 0 mm opravu zadat nelze, protože směr posunu středu není určen. Oprava je vázaná na složení bodů piloty: po vyřazení nebo vrácení bodu se přestane uplatňovat a platí znovu vypočtený střed. Opravu je vhodné použít až poté, co nelze špatný bod vyřadit v tabulce a střed nechat znovu spočítat.": "The Correct deviations button in the Tools group of the plan is used to correct a wrongly measured pile centre. Double-click a deviation label to enter a new value (whole number in mm only). The centre moves along the arrow towards the PD point to the entered distance; the Y and X centre coordinates, ΔY, ΔX and Δp, the arrow and the colour according to the tolerance are recalculated. Height Z and ΔZ do not change. A corrected label has a purple frame in editing mode. Restore measured in the input restores the measured centre (entering the original value does the same), Undo and Redo (Ctrl+Z, Ctrl+Y) revert individual steps, Undo all corrections removes all of them and Reset clears them. For a pile with a measured deviation of 0 mm a correction cannot be entered because the direction of the centre shift is not defined. A correction is bound to the set of points of the pile: after excluding or restoring a point it no longer applies and the recalculated centre is used. The correction is stored in the browser and applies to the table, plan, PDF, DXF and saved files. Use it only when the wrong point cannot be excluded in the table and the centre recalculated.",
+ "Odchylka ⟦0⟧: vrácena změřená hodnota.": "Deviation ⟦0⟧: measured value restored.",
+ "Odchylka ⟦0⟧: ⟦1⟧ → ⟦2⟧ mm.": "Deviation ⟦0⟧: ⟦1⟧ → ⟦2⟧ mm.",
+ "Odchylky lze opravovat jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home.": "Deviations can be corrected only in the 2D plan view. Return with the Plan button or the Home key.",
+ "Oprava odchylek je dostupná, až budou v plánu odchylky od projektu (PD).": "Deviation correction is available once the plan shows deviations from the design (PD).",
+ "Opravené odchylky: <b>⟦0⟧</b>": "Corrected deviations: <b>⟦0⟧</b>",
+ "Všem pilotám se vrátily změřené odchylky.": "All piles are back to their measured deviations.",
+ "Zadejte celé číslo 0 až 9999 (mm).": "Enter a whole number from 0 to 9999 (mm).",
+ "Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.": "The measured deviation of ⟦0⟧ is 0 mm: the direction of the centre shift is not defined, a correction cannot be entered.",
+ "změřeno ⟦0⟧ mm": "measured ⟦0⟧ mm",
+ "Žádná odchylka není ručně opravená.": "No deviation is corrected manually.",
  "Upravit popisky": "Edit labels",
  "Upravit popisky: posun popisků odchylek ve 2D plánu, aby se nepřekrývaly. Platí i pro PDF 2D, DXF 2D a protokol.": "Edit labels: move deviation labels in the 2D plan so they do not overlap. Also applies to PDF 2D, DXF 2D and the report.",
  "Zavřít úpravy popisků (Escape)": "Close label editing (Escape)",
