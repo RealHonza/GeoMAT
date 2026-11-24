@@ -659,7 +659,23 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-leg{display:flex;flex-wrap:wrap;gap:4px 16px;margin:-2px 0 10px;font-size:12px;color:var(--mut)}
 #zprt .zprt-leg span{display:inline-flex;align-items:center;gap:6px}
 #zprt .zprt-leg i{display:inline-block;width:22px;height:14px;border:1px solid var(--bd);border-radius:3px;background:var(--card)}
+@font-face{font-family:"GeoMAT Mask Marks";src:url(data:font/woff;base64,d09GRgABAAAAAAKwAAoAAAAAA7gAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABZAAAAC0AAABgSDBGwWNtYXAAAAGcAAAAKgAAADQADAMgZ2x5ZgAAAdAAAAAYAAAAGC7t0yRoZWFkAAAA9AAAADYAAAA2L2NkbmhoZWEAAAEsAAAAHwAAACQFegGraG10eAAAAZQAAAAGAAAABgJxAABsb2NhAAAByAAAAAYAAAAGAAwAAG1heHAAAAFMAAAAFgAAACAABAAGbmFtZQAAAegAAACvAAABoW7pBkFwb3N0AAACmAAAABgAAAAu4uhUzQABAAAAAQAApOTd8l8PPPUAAwPoAAAAAOcrkhwAAAAA5yuSHAB9/40Bd//JAAAAAwACAAAAAAAAeJxjYGRgYG75b8HAwPiFoZahlrGcASiCAhgBa0IEKQB4nGNgZGBgYGJgYQDRIBYaAAABEgALAAB4nGNgZvzCOIGBlYGFgTBQQObYAwEDA9NZprPMLf8tGBiYWxhOYKoHADP1B3oAAAAB9AAAAH0AAHicY2BgYGJgYGAGYhEgyQimWRgUgDQLEAL5TGf//4eQf03A8gwAXj8HKwAAAAAAAAAMAAAAAQB9/40Bd//JAAMAABczNSN9+vpzPAB4nKWQPQrCQBBGX36IaCFYqd1iv0K8QaqAkCbkAluEFAkEsqS18QSeyTPZO0lWFAUtnGL27dtvGFhgwQmPoTxWYx/KZya3iQO2bByHwrHjiDVHefXCuZgdxrHPkrPjgAMXx6Hw1XHEnltatllSqMzYWlpX27ys+sZ0kx/0aLXTOv4YUN8nSClpyUgoUHIaLLWjTsiSS6KipxnNa/6Rfmb1W1rLV/zeoP7ZcQeXyEtvAHicY2BiwA+A8oxM7Dn55b6JRdkADH0C7A==) format("woff");unicode-range:U+02CD}
+#zprt #zp_zakazka{font-family:"GeoMAT Mask Marks",system-ui,"Segoe UI",sans-serif}
 #zprt .zprt-in{position:relative;display:block}
+#zprt .zprt-job-label{display:block;font-weight:600;color:var(--fg)}
+#zprt .zprt-job-line{--job-height:27px;display:flex;align-items:stretch;gap:6px}
+#zprt .zprt-job-line>.zprt-in{flex:1;min-width:0}
+#zprt .zprt-job-line input{display:block;height:var(--job-height)}
+/* 1.454: tlačítko IS – fialový přechod se zeměkoulí (fialová = internet / firemní IS); při najetí myší se barva přelévá jako vlna (bez animace při omezení pohybu) */
+#zprt #zprtJobIS{--is-a:#5b2fb0;--is-b:#8b5cf6;flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto;height:var(--job-height);min-width:0;min-height:0;padding:0 11px 0 9px;border:0;border-radius:3px;color:#fff;background:linear-gradient(110deg,var(--is-a) 0%,var(--is-b) 25%,var(--is-a) 50%,var(--is-b) 75%,var(--is-a) 100%) 0 0/200% 100%;font:600 12px/1 system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 1px 2px rgba(60,20,120,.25),inset 0 1px 0 rgba(255,255,255,.18);transition:box-shadow .15s}
+#zprt #zprtJobIS svg{width:15px;height:15px;flex:none}
+#zprt #zprtJobIS:hover,#zprt #zprtJobIS:focus-visible{color:#fff;background:linear-gradient(110deg,var(--is-a) 0%,var(--is-b) 25%,var(--is-a) 50%,var(--is-b) 75%,var(--is-a) 100%) 0 0/200% 100%;filter:none;box-shadow:0 2px 8px rgba(109,63,192,.38),inset 0 1px 0 rgba(255,255,255,.18);animation:gmIsWave 1.6s linear infinite}
+#zprt #zprtJobIS:focus-visible{outline:2px solid var(--is-b);outline-offset:2px}
+@keyframes gmIsWave{from{background-position:0 0}to{background-position:-100% 0}}
+@media (prefers-reduced-motion:reduce){#zprt #zprtJobIS:hover,#zprt #zprtJobIS:focus-visible{animation:none;filter:brightness(1.08)}}
+#zprt #zprtJobISNote:not(:empty){display:flex;align-items:center;gap:6px;margin:6px 0 0;padding:5px 9px;border-radius:3px;font-size:12px;color:color-mix(in srgb,#6d3fc0 80%,var(--fg));background:color-mix(in srgb,#8b5cf6 8%,var(--card));border:1px solid color-mix(in srgb,#8b5cf6 28%,var(--bd))}
+#zprt #zprtJobISNote:not(:empty)::before{content:"";flex:none;width:14px;height:14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23000%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%229%22/%3E%3Cpath%20d=%22M12%2011v5M12%208h.01%22/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23000%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%229%22/%3E%3Cpath%20d=%22M12%2011v5M12%208h.01%22/%3E%3C/svg%3E") center/contain no-repeat}   /* ikona i; text hlášení dál plní JS přes textContent */
+@media (prefers-color-scheme:dark){#zprt #zprtJobISNote:not(:empty){color:#cbb8ff}}
 #zprt .zprt-in>input,#zprt .zprt-in>textarea{padding-right:32px}
 #zprt .zprt-in>textarea{display:block}
 #zprt .zprt-in>input[list]::-webkit-calendar-picker-indicator{margin-right:16px}   /* šipka nabídky vlevo od křížku */
@@ -1124,6 +1140,10 @@ summary .gm-info[hidden]{display:none}
 #zsssprt,#rvprt,#trxprt{border-width:1.5px}   /* Protokol: obrys 1,5 px jako ohraničení karet */
 #zsssprt:hover:not(:disabled),#rvprt:hover:not(:disabled),#trxprt:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--ac)}   /* Protokol při najetí myší: obrys 2 px (okraj + vnitřní stín), tlačítko neposkočí; na displeji 1× se okraj 1,5 px vykreslí jako 1 px */
 @media (min-resolution:1.5dppx){#zsssprt:hover:not(:disabled),#rvprt:hover:not(:disabled),#trxprt:hover:not(:disabled){box-shadow:inset 0 0 0 .5px var(--ac)}}
+/* 1.453: Uložit protokol PDF bez výplně – obrys 1,5 px a stín při najetí jako tlačítko Protokol, které okno otevírá */
+#zprt #zprtGo{background:var(--card);color:var(--ac);border:1.5px solid var(--ac);filter:none}
+#zprt #zprtGo:hover:not(:disabled){background:var(--card);filter:none;box-shadow:inset 0 0 0 1px var(--ac)}
+@media (min-resolution:1.5dppx){#zprt #zprtGo:hover:not(:disabled){box-shadow:inset 0 0 0 .5px var(--ac)}}
 .zcard>.zh,.xzone.zset>.zh,.zsplit>.zcol>.zh{box-sizing:border-box;margin:calc(-1*var(--zpt) - 1px) calc(-1*var(--zhp) - 1px) 12px;padding:calc(var(--zpt) + 1px - var(--zhl)) calc(var(--zhp) + 1px - var(--zhl)) 10px;min-height:calc(var(--zpt) + 1px + 30px + 10px + var(--zhl));border:var(--zhl) solid var(--zhc);border-radius:10px 10px 0 0}
 .xzone.zset>.zh{padding-right:calc(var(--zhp) + 72px)}
 /* 1.399: záhlaví sekce Co program umí má vpravo ozubené kolečko (Nastavení) – stejné místo a velikost jako koš v záhlaví sekce Měření */
@@ -1907,7 +1927,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <p class="zprt-leg" aria-hidden="true"><span><i class="st-fill"></i>vyplněno</span><span><i class="st-opt"></i>nevyplněno (nepovinné)</span><span><i class="st-req"></i>nevyplněno (povinné)</span></p>
 <div class="zprt-cols"><!-- 1.433: dva sloupce sekcí, okno se vejde na výšku monitoru bez posouvání -->
 <div class="zprt-col">
-<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><label class="zprt-f"><span>Číslo zakázky<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
+<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_zakazka">Číslo zakázky<i class="zprt-rq">(nepovinné)</i></label><div class="zprt-job-line"><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" spellcheck="false" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><button type="button" id="zprtJobIS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9"/></svg><span>IS</span></button></div></div></div><div id="zprtJobISNote" role="status"></div></section>
 <section class="zprt-sec"><h3>Identifikace</h3><div class="zprt-grid"><label class="zprt-f"><span>Číslo protokolu<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_cislo" required autocomplete="off" maxlength="160" placeholder="např. 27/2026"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavba<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_akce" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavební objekt<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_usek" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Předmět<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_nazev" required autocomplete="off" maxlength="160" title="Předmět na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název."><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Investor<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_inv" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Objednatel<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_obj" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Zhotovitel měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zhot" required list="zp_zhot_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 </label><label class="zprt-f"><span>Katastrální území<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_ku" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Datum měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zamereno" required list="zp_zamereno_options" autocomplete="off" title="Nabídka vychází z data poslední změny naposledy načteného souboru měření." maxlength="160" placeholder="datum měření"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_zamereno_options">
@@ -2333,7 +2353,7 @@ function gmCameraFit(points,rotate,plot,minSpan,margin,depthMargin){
   depth:Math.max(1,depth*depthMargin)};
 }
 
-const GM_STABLE_MESSAGES={"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"report.flatness.title":{"cs":"Zaměření rovinnosti","en":"Flatness survey"},"report.terrain.title":{"cs":"Výpočet kubatur","en":"Volume calculation"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 20 souborů v jedné sekci.","en":"Each section accepts up to 20 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vložte do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vložte do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
+const GM_STABLE_MESSAGES={"report.is.label":{"cs":"Načíst údaje z firemního IS","en":"Load details from the company system"},"report.is.pending":{"cs":"Napojení na firemní IS je v přípravě. Načtení údajů zatím není dostupné.","en":"The company system integration is in development. Loading details is not available yet."},"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"report.flatness.title":{"cs":"Zaměření rovinnosti","en":"Flatness survey"},"report.terrain.title":{"cs":"Výpočet kubatur","en":"Volume calculation"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 20 souborů v jedné sekci.","en":"Each section accepts up to 20 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vložte do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vložte do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
 function gmT(id,params=[]){
     const entry=GM_STABLE_MESSAGES[id];
     if(!entry||!Object.hasOwn(GM_STABLE_MESSAGES,id))throw Error('Unknown translation ID: '+id);
@@ -2441,7 +2461,7 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.447", APP_DATE="24. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.454", APP_DATE="24. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -4961,11 +4981,11 @@ const GK_LOGO={w:359,h:62,inks:[["#5989c5","0.349121 0.537109 0.773438 rg"],["#3
   [0,"f","240.684 29.1527 m 245.634 29.1527 l 245.634 19.2527 l 249.504 29.1527 l 254.754 29.1527 l 249.954 17.6328 l 254.093 7.4031 l 248.934 7.4031 l 245.634 16.793 l 245.634 7.4031 l 240.684 7.4031 l 240.684 29.1527 l"],
   [0,"f","255.023 29.1527 m 260.094 29.1527 l 260.694 23.8129 l 263.904 23.8129 l 264.504 29.1527 l 269.694 29.1527 l 266.364 7.4031 l 258.264 7.4031 l 255.023 29.1527 l h 261.144 20.1828 m 262.344 9.923 l 263.454 20.1828 l 261.144 20.1828 l h"],
   [0,"f","271.734 29.1527 m 276.324 29.1527 l 275.993 11.4828 l 279.984 29.1527 l 287.094 29.1527 l 287.094 7.4031 l 282.504 7.4031 l 282.804 24.593 l 278.873 7.4031 l 271.734 7.4031 l 271.734 29.1527 l"],
-  [0,"f","297.714 14.7527 m 302.334 14.7527 l 302.334 13.2531 l 302.334 12.173 302.279 11.243 302.169 10.4629 c 302.059 9.6828 301.773 9.0031 301.314 8.423 c 300.854 7.843 300.244 7.4828 299.484 7.343 c 298.724 7.2031 297.754 7.1332 296.573 7.1332 c 295.254 7.1332 294.159 7.2031 293.289 7.343 c 292.418 7.4828 291.704 7.8531 291.143 8.4527 c 290.624 9.0328 290.304 9.7082 290.184 10.4781 c 290.064 11.248 290.004 12.173 290.004 13.2531 c 290.004 23.3031 l 290.004 24.3832 290.064 25.3129 290.184 26.093 c 290.304 26.873 290.624 27.5531 291.143 28.1332 c 291.447 28.4531 291.779 28.7031 292.149 28.8832 c 292.519 29.0629 292.924 29.193 293.364 29.2727 c 293.804 29.3531 294.289 29.398 294.819 29.4082 c 295.349 29.418 295.934 29.4227 296.573 29.4227 c 297.134 29.4227 297.648 29.4129 298.118 29.393 c 298.589 29.373 299.018 29.323 299.409 29.2426 c 299.798 29.1629 300.154 29.0379 300.473 28.868 c 300.793 28.698 301.084 28.4531 301.344 28.1332 c 301.804 27.5531 302.084 26.873 302.184 26.093 c 302.284 25.3129 302.334 24.3832 302.334 23.3031 c 302.334 21.0527 l 297.714 21.0527 l 297.714 24.023 l 297.714 24.643 297.634 25.0527 297.473 25.2531 c 297.314 25.4527 296.973 25.5527 296.454 25.5527 c 295.934 25.5527 295.599 25.4527 295.448 25.2531 c 295.298 25.0527 295.224 24.643 295.224 24.023 c 295.224 12.5629 l 295.224 11.943 295.298 11.5332 295.448 11.3328 c 295.599 11.1332 295.934 11.0328 296.454 11.0328 c 296.973 11.0328 297.314 11.1332 297.473 11.3328 c 297.634 11.5332 297.714 11.943 297.714 12.5629 c 297.714 14.7527 l"],
+  [0,"f","297.714 14.7527 m 302.334 14.7527 l 302.334 13.2531 l 302.334 12.173 302.279 11.243 302.169 10.4629 c 302.059 9.6828 301.773 9.0031 301.314 8.423 c 300.854 7.843 300.244 7.4828 299.484 7.343 c 298.724 7.2031 297.754 7.1332 296.573 7.1332 c 295.254 7.1332 294.159 7.2031 293.289 7.343 c 292.418 7.4828 291.704 7.8531 291.143 8.4527 c 290.624 9.0328 290.304 9.7082 290.184 10.4781 c 290.064 11.248 290.004 12.173 290.004 13.2531 c 290.004 23.3031 l 290.004 24.3832 290.064 25.3129 290.184 26.093 c 290.304 26.873 290.624 27.5531 291.143 28.1332 c 291.450 28.4531 291.779 28.7031 292.149 28.8832 c 292.519 29.0629 292.924 29.193 293.364 29.2727 c 293.804 29.3531 294.289 29.398 294.819 29.4082 c 295.349 29.418 295.934 29.4227 296.573 29.4227 c 297.134 29.4227 297.648 29.4129 298.118 29.393 c 298.589 29.373 299.018 29.323 299.409 29.2426 c 299.798 29.1629 300.154 29.0379 300.473 28.868 c 300.793 28.698 301.084 28.4531 301.344 28.1332 c 301.804 27.5531 302.084 26.873 302.184 26.093 c 302.284 25.3129 302.334 24.3832 302.334 23.3031 c 302.334 21.0527 l 297.714 21.0527 l 297.714 24.023 l 297.714 24.643 297.634 25.0527 297.473 25.2531 c 297.314 25.4527 296.973 25.5527 296.454 25.5527 c 295.934 25.5527 295.599 25.4527 295.448 25.2531 c 295.298 25.0527 295.224 24.643 295.224 24.023 c 295.224 12.5629 l 295.224 11.943 295.298 11.5332 295.448 11.3328 c 295.599 11.1332 295.934 11.0328 296.454 11.0328 c 296.973 11.0328 297.314 11.1332 297.473 11.3328 c 297.634 11.5332 297.714 11.943 297.714 12.5629 c 297.714 14.7527 l"],
   [0,"f","304.914 29.1527 m 314.904 29.1527 l 314.904 25.2531 l 309.984 25.2531 l 309.984 19.8531 l 314.214 19.8531 l 314.214 16.1031 l 309.984 16.1031 l 309.984 11.3027 l 314.484 11.3027 l 314.484 7.4031 l 304.914 7.4031 l 304.914 29.1527 l"],
   [0,"f","317.334 29.1527 m 327.204 29.1527 l 327.204 25.2531 l 322.404 25.2531 l 322.404 7.4031 l 317.334 7.4031 l 317.334 29.1527 l"],
   [0,"f","328.823 29.1527 m 333.894 29.1527 l 334.494 23.8129 l 337.704 23.8129 l 338.304 29.1527 l 343.494 29.1527 l 340.164 7.4031 l 332.064 7.4031 l 328.823 29.1527 l h 334.944 20.1828 m 336.144 9.923 l 337.254 20.1828 l 334.944 20.1828 l h 340.464 0.2328 m 336.684 0.2328 l 333.804 5.6629 l 335.874 5.6629 l 340.464 0.2328 l"],
-  [0,"f","353.423 23.6629 m 353.423 29.1527 l 358.404 29.1527 l 358.404 23.4531 l 358.404 21.2531 357.273 19.993 355.014 19.673 c 356.273 19.4531 357.173 19.0129 357.713 18.3531 c 358.254 17.693 358.523 16.7328 358.523 15.473 c 358.523 12.9828 l 358.523 11.7832 358.384 10.818 358.104 10.0879 c 357.823 9.3578 357.373 8.793 356.754 8.393 c 356.134 7.993 355.334 7.7281 354.354 7.598 c 353.373 7.468 352.194 7.4031 350.814 7.4031 c 345.534 7.4031 l 345.534 29.1527 l 350.604 29.1527 l 350.604 21.6832 l 351.447 21.6832 l 352.184 21.6832 352.699 21.818 352.989 22.0879 c 353.279 22.3578 353.423 22.8828 353.423 23.6629 c h 351.834 11.243 m 352.454 11.243 352.884 11.343 353.123 11.543 c 353.364 11.743 353.484 12.1629 353.484 12.8031 c 353.484 16.4031 l 353.484 17.043 353.364 17.4629 353.123 17.6629 c 352.884 17.8629 352.454 17.9629 351.834 17.9629 c 350.604 17.9629 l 350.604 11.243 l 351.834 11.243 l h 346.794 0.293 m 349.673 5.723 l 353.154 5.723 l 356.034 0.293 l 353.964 0.293 l 351.414 3.473 l 348.834 0.293 l 346.794 0.293 l"],
+  [0,"f","353.423 23.6629 m 353.423 29.1527 l 358.404 29.1527 l 358.404 23.4531 l 358.404 21.2531 357.273 19.993 355.014 19.673 c 356.273 19.4531 357.173 19.0129 357.713 18.3531 c 358.254 17.693 358.523 16.7328 358.523 15.473 c 358.523 12.9828 l 358.523 11.7832 358.384 10.818 358.104 10.0879 c 357.823 9.3578 357.373 8.793 356.754 8.393 c 356.134 7.993 355.334 7.7281 354.354 7.598 c 353.373 7.468 352.194 7.4031 350.814 7.4031 c 345.534 7.4031 l 345.534 29.1527 l 350.604 29.1527 l 350.604 21.6832 l 351.450 21.6832 l 352.184 21.6832 352.699 21.818 352.989 22.0879 c 353.279 22.3578 353.423 22.8828 353.423 23.6629 c h 351.834 11.243 m 352.454 11.243 352.884 11.343 353.123 11.543 c 353.364 11.743 353.484 12.1629 353.484 12.8031 c 353.484 16.4031 l 353.484 17.043 353.364 17.4629 353.123 17.6629 c 352.884 17.8629 352.454 17.9629 351.834 17.9629 c 350.604 17.9629 l 350.604 11.243 l 351.834 11.243 l h 346.794 0.293 m 349.673 5.723 l 353.154 5.723 l 356.034 0.293 l 353.964 0.293 l 351.414 3.473 l 348.834 0.293 l 346.794 0.293 l"],
   [0,"f","95.8195 58.66289 m 97.4996 58.66289 l 97.4996 43.4711 l 103.86 58.66289 l 106.5 58.66289 l 106.5 41.2629 l 104.82 41.2629 l 104.82 56.71914 l 98.3637 41.2629 l 95.8195 41.2629 l 95.8195 58.66289 l"],
   [0,"f","118.824 56.98281 m 112.776 56.98281 l 112.776 50.4551 l 118.392 50.4551 l 118.392 48.775 l 112.776 48.775 l 112.776 42.943 l 118.824 42.943 l 118.824 41.2629 l 111.048 41.2629 l 111.048 58.66289 l 118.824 58.66289 l 118.824 56.98281 l"],
   [0,"f","122.556 58.66289 m 126.924 58.66289 l 128.076 58.66289 129.036 58.55117 129.804 58.32695 c 130.572 58.10273 131.188 57.74297 131.652 57.24727 c 132.116 56.75117 132.448 56.10312 132.648 55.30312 c 132.848 54.50273 132.948 53.52695 132.948 52.375 c 132.948 47.575 l 132.948 46.423 132.848 45.443 132.648 44.6348 c 132.448 43.827 132.116 43.175 131.652 42.6789 c 131.188 42.1828 130.572 41.823 129.804 41.5988 c 129.036 41.375 128.076 41.2629 126.924 41.2629 c 122.556 41.2629 l 122.556 58.66289 l h 124.284 57.05508 m 124.284 42.8707 l 126.588 42.8707 l 127.532 42.8707 128.304 42.943 128.904 43.0867 c 129.504 43.2309 129.972 43.4949 130.308 43.8789 c 130.676 44.327 130.904 44.8508 130.992 45.4512 c 131.08 46.0508 131.124 46.775 131.124 47.623 c 131.124 52.30273 l 131.124 53.15117 131.08 53.875 130.992 54.475 c 130.904 55.075 130.676 55.59922 130.308 56.04687 c 129.972 56.43086 129.504 56.69492 128.904 56.83906 c 128.304 56.98281 127.532 57.05508 126.588 57.05508 c 124.284 57.05508 l"],
@@ -4985,7 +5005,7 @@ const GK_LOGO={w:359,h:62,inks:[["#5989c5","0.349121 0.537109 0.773438 rg"],["#3
   [0,"f","330.796 58.66289 m 332.571 58.66289 l 332.571 56.33477 l 330.796 56.33477 l 330.796 58.66289 l"],
   [0,"f","351.496 54.00703 m 351.496 51.127 l 351.496 50.2309 351.428 49.475 351.292 48.859 c 351.156 48.243 350.932 47.743 350.62 47.359 c 350.308 46.975 349.9 46.6992 349.396 46.5309 c 348.892 46.3629 348.264 46.2789 347.512 46.2789 c 346.76 46.2789 346.128 46.3629 345.616 46.5309 c 345.104 46.6992 344.688 46.975 344.368 47.359 c 344.048 47.743 343.82 48.243 343.684 48.859 c 343.548 49.475 343.48 50.2309 343.48 51.127 c 343.48 54.00703 l 343.48 54.90312 343.548 55.65898 343.684 56.275 c 343.82 56.89102 344.044 57.39102 344.356 57.775 c 344.668 58.15898 345.08 58.43906 345.592 58.61523 c 346.104 58.79102 346.736 58.87891 347.488 58.87891 c 348.24 58.87891 348.872 58.79492 349.384 58.62695 c 349.896 58.45898 350.308 58.1832 350.62 57.79883 c 350.932 57.41484 351.156 56.91094 351.292 56.28711 c 351.428 55.66328 351.496 54.90312 351.496 54.00703 c h 345.136 51.127 m 345.136 50.5027 345.164 49.9828 345.22 49.5668 c 345.276 49.1512 345.388 48.8148 345.556 48.559 c 345.724 48.3031 345.96 48.1191 346.264 48.007 c 346.568 47.8949 346.976 47.8391 347.488 47.8391 c 348 47.8391 348.412 47.8949 348.724 48.007 c 349.036 48.1191 349.276 48.3031 349.444 48.559 c 349.612 48.8148 349.72 49.1512 349.768 49.5668 c 349.816 49.9828 349.84 50.5027 349.84 51.127 c 349.84 54.03086 l 349.84 54.65508 349.812 55.175 349.756 55.59102 c 349.7 56.00703 349.588 56.34727 349.42 56.61094 c 349.252 56.875 349.016 57.06328 348.712 57.175 c 348.408 57.28711 348 57.34297 347.488 57.34297 c 346.976 57.34297 346.564 57.28711 346.252 57.175 c 345.94 57.06328 345.7 56.875 345.532 56.61094 c 345.364 56.34727 345.256 56.00703 345.208 55.59102 c 345.16 55.175 345.136 54.65508 345.136 54.03086 c 345.136 51.127 l"],
   [0,"f","356.404 58.66289 m 358.18 58.66289 l 358.18 56.33477 l 356.404 56.33477 l 356.404 58.66289 l"],
-  [1,"f","200.197 56.59922 m 201.901 58.75898 l 203.125 57.55898 l 200.629 54.39102 l 200.629 48.8949 l 199.141 48.8949 l 199.141 52.73477 l 194.173 46.1828 l 193.773 45.6547 193.573 45.0949 193.573 44.5027 c 193.573 43.8148 193.773 43.323 194.173 43.027 c 194.573 42.7309 195.213 42.5828 196.093 42.5828 c 196.557 42.5828 196.937 42.623 197.233 42.7027 c 197.529 42.7832 197.757 42.9109 197.917 43.0867 c 198.077 43.2629 198.185 43.4992 198.241 43.7949 c 198.297 44.091 198.325 44.4551 198.325 44.8867 c 198.325 45.775 l 199.837 45.775 l 199.837 44.7906 l 199.837 44.0871 199.781 43.4949 199.669 43.0148 c 199.557 42.5352 199.361 42.1508 199.081 41.8629 c 198.801 41.575 198.417 41.3668 197.929 41.2391 c 197.441 41.1109 196.821 41.0469 196.069 41.0469 c 194.613 41.0469 193.541 41.323 192.853 41.8746 c 192.165 42.427 191.821 43.2949 191.821 44.4789 c 191.821 44.9109 191.849 45.275 191.905 45.5707 c 191.961 45.8668 192.041 46.1309 192.145 46.3629 c 192.249 46.5949 192.369 46.807 192.505 46.9988 c 192.641 47.191 192.789 47.391 192.949 47.5992 c 193.621 48.4867 l 192.853 48.6148 192.265 48.9711 191.857 49.5551 c 191.449 50.1391 191.245 50.9348 191.245 51.943 c 191.245 54.70312 l 191.245 55.51914 191.329 56.19492 191.497 56.73086 c 191.665 57.2668 191.937 57.69492 192.313 58.01484 c 192.689 58.33516 193.181 58.55898 193.789 58.68711 c 194.397 58.81484 195.141 58.87891 196.021 58.87891 c 197.221 58.87891 198.153 58.71094 198.817 58.375 c 199.481 58.03906 199.941 57.44687 200.197 56.59922 c h 198.973 55.13516 m 198.973 55.20703 l 198.973 56.02305 198.749 56.60703 198.301 56.95898 c 197.854 57.31094 197.133 57.48672 196.141 57.48672 c 195.533 57.48672 195.025 57.43125 194.617 57.31914 c 194.209 57.20703 193.885 57.01875 193.645 56.75508 c 193.405 56.49102 193.237 56.14687 193.141 55.72305 c 193.045 55.29922 192.997 54.76719 192.997 54.12695 c 192.997 52.47109 l 192.997 51.623 193.138 50.9789 193.417 50.5391 c 193.697 50.0988 194.093 49.8789 194.605 49.8789 c 194.653 49.8789 194.697 49.8828 194.737 49.891 c 194.777 49.8988 194.813 49.9031 194.845 49.9031 c 198.973 55.13516 l"]
+  [1,"f","200.197 56.59922 m 201.901 58.75898 l 203.125 57.55898 l 200.629 54.39102 l 200.629 48.8949 l 199.141 48.8949 l 199.141 52.73477 l 194.173 46.1828 l 193.773 45.6547 193.573 45.0949 193.573 44.5027 c 193.573 43.8148 193.773 43.323 194.173 43.027 c 194.573 42.7309 195.213 42.5828 196.093 42.5828 c 196.557 42.5828 196.937 42.623 197.233 42.7027 c 197.529 42.7832 197.757 42.9109 197.917 43.0867 c 198.077 43.2629 198.185 43.4992 198.241 43.7949 c 198.297 44.091 198.325 44.4551 198.325 44.8867 c 198.325 45.775 l 199.837 45.775 l 199.837 44.7906 l 199.837 44.0871 199.781 43.4949 199.669 43.0148 c 199.557 42.5352 199.361 42.1508 199.081 41.8629 c 198.801 41.575 198.417 41.3668 197.929 41.2391 c 197.441 41.1109 196.821 41.0469 196.069 41.0469 c 194.613 41.0469 193.541 41.323 192.853 41.8746 c 192.165 42.427 191.821 43.2949 191.821 44.4789 c 191.821 44.9109 191.849 45.275 191.905 45.5707 c 191.961 45.8668 192.041 46.1309 192.145 46.3629 c 192.249 46.5949 192.369 46.807 192.505 46.9988 c 192.641 47.191 192.789 47.391 192.949 47.5992 c 193.621 48.4867 l 192.853 48.6148 192.265 48.9711 191.857 49.5551 c 191.450 50.1391 191.245 50.9348 191.245 51.943 c 191.245 54.70312 l 191.245 55.51914 191.329 56.19492 191.497 56.73086 c 191.665 57.2668 191.937 57.69492 192.313 58.01484 c 192.689 58.33516 193.181 58.55898 193.789 58.68711 c 194.397 58.81484 195.141 58.87891 196.021 58.87891 c 197.221 58.87891 198.153 58.71094 198.817 58.375 c 199.481 58.03906 199.941 57.44687 200.197 56.59922 c h 198.973 55.13516 m 198.973 55.20703 l 198.973 56.02305 198.749 56.60703 198.301 56.95898 c 197.854 57.31094 197.133 57.48672 196.141 57.48672 c 195.533 57.48672 195.025 57.43125 194.617 57.31914 c 194.209 57.20703 193.885 57.01875 193.645 56.75508 c 193.405 56.49102 193.237 56.14687 193.141 55.72305 c 193.045 55.29922 192.997 54.76719 192.997 54.12695 c 192.997 52.47109 l 192.997 51.623 193.138 50.9789 193.417 50.5391 c 193.697 50.0988 194.093 49.8789 194.605 49.8789 c 194.653 49.8789 194.697 49.8828 194.737 49.891 c 194.777 49.8988 194.813 49.9031 194.845 49.9031 c 198.973 55.13516 l"]
 ]};
 const LOGO_H=22, LOGO_BAND=LOGO_H+10;
 let gkLogoSvgPaths, gkLogoCanvasPaths;
@@ -5606,6 +5626,124 @@ function zprtNorm(k,v){   // uložená hodnota → hodnota pole (výchozí texty
   if(k==="zhot") return typeof v!=="string"?zprtDef(k):v;
   return v; }
 function zprtNoteTx(){ const n=document.querySelector("#zprt .zprt-note"); if(n) n.textContent=gmPreviewText(ZPRT_NOTE); }
+const ZPRT_JOB_MARK="ˍ";
+const ZPRT_JOB_TEMPLATE=`390${ZPRT_JOB_MARK.repeat(3)}/20${ZPRT_JOB_MARK.repeat(2)}`;
+const ZPRT_JOB_SLOTS=[3,4,5,9,10];
+const zprtJobField=$("zp_zakazka");
+const zprtJobIS=$("zprtJobIS"), zprtJobISNote=$("zprtJobISNote");
+
+function zprtJobISText(){
+  const label=gmT("report.is.label"), pending=gmT("report.is.pending");
+  zprtJobIS.setAttribute("aria-label",label);
+  zprtJobIS.title=pending;
+  if(zprtJobISNote.textContent)zprtJobISNote.textContent=pending;
+}
+// Live lookup requires an endpoint provided by the company system.
+zprtJobIS.onclick=()=>{zprtJobISNote.textContent=gmT("report.is.pending");};
+let zprtJobDraft=null, zprtJobClicked=false;
+
+function zprtJobMasked(){
+  return zprtJobDraft!==null&&zprtJobField.value===zprtJobDraft;
+}
+function zprtJobInit(){
+  zprtJobISNote.textContent="";
+  zprtJobISText();
+  zprtJobClicked=false;
+  zprtJobDraft=zprtJobField.value===""?ZPRT_JOB_TEMPLATE:null;
+  if(zprtJobDraft!==null)zprtJobField.value=zprtJobDraft;
+}
+function zprtJobFocus(){
+  zprtJobField.focus({preventScroll:true});
+  if(zprtJobMasked()){
+    const next=zprtJobDraft.indexOf(ZPRT_JOB_MARK);
+    const caret=next<0?zprtJobDraft.length:next;
+    zprtJobField.setSelectionRange(caret,caret);
+  }
+}
+function zprtFieldValue(key){
+  const value=$("zp_"+key).value;
+  return key==="zakazka"&&zprtJobMasked()&&value.includes(ZPRT_JOB_MARK)?"":value;
+}
+function zprtJobInput(){
+  zprtJobField.dispatchEvent(new Event("input",{bubbles:true}));
+}
+function zprtJobManual(){
+  const {selectionStart:start,selectionEnd:end,selectionDirection:direction}=zprtJobField;
+  const realIndex=i=>zprtJobDraft.slice(0,i).replaceAll(ZPRT_JOB_MARK,"").length;
+  const from=realIndex(start),to=realIndex(end);
+  zprtJobField.value=zprtJobDraft.replaceAll(ZPRT_JOB_MARK,"");
+  zprtJobDraft=null;
+  zprtJobField.setSelectionRange(from,to,direction);
+}
+function zprtJobDigits(digits,whole=false){
+  const start=whole?0:zprtJobField.selectionStart;
+  const end=whole?ZPRT_JOB_TEMPLATE.length:zprtJobField.selectionEnd;
+  const chars=(whole?ZPRT_JOB_TEMPLATE:zprtJobDraft).split("");
+  for(const pos of ZPRT_JOB_SLOTS)if(pos>=start&&pos<end)chars[pos]=ZPRT_JOB_MARK;
+  const first=ZPRT_JOB_SLOTS.findIndex(pos=>pos>=start);
+  if(first<0)return;
+  const count=Math.min(digits.length,ZPRT_JOB_SLOTS.length-first);
+  for(let i=0;i<count;i++)chars[ZPRT_JOB_SLOTS[first+i]]=digits[i];
+  const caret=ZPRT_JOB_SLOTS[first+count]??chars.length;
+  zprtJobField.value=zprtJobDraft=chars.join("");
+  zprtJobField.setSelectionRange(caret,caret);
+  zprtJobInput();
+}
+zprtJobField.addEventListener("click",()=>{
+  if(!zprtJobMasked())return;
+  if(!zprtJobClicked){
+    zprtJobClicked=true;
+    const first=ZPRT_JOB_SLOTS[0];
+    zprtJobField.setSelectionRange(first,first);
+    return;
+  }
+  // The native click has already positioned the caret. Carry that position
+  // across the removal of the remaining visual marks.
+  zprtJobManual();
+  zprtJobInput();
+});
+zprtJobField.addEventListener("keydown",event=>{
+  if(!zprtJobMasked()||!["Backspace","Delete"].includes(event.key))return;
+  zprtJobManual();
+  // The browser applies the ordinary deletion to the now unmasked text.
+  zprtJobInput();
+});
+zprtJobField.addEventListener("beforeinput",event=>{
+  if(!zprtJobMasked())return;
+  if(event.inputType.startsWith("delete")){
+    zprtJobManual();
+    // Touch keyboards do not always send Backspace as a keydown.
+    if(event.cancelable&&["deleteContentBackward","deleteContentForward"].includes(event.inputType)){
+      event.preventDefault();
+      const {selectionStart:start,selectionEnd:end,value}=zprtJobField;
+      const from=start===end&&event.inputType==="deleteContentBackward"?Math.max(0,start-1):start;
+      const to=start===end&&event.inputType==="deleteContentForward"?Math.min(value.length,end+1):end;
+      zprtJobField.setRangeText("",from,to,"start");
+    }
+    zprtJobInput();
+    return;
+  }
+  if(event.inputType!=="insertText"||!/^\d+$/.test(event.data||"")||!event.cancelable){
+    zprtJobManual();
+    return;
+  }
+  event.preventDefault();
+  zprtJobDigits(event.data);
+});
+zprtJobField.addEventListener("paste",event=>{
+  if(!zprtJobMasked())return;
+  const value=event.clipboardData?.getData("text/plain")??"";
+  const short=/^(\d{3})(?:\/?20)?(\d{2})$/.exec(value);
+  if(short){
+    event.preventDefault();
+    zprtJobDigits(short[1]+short[2],true);
+  }else{
+    // An explicit full identifier or custom format replaces the template.
+    zprtJobManual();
+    zprtJobField.select();
+  }
+});
+
 function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().key)||"{}")||{}; }catch(e){ o={}; }
   ZPRT_F.forEach(([k,d])=>{
     const field=$("zp_"+k);
@@ -5617,12 +5755,14 @@ function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().ke
   $("zp_sw_options").replaceChildren(Object.assign(document.createElement("option"),{value:zprtDef("sw")}));   // 1.432: nabídka Použitý software = GeoMAT a aktuální verze (APP_VERSION)
   zprtDateOption("datum",today);
   zprtDateOption("zamereno",new Date(zprtM().files().at(-1)?.lastModified));
-  if(typeof o.datum!=="string") $("zp_datum").value=gmDateText(today); }
-function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=$("zp_"+k).value.trim(); }); return o; }
-function zprtResetSync(){ gmResetIdle($("zprtReset"),ZPRT_F.every(([k])=>{ const v=$("zp_"+k).value; const dv=zprtDef(k); return dv!==undefined?v===dv:v===""; }),"Všechna pole protokolu už jsou prázdná, není co mazat."); }
-function zprtSave(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=$("zp_"+k).value; }); writeStorage(zprtM().key,JSON.stringify(o)); zprtResetSync(); }
+  if(typeof o.datum!=="string") $("zp_datum").value=gmDateText(today);
+  zprtJobInit();
+}
+function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k).trim(); }); return o; }
+function zprtResetSync(){ gmResetIdle($("zprtReset"),ZPRT_F.every(([k])=>{ const v=zprtFieldValue(k); const dv=zprtDef(k); return dv!==undefined?v===dv:v===""; }),"Všechna pole protokolu už jsou prázdná, není co mazat."); }
+function zprtSave(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k); }); writeStorage(zprtM().key,JSON.stringify(o)); zprtResetSync(); }
 let zprtOpener=null;
-function zprtOpen(mode){ zprtMode=Object.hasOwn(ZPRT_MODES,mode)?mode:"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; zprtNoteTx(); zprtLoad(); zprtResetSync(); zprtClrSync(); $("zprt").hidden=false; $("zp_zakazka").focus({preventScroll:true}); }   // 1.430: fokus na první pole (Číslo zakázky)
+function zprtOpen(mode){ zprtMode=Object.hasOwn(ZPRT_MODES,mode)?mode:"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; zprtNoteTx(); zprtLoad(); zprtResetSync(); zprtClrSync(); $("zprt").hidden=false; zprtJobFocus(); }   // 1.430: fokus na první pole (Číslo zakázky)
 function zprtClose(){ $("zprt").hidden=true; if(zprtOpener&&zprtOpener.focus) zprtOpener.focus({preventScroll:true}); }
 /* kreslení: souřadnice y shora (jako ve scénách plánu), převod na PDF uvnitř */
 function zprtCanvas(W,H){
@@ -6155,9 +6295,10 @@ $("zprtReset").onclick=()=>{
     field.value=zprtDef(key)??"";
     field.removeAttribute("aria-invalid");
   });
+  zprtJobInit();
   zprtSave(); zprtClrSync();
   zprtM().render();
-  $("zp_zakazka").focus({preventScroll:true});
+  zprtJobFocus();
 };
 $("zprtCancel").onclick=zprtClose; $("zprtX").onclick=zprtClose;
 $("zprt").addEventListener("click",e=>{ if(e.target===$("zprt")) zprtClose(); });
@@ -6165,12 +6306,16 @@ $("zprt").addEventListener("keydown",e=>{
   if(e.key==="Escape"){ e.preventDefault(); e.stopPropagation(); zprtClose(); return; }
   if(e.key==="Tab"){ const f=[...$("zprt").querySelectorAll("input,textarea,button")].filter(x=>!x.disabled&&x.offsetParent!==null); if(!f.length) return;
     const i=f.indexOf(document.activeElement); if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&i===f.length-1){ e.preventDefault(); f[0].focus(); } } });
-function zprtClrSync(){ for(const b of $("zprt").querySelectorAll(".zprt-clr")){ const f=b.parentElement.querySelector("input,textarea"); b.hidden=!f||!f.value;
-    if(f){ const st=f.value.trim()?"st-fill":f.required?"st-req":"st-opt"; f.classList.remove("st-fill","st-opt","st-req"); f.classList.add(st); } } }   // 1.427: křížek jen u vyplněného pole; 1.430: podbarvení podle stavu (vyplněno / nevyplněno nepovinné / nevyplněno povinné)
+function zprtClrSync(){ for(const b of $("zprt").querySelectorAll(".zprt-clr")){ const f=b.parentElement.querySelector("input,textarea"); const value=f?zprtFieldValue(f.id.slice(3)):""; b.hidden=!value;
+    if(f){ const st=value.trim()?"st-fill":f.required?"st-req":"st-opt"; f.classList.remove("st-fill","st-opt","st-req"); f.classList.add(st); } } }   // 1.427: křížek jen u vyplněného pole; 1.430: podbarvení podle stavu (vyplněno / nevyplněno nepovinné / nevyplněno povinné)
 $("zprt").addEventListener("click",e=>{ const b=e.target.closest?.(".zprt-clr"); if(!b) return; const f=b.parentElement.querySelector("input,textarea"); if(!f) return;
-  f.value=""; f.focus({preventScroll:true}); f.dispatchEvent(new Event("input",{bubbles:true})); });
+  f.value="";
+  if(f===zprtJobField){zprtJobInit();zprtJobFocus();}
+  else f.focus({preventScroll:true});
+  f.dispatchEvent(new Event("input",{bubbles:true})); });
 $("zprt").addEventListener("mousedown",e=>{ if(e.target.closest?.(".zprt-clr")) e.preventDefault(); });   // fokus zůstane v poli
 $("zprtForm").addEventListener("input",e=>{
+  if(e.target===zprtJobField)zprtJobISNote.textContent="";
   zprtClrSync();
   if(e.target.value?.trim())e.target.removeAttribute("aria-invalid");
   zprtSave();
@@ -6178,20 +6323,23 @@ $("zprtForm").addEventListener("input",e=>{
 });
 function zprtValidate(values){
   let firstMissing=null;
+  const unfinishedJob=zprtJobMasked()&&zprtJobDraft!==ZPRT_JOB_TEMPLATE&&zprtJobDraft.includes(ZPRT_JOB_MARK);
   for(const [key] of ZPRT_F){
     const field=$("zp_"+key);
-    if(field.required&&!values[key]){
+    if((key==="zakazka"&&unfinishedJob)||(field.required&&!values[key])){
       field.setAttribute("aria-invalid","true");
       firstMissing??=field;
     }else field.removeAttribute("aria-invalid");
   }
-  firstMissing?.focus();
+  if(firstMissing===zprtJobField)zprtJobFocus();
+  else firstMissing?.focus();
   return !firstMissing;
 }
 // „Zrušit“ má ve slovníku význam „Remove“ (Zrušit měření); tlačítko okna protokolu je „Cancel“
 { const zprtCancelTx=()=>{ $("zprtCancel").textContent=window.GeoMATLanguage?.get()==="en"?"Cancel":"Zrušit"; };
   window.GeoMATLanguage?.onChange(()=>{
     zprtCancelTx();
+    zprtJobISText();
     if(!$("zprt").hidden){ zprtNoteTx(); zprtSdOptions(); }
     ["nazev","prohl"].forEach(k=>{ const field=$("zp_"+k); field.value=zprtNorm(k,field.value); });
     if(typeof zprtClrSync==="function") zprtClrSync(); if(typeof zprtResetSync==="function") zprtResetSync();
@@ -17914,7 +18062,7 @@ gmJobResume();
  "nevyplněno (povinné)": "not filled in (required)",
  "PDF obsahuje úvodní stranu, tabulku výsledků a plán. DOCX obsahuje editovatelnou úvodní stranu.": "The PDF includes the cover page, results table, and plan. The DOCX contains the editable cover page.",
  "Uloží výsledkovou přílohu protokolu jako editovatelný DOCX.": "Save the protocol results appendix as an editable DOCX.",
- "GeoMAT verze 1.447 · Autor: Jan Bartůněk": "GeoMAT version 1.447 · Author: Jan Bartůněk"
+ "GeoMAT verze 1.454 · Autor: Jan Bartůněk": "GeoMAT version 1.454 · Author: Jan Bartůněk"
 }</script>
 <script data-gm-language-runtime>
 function gmPreviewText(message,params=[]){
