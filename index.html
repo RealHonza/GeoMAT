@@ -1867,7 +1867,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <div id="rgFixPanel" class="measure-panel tin-panel" hidden role="region" aria-label="Opravit odchylky">
  <button type="button" class="measure-close" id="rgFixClose" aria-label="Zavřít opravy odchylek (Escape)" title="Zavřít (Escape)">×</button>
  <div class="tin-head"><strong>Opravit odchylky</strong><span class="tin-count" id="rgFixCount"></span></div>
- <div class="tin-ctx"><div class="tin-pane"><span class="hp" id="rgFixHint">Dvojklikem na popisek odchylky zadejte novou hodnotu (číslo se znaménkem v jednotkách odchylek). Bod se posune kolmo k rovině (u vodorovné roviny změní jen Z), přepočtou se jeho souřadnice, odchylka, vyhodnocení, mapa i kubatury. Souřadnice se zaokrouhlí na počet desetinných míst měření. Opravený popisek je orámovaný fialově. Používejte jen pro body, kde na ploše něco překáželo.</span>
+ <div class="tin-ctx"><div class="tin-pane"><span class="hp" id="rgFixHint">Dvojklikem na popisek odchylky zadejte novou hodnotu (číslo se znaménkem v jednotkách odchylek). Bod se posune kolmo k rovině (u vodorovné roviny změní jen Z), přepočtou se jeho souřadnice, odchylka, vyhodnocení, mapa i kubatury. Uložená poloha bodu platí pro všechny typy rovin. Po změně roviny se přepočítá odchylka. Používejte jen pro body, kde na ploše něco překáželo.</span>
   <div id="rgFixEd" style="display:none;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px"><label>Bod <b id="rgFixName"></b>: odchylka <input type="text" id="rgFixVal" inputmode="decimal" maxlength="10" size="8" autocomplete="off" aria-label="Nová odchylka"> <span id="rgFixUnit">mm</span></label><span class="hp" id="rgFixOrig"></span><button type="button" class="wi" id="rgFixOk">Použít</button><button type="button" class="wi" id="rgFixRev" title="Vrátí změřené souřadnice bodu">Vrátit měřenou</button><button type="button" class="wi" id="rgFixCancel">Storno</button></div></div></div>
  <div class="tin-foot">
   <p id="rgFixStatus" class="hp" role="status" aria-live="polite"></p>
@@ -2077,7 +2077,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <li><b>Obnovit výchozí výběr</b> (šipka vpravo): znovu zaškrtne všechny body, filtr vrátí na všechny body, zruší řazení a hledání.</li>
 <li><b>Kopírovat do schránky</b>: zkopíruje zaškrtnuté body podle filtru v zobrazeném pořadí (tabulátor jako oddělovač, pro vložení do Excelu); v záhlaví je definice příslušné roviny a mezní odchylka, u bodů i vyhodnocení vůči mezní odchylce. Desetinnou čárku řídí volba „CSV s des. čárkou“ v Nastavení Rovinnosti (skupina Body a výstup), stejně jako u CSV.</li>
 <li><b>STX</b> (nabídka Data v sekci 4. Export, zkratka <kbd>Shift</kbd>+<kbd>T</kbd>): uloží použité měřené body podle aktuálního filtru a pořadí jako „název Y X ΔZ [kód]“. Místo absolutní výšky Z obsahuje čtvrtý sloupec ΔZ u vodorovné nebo kolmou odchylku d u svislé a obecné roviny, nikoli h od latě. Y, X i odchylka jsou vždy v metrech, s desetinnou tečkou; přesnost odchylky odpovídá nastavení. Název souboru končí _rovinnost_dZ.stx u vodorovné a _rovinnost_d.stx u ostatních rovin. Odškrtnuté a automaticky vyřazené nevrácené body se neexportují.</li>
-<li><b>CSV</b> (sekce 4. Export, zkratka <kbd>Shift</kbd>+<kbd>C</kbd>): uloží stejnou tabulku jako soubor CSV pro Excel (oddělovač středník, název podle načteného souboru s příponou _rovinnost.csv). V záhlaví je definice roviny a mezní odchylka, u každého bodu původní Y, X, Z, odchylka ΔZ / d a případně h ve zvolených jednotkách a přesnosti; svislá rovina přidává staničení s a obecná místní x′, y′; následuje vyhodnocení (do mezní odchylky / nad mezní odchylkou / nad 150 % mezní odchylky). Stejné sloupce má i kopírování do schránky.</li>
+<li><b>CSV</b> (sekce 4. Export, zkratka <kbd>Shift</kbd>+<kbd>C</kbd>): uloží stejnou tabulku jako soubor CSV pro Excel (oddělovač středník, název podle načteného souboru s příponou _rovinnost.csv). V záhlaví je definice roviny a mezní odchylka, u každého bodu Y, X, Z, odchylka ΔZ / d a případně h ve zvolených jednotkách a přesnosti; svislá rovina přidává staničení s a obecná místní x′, y′; následuje vyhodnocení (do mezní odchylky / nad mezní odchylkou / nad 150 % mezní odchylky). Stejné sloupce má i kopírování do schránky.</li>
 <li><b>PDF 2D</b> (sekce 4. Export, zkratka <kbd>Shift</kbd>+<kbd>P</kbd>): uloží celý 2D plán jako jednostránkové <b>PDF A3</b> (na šířku nebo na výšku podle tvaru výkresu): půdorys vodorovné plochy nebo místní pohled na svislou či obecnou rovinu, s barvami podle ΔZ / d nebo h, popisky, mřížkou, legendou a volitelnou hlavičkou podle voleb plánu. Nezávisí na aktuálním přiblížení; velikost písma určuje posuvník Písmo v plánu. Stejné tlačítko je i v liště plánu.</li>
 <li><b>DXF 2D</b> (sekce 4. Export, zkratka <kbd>Shift</kbd>+<kbd>S</kbd>): uloží 2D půdorys nebo místní pohled pro CAD podle typu roviny (pro skutečnou prostorovou polohu slouží samostatné DXF 3D): měřené body jako křížky (bodové prvky – blok KRIZEK; vrstvy BODY_mereno do mezní odchylky, BODY_nad nad mezní odchylkou, BODY_vyrazeno odškrtnuté, BODY_odlehle odlehlé, v režimu latě BODY_bezlate body bez latě), odchylky ΔZ (ODCHYLKY_ok / ODCHYLKY_nad), názvy bodů (BODY_popis), nadpis, hlavičku a legendu v samostatných vrstvách. Texty mají velikost podle posuvníku Písmo.</li>
 <li><b>Protokol PDF</b> (první tlačítko v sekci 4. Export, zkratka <kbd>Shift</kbd>+<kbd>R</kbd>): otevře okno s údaji zakázky (číslo protokolu, akce, katastrální území, objednatel, přístroj…) a uloží jeden soubor PDF: úvodní strana A4, seznam odchylek bodů od roviny A4 a plán PDF 2D A3. Seznam obsahuje všechny použité body (zaškrtnuté, bez automaticky vyřazených odlehlých) v původním pořadí bez ohledu na filtr tabulky; sloupce se řídí typem roviny (svislá přidává staničení s, obecná x′ a y′), v režimu latě přibude h a při více souborech měření číslo souboru. Odchylky nad mezní odchylkou jsou červeně. Plán je stejný jako z tlačítka PDF 2D a druhý řádek jeho nadpisu převezme vyplněnou akci. Údaje se průběžně ukládají v prohlížeči odděleně od protokolu ZSS pilot. Úvodní strana a záhlaví a zápatí stran A4 odpovídají šabloně Geodetický protokol GK (Excel). Volba Verze protokolu v Nastavení: Světlá (výchozí) nebo Tmavá (nadpis PROTOKOL v barvě loga s bílým textem, podnadpis modrý jako názvy bloků).</li>
@@ -2088,7 +2088,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <p>Při importu DXF jsou jednotky <b>m</b> (výchozí), <b>mm</b> nebo <b>ft</b>. Souřadnicový systém <b>S-JTSK</b> (výchozí) používá CAD X = −Y, CAD Y = −X; volba <b>Matematický</b> odpovídá CAD X = X, CAD Y = Y. Jednotky se převádějí na metry. Výkres s nulovými nebo neuvedenými výškami je automaticky 2D ve vodorovné referenční rovině, výchozně Z = 0 m. V modalu importu lze zadat referenční posun Z v metrech pro 2D i 3D DXF. U 2D určí výšku celé roviny, u 3D se přičte ke všem původním výškám a zachová jejich rozdíly. Y, X, tvar ani natočení se nemění. Tlačítko <b>Automaticky</b> umístí 2D podklad do minima použitých měřených bodů; u 3D posune medián výšek unikátních definičních bodů geometrie DXF do minima měření. Texty, směrové vektory ani body vytvořené vyhlazením medián neovlivňují. V Rovinnosti se použijí body po robustní filtraci a ručním výběru, v ZSS pilot výšky použitých vyhodnocených středů; filtr zobrazení tabulky nemá vliv. Posun se počítá vždy z původního podkladu a nesčítá se. Ikona obnovení vrátí posun na 0 m; výsledek se uloží až potvrzením importu. Podklad se používá také při prostorovém zobrazení a v místních pohledech svislé a obecné roviny. DXF 3D zachová referenčně umístěnou geometrii; DXF 2D zůstává průmětem do příslušného pohledu. Původní soubor se nepřepisuje. Při selhání uložení v prohlížeči se zobrazí trvalé upozornění; poslední úspěšně uložený podklad zůstane zachovaný a novější změny platí jen pro otevřenou stránku. Nastavení a zprávu o importu lze znovu otevřít názvem DXF ve štítku; křížek vpravo nahoře modal zavře bez potvrzení.</p>
 <p>Zpracovává se modelový prostor: čáry, body, křivky včetně obloukových úseků, kružnice, oblouky, elipsy, spline s řídicími body, texty, plochy a rozvinuté bloky s jejich transformacemi. Nepodporované prvky, externí reference a rozvržení se oznámí ve zprávě importu. DWG a binární DXF je třeba nejprve převést v CADu na textové DXF. Bohaté formátování MTEXT se zjednoduší, používá se běžné písmo a zjednodušené styly čar; šířky křivek se zobrazují jako osy. Nejde o úplnou kopii vzhledu původního CAD výkresu.</p>
 <p>Volba <b>Projekt DXF</b> v plánu se po načtení prvního podkladu zapne; bez podkladu je vypnutá a neaktivní. Pamatuje se samostatně v každém modulu a řídí také přidání podkladu do PDF a DXF. Podklad je decentně šedý, v DXF ve vrstvách <b>PD_původní_vrstva</b>. PDF 2D zachovává celý příslušný 2D výkres; PDF 3D aktuální prostorový pohled. DXF 3D zapisuje skutečnou prostorovou geometrii bez natočení kamery a bez zvětšení odchylek. Export s podkladem používá textové <b>DXF R2000 (AC1015)</b> v metrech, bez podkladu původní <b>DXF R12 (AC1009)</b>. Kružnice, oblouky, elipsy a spline podkladu zůstávají nativními prvky, bloky jsou rozvinuté. Prázdné texty se vynechávají, dlouhé se dělí na kratší řádky.</p>
-<p><b>Pravděpodobně nesourodá data</b>: výrazné červené upozornění porovnává jednotlivé soubory měření s bodovým i DXF projektem po převodu do metrů. Varuje, je-li půdorysná mezera mezi obalovými obdélníky větší než <b>max(1 000 m; 10 × větší rozsah obou souborů)</b>. Každý soubor potřebuje alespoň jeden blízký protějšek opačného typu; samotné nesouvisející dvojice dvou správně načtených lokalit nevadí. Filtr tabulky, výšky a viditelnost podkladu kontrolu nemění. Upozornění neblokuje načtení; zkontrolujte jednotky, osu a znaménka. Ukládání do prohlížeče může omezit jeho kapacita; případná chyba uložení se oznámí nad aplikací.</p><h3>Obecná rovina</h3><p><b>Určení roviny: Třemi body / MNČ.</b> MNČ vyrovná polohu i sklon ortogonálně, se stejnou vahou každého zdrojového bodu. Zdroj lze zvolit jako všechny PD se známými Y, X, Z nebo všechny použité měřené body bez ohledu na filtr tabulky. Nejméně tři prostorově rozložené body musí jednoznačně určovat plochu. Při změně zdrojových souborů nebo použitých bodů se MNČ přepočítá automaticky. U měření přebírá body po stávající robustní filtraci a ručním výběru; nepřidává další filtr. Filtr tabulky, řazení a kamera zdroj nemění. Zadaný kolmý posun a kladná strana zůstávají zachované. Pokud zdroj rovinu neurčuje, program upozorní a ponechá poslední platnou rovinu. Použití měření jako reference odstraní jejich celkový sklon i posun vůči původnímu projektu. Pomocné body 1–2–3 zobrazují vyrovnanou rovinu a nejsou ručně upravitelné. Počátek je v těžišti zdrojů, směr x′ vychází z průmětu předchozího x′ do nové roviny; bez původního zadání z průmětu +X JTSK (případně +Y). Kladná strana se zachová vůči předchozí rovině, jinak ji určí kladná největší složka normály v Y, X, Z. Obrátit stranu + zůstává dostupné. Min/max/průměr/medián i vlastní posun nadále mění jen rovnoběžný posun. Volba Třemi body obnoví původní zadání včetně kladné strany a posunu před přechodem na MNČ. Původní měřené ani projektované souřadnice se nemění; CSV, PDF a DXF rozlišují určení reference od informativního vyrovnání zaměřené plochy.</p><p></p><p>Tři body Y, X, Z určují referenční rovinu. Tabulka zachovává původní souřadnice a přidává místní x′, y′ v metrech a kolmou odchylku d podle nastavených jednotek. Počátek je v bodě 1, +x′ vede k bodu 2; výchozí +y′ směřuje ke straně bodu 3. Při pohledu z +d jde +x′ k +y′ po směru hodinových ručiček, stejně jako +X k +Y v JTSK. Obrácení kladné strany obrátí d i y′, nikoli x′ nebo původní XYZ.</p><p></p><p>Posun v mm a min/max/průměr/medián kolmých odchylek všech PD se známou výškou posouvají všechny tři definiční body stejně, bez změny sklonu. Nabídka Podle bodů PD umožňuje vrátit původní body i orientaci před prvním posunem. Výběr z nabídky platí ihned; číselný posun se provede Enterem nebo opuštěním pole. Čelní 2D plán ukazuje průměty měřených bodů: x′ roste dolů, y′ doleva. Značka kruhu s tečkou a +d označuje směr k pozorovateli. Volitelná Rovina 1–2–3 (ve výchozím stavu vypnutá) zobrazí tři definiční body a přerušovaný trojúhelník; Celý výkres zahrne i tyto body. Názvy, skutečné výšky Z, odchylky d, mřížka, legenda, měřítko a propojení s tabulkou používají stejné ovládání jako ostatní plány. Kolečko přibližuje kolem kurzoru, tažení posouvá, F přizpůsobí celý výkres a V přepíná tabulku, rozdělenou obrazovku a celý plán. </p><p>Lať i robustní filtrace pracují v místní soustavě x′, y′, d. Barvy, mapa a vrstevnice v režimu latě používají h; kubatury vždy skutečné d a lineární TIN, nezávisle na vyhlazení i filtru tabulky. Plocha se měří v referenční rovině x′, y′. Vyrovnaný posun vychází z plošně váženého průměru d; Převzít posune všechny tři definiční body kolmo, Vrátit posun obnoví předchozí zadání. Úhel vůči zadané rovině a RMS vycházejí z ortogonálního vyrovnání původních XYZ všech použitých bodů, nezávisle na filtru a hodnotách h. Body se stejným průmětem a různým d vyvolají upozornění a zablokují lať, mapu i kubatury, dokud neodškrtnete body dalších povrchů. V malém okně se legenda podle potřeby zkrátí: zachová barevné intervaly, podrobné kubatury zůstanou v souhrnu pod tabulkou. </p><p>Prostorový plán otevřete natočením kostky nebo Shift + tažením v plánu. Kostka ukazuje ±x′, ±y′ a ±d; šipky překlápějí pohled po 90°, zatočené šipky otáčejí v rovině pohledu. Pohled na rovinu, dvojklik na kostku nebo Home vrátí původní místní 2D pohled včetně přiblížení a posunu. Zvětšení d 1–2–5–10–20–50–100 mění jen zobrazení ve směru normály; popisky, výšky Z i výpočty zůstávají skutečné. Volba Rovina zobrazí referenční plochu d = 0 a kolmé spojnice měřených bodů. Rovina 1–2–3 ovládá i prostorový definiční trojúhelník. TIN, barvy i vrstevnice lze zobrazit v prostoru; při latění se barvy řídí h, poloha povrchu vždy d. Souřadnicová mřížka používá místní x′, y′. Bez WebGL zůstává dostupný 2D plán. </p><p>CSV a schránka obsahují původní Y, X, Z, místní x′, y′, kolmou odchylku d, případně h od latě, definici a orientaci roviny, jednotky, kubatury a ortogonální odklon. Exportují použité body podle filtru a řazení; kubatury i odklon se nadále počítají ze všech použitých bodů. STX obsahuje původní Y, X a d místo výšky Z, vždy v metrech, nikoli h od latě. PDF 2D obsahuje celý místní pohled na A3; PDF 3D zachytí aktuální natočení, přiblížení a označené zvětšení d jako statický obrázek s textovými popisky. Obě PDF obsahují definiční body a vysvětlení místní soustavy. DXF 2D zachová místní pohled (CAD X = −y′, CAD Y = −x′, CAD Z = 0). DXF 3D zachová skutečnou polohu v JTSK (CAD X = −Y, CAD Y = −X, CAD Z = Z), bez natočení kamery a bez zvětšení d. Definice a báze místní soustavy jsou v záhlaví DXF; vrstva BODY_souradnice obsahuje původní měřené body, ROVINA_souradnice definiční body při zapnuté volbě Rovina 1–2–3. Popisy a značky leží rovnoběžně s referenční rovinou; plocha v režimu latě používá skutečné d z lineárního TIN, barvy a vrstevnice h.</p>
+<p><b>Pravděpodobně nesourodá data</b>: výrazné červené upozornění porovnává jednotlivé soubory měření s bodovým i DXF projektem po převodu do metrů. Varuje, je-li půdorysná mezera mezi obalovými obdélníky větší než <b>max(1 000 m; 10 × větší rozsah obou souborů)</b>. Každý soubor potřebuje alespoň jeden blízký protějšek opačného typu; samotné nesouvisející dvojice dvou správně načtených lokalit nevadí. Filtr tabulky, výšky a viditelnost podkladu kontrolu nemění. Upozornění neblokuje načtení; zkontrolujte jednotky, osu a znaménka. Ukládání do prohlížeče může omezit jeho kapacita; případná chyba uložení se oznámí nad aplikací.</p><h3>Obecná rovina</h3><p><b>Určení roviny: Třemi body / MNČ.</b> MNČ vyrovná polohu i sklon ortogonálně, se stejnou vahou každého zdrojového bodu. Zdroj lze zvolit jako všechny PD se známými Y, X, Z nebo všechny použité měřené body bez ohledu na filtr tabulky. Nejméně tři prostorově rozložené body musí jednoznačně určovat plochu. Při změně zdrojových souborů nebo použitých bodů se MNČ přepočítá automaticky. U měření přebírá body po stávající robustní filtraci a ručním výběru; nepřidává další filtr. Filtr tabulky, řazení a kamera zdroj nemění. Zadaný kolmý posun a kladná strana zůstávají zachované. Pokud zdroj rovinu neurčuje, program upozorní a ponechá poslední platnou rovinu. Použití měření jako reference odstraní jejich celkový sklon i posun vůči původnímu projektu. Pomocné body 1–2–3 zobrazují vyrovnanou rovinu a nejsou ručně upravitelné. Počátek je v těžišti zdrojů, směr x′ vychází z průmětu předchozího x′ do nové roviny; bez původního zadání z průmětu +X JTSK (případně +Y). Kladná strana se zachová vůči předchozí rovině, jinak ji určí kladná největší složka normály v Y, X, Z. Obrátit stranu + zůstává dostupné. Min/max/průměr/medián i vlastní posun nadále mění jen rovnoběžný posun. Volba Třemi body obnoví původní zadání včetně kladné strany a posunu před přechodem na MNČ. Původní měřené ani projektované souřadnice se nemění; CSV, PDF a DXF rozlišují určení reference od informativního vyrovnání zaměřené plochy.</p><p></p><p>Tři body Y, X, Z určují referenční rovinu. Tabulka zachovává původní souřadnice a přidává místní x′, y′ v metrech a kolmou odchylku d podle nastavených jednotek. Počátek je v bodě 1, +x′ vede k bodu 2; výchozí +y′ směřuje ke straně bodu 3. Při pohledu z +d jde +x′ k +y′ po směru hodinových ručiček, stejně jako +X k +Y v JTSK. Obrácení kladné strany obrátí d i y′, nikoli x′ nebo původní XYZ.</p><p></p><p>Posun v mm a min/max/průměr/medián kolmých odchylek všech PD se známou výškou posouvají všechny tři definiční body stejně, bez změny sklonu. Nabídka Podle bodů PD umožňuje vrátit původní body i orientaci před prvním posunem. Výběr z nabídky platí ihned; číselný posun se provede Enterem nebo opuštěním pole. Čelní 2D plán ukazuje průměty měřených bodů: x′ roste dolů, y′ doleva. Značka kruhu s tečkou a +d označuje směr k pozorovateli. Volitelná Rovina 1–2–3 (ve výchozím stavu vypnutá) zobrazí tři definiční body a přerušovaný trojúhelník; Celý výkres zahrne i tyto body. Názvy, skutečné výšky Z, odchylky d, mřížka, legenda, měřítko a propojení s tabulkou používají stejné ovládání jako ostatní plány. Kolečko přibližuje kolem kurzoru, tažení posouvá, F přizpůsobí celý výkres a V přepíná tabulku, rozdělenou obrazovku a celý plán. </p><p>Lať i robustní filtrace pracují v místní soustavě x′, y′, d. Barvy, mapa a vrstevnice v režimu latě používají h; kubatury vždy skutečné d a lineární TIN, nezávisle na vyhlazení i filtru tabulky. Plocha se měří v referenční rovině x′, y′. Vyrovnaný posun vychází z plošně váženého průměru d; Převzít posune všechny tři definiční body kolmo, Vrátit posun obnoví předchozí zadání. Úhel vůči zadané rovině a RMS vycházejí z ortogonálního vyrovnání původních XYZ všech použitých bodů, nezávisle na filtru a hodnotách h. Body se stejným průmětem a různým d vyvolají upozornění a zablokují lať, mapu i kubatury, dokud neodškrtnete body dalších povrchů. V malém okně se legenda podle potřeby zkrátí: zachová barevné intervaly, podrobné kubatury zůstanou v souhrnu pod tabulkou. </p><p>Prostorový plán otevřete natočením kostky nebo Shift + tažením v plánu. Kostka ukazuje ±x′, ±y′ a ±d; šipky překlápějí pohled po 90°, zatočené šipky otáčejí v rovině pohledu. Pohled na rovinu, dvojklik na kostku nebo Home vrátí původní místní 2D pohled včetně přiblížení a posunu. Zvětšení d 1–2–5–10–20–50–100 mění jen zobrazení ve směru normály; popisky, výšky Z i výpočty zůstávají skutečné. Volba Rovina zobrazí referenční plochu d = 0 a kolmé spojnice měřených bodů. Rovina 1–2–3 ovládá i prostorový definiční trojúhelník. TIN, barvy i vrstevnice lze zobrazit v prostoru; při latění se barvy řídí h, poloha povrchu vždy d. Souřadnicová mřížka používá místní x′, y′. Bez WebGL zůstává dostupný 2D plán. </p><p>CSV a schránka obsahují Y, X, Z, místní x′, y′, kolmou odchylku d, případně h od latě, definici a orientaci roviny, jednotky, kubatury a ortogonální odklon. Exportují použité body podle filtru a řazení; kubatury i odklon se nadále počítají ze všech použitých bodů. STX obsahuje původní Y, X a d místo výšky Z, vždy v metrech, nikoli h od latě. PDF 2D obsahuje celý místní pohled na A3; PDF 3D zachytí aktuální natočení, přiblížení a označené zvětšení d jako statický obrázek s textovými popisky. Obě PDF obsahují definiční body a vysvětlení místní soustavy. DXF 2D zachová místní pohled (CAD X = −y′, CAD Y = −x′, CAD Z = 0). DXF 3D zachová skutečnou polohu v JTSK (CAD X = −Y, CAD Y = −X, CAD Z = Z), bez natočení kamery a bez zvětšení d. Definice a báze místní soustavy jsou v záhlaví DXF; vrstva BODY_souradnice obsahuje původní měřené body, ROVINA_souradnice definiční body při zapnuté volbě Rovina 1–2–3. Popisy a značky leží rovnoběžně s referenční rovinou; plocha v režimu latě používá skutečné d z lineárního TIN, barvy a vrstevnice h.</p>
 <h3>Svislá rovina</h3>
 <ul><li>Zadejte dva různé body Y, X ručně nebo výběrem z PD. Otevření nabídky pole bodu zobrazí všechny možnosti, i když pole obsahuje zvolený bod. Teprve psaní nabídku filtruje podle názvu. Šipka u pole vždy znovu nabídne vše; výběr lze provést myší nebo šipkami a Enterem. Rovina je svislá a nekonečná, výšky definičních bodů nejsou potřeba.</li>
 <li><b>d</b> je kolmá vodorovná odchylka: kladná vpravo od směru 1 → 2 při pohledu shora (před rovinou, vystupuje), záporná vlevo (za rovinou, ustupuje). Přebývající materiál lze takto interpretovat, pokud kladná strana míří do volného prostoru.</li>
@@ -2098,7 +2098,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <li><b>Vlastní posun [mm]</b>: zadejte kladnou nebo zápornou hodnotu (čárka i tečka) a potvrďte Enterem nebo opuštěním pole. Během psaní se rovina neposouvá. Kladný posun míří vpravo od 1 → 2 při pohledu shora, záporný vlevo. Další změna hodnoty provede další posun. Enter následovaný opuštěním pole provede posun pouze jednou. Vypočtené souřadnice se v polích zobrazují na 3 desetinná místa v metrech; výpočet zachovává vyšší přesnost, dostupnou v tooltipu.</li>
 <li><b>Posun podle PD</b>: po zadání dvou různých bodů lze rovinu rovnoběžně posunout podle minima, maxima, průměru nebo mediánu kolmých odchylek všech načtených PD. Výšky PD nejsou potřeba. Min posune rovinu na nejmenší kolmou souřadnici PD, max na největší; průměr vynuluje průměrnou odchylku PD, medián jejich medián. Výběr statistiky provede posun ihned; nabídka se pak vrátí na „Vybrat…“, takže lze znovu vybrat i stejnou statistiku. Oba definiční body dostanou stejný kolmý posun; nové zadání se uloží. Další změny PD rovinu automaticky neposouvají.</li>
 <li>Fungují tabulka, řazení, filtry, zaškrtávání, jednotky, přesnost a statistiky. Definice se pamatuje po obnovení stránky. Krátká základna vůči rozsahu měření vyvolá upozornění.</li>
-<li><b>Pohled na stěnu</b>: zobrazí se z kladné strany roviny; staničení s roste doprava a výška Z nahoru. Barvy a popisky ukazují kolmou odchylku d. Kolečko přibližuje kolem kurzoru, tažení posouvá, F vrátí celý výkres. V přepíná tabulku, rozdělenou obrazovku a celý pohled. Kliknutí propojuje bod s tabulkou; šipky mění výběr. Názvy, výšky, odchylky, značky, písmo, mřížka a legenda jsou nastavitelné. Osy mají stejné měřítko, původní Y, X, Z se nemění. Ve 2D plánu i PDF je dole měřítková lišta v metrech, která se přizpůsobuje přiblížení; platí také pro půdorys vodorovné plochy. Mřížku lze zapnout samostatně ve 2D i 3D, ve 3D také při skryté výplni referenční roviny.</li>
+<li><b>Pohled na stěnu</b>: zobrazí se z kladné strany roviny; staničení s roste doprava a výška Z nahoru. Barvy a popisky ukazují kolmou odchylku d. Kolečko přibližuje kolem kurzoru, tažení posouvá, F vrátí celý výkres. V přepíná tabulku, rozdělenou obrazovku a celý pohled. Kliknutí propojuje bod s tabulkou; šipky mění výběr. Názvy, výšky, odchylky, značky, písmo, mřížka a legenda jsou nastavitelné. Osy mají stejné měřítko, Y, X, Z se nemění. Ve 2D plánu i PDF je dole měřítková lišta v metrech, která se přizpůsobuje přiblížení; platí také pro půdorys vodorovné plochy. Mřížku lze zapnout samostatně ve 2D i 3D, ve 3D také při skryté výplni referenční roviny.</li>
 <li><b>Sklon a odklon zaměřené plochy</b>: pod souhrnem se zobrazuje výsledek ortogonálního vyrovnání roviny ze všech zaškrtnutých bodů, se stejnou vahou a ze skutečných Y, X, Z. Filtr tabulky ani režim latě rozsah výpočtu nemění; vyřazené body se nepoužijí, ručně vrácené ano. U vodorovné plochy je sklon v mm/m a stupních a směr největšího stoupání od osy −X směrem k −Y (0° = −X, 90° = −Y, 180° = +X, 270° = +Y); nejde o zeměpisný azimut a neuplatňuje se meridiánová konvergence. U svislé plochy je odklon od svislice, jeho směr k +d / −d a samostatné natočení vůči stopě 1 → 2; kladné natočení stáčí stopu ve směru 1 → 2 ke straně +d. Jde o informaci o celkovém náklonu; zadaná rovina, odchylky, mezní odchylka a kubatury se nemění. Údaje jsou také v PDF 2D, PDF 3D a záhlaví CSV / kopírované tabulky; u exportů je uvedeno, že platí pro všechny zaškrtnuté body bez ohledu na filtr. Je potřeba alespoň 3 plošně rozmístěné body; téměř přímkové nebo prostorově nejednoznačné soubory se označí jako nespolehlivé. U vodorovné plochy bez sklonu se směr stoupání neurčuje.</li>
 <li><b>RMS od vyrovnané roviny</b>: odmocnina průměru čtverců kolmých vzdáleností všech použitých bodů od ortogonálně vyrovnané roviny, tedy √(Σd²/n). Má stejné jednotky a zobrazenou přesnost jako odchylky. Ukazuje, jak těsně body přiléhají k jedné rovině; nevyjadřuje přesnost měření a nenahrazuje kontrolu vůči zadané rovině ani vyhodnocení latí. Filtr tabulky výsledek nemění. Je v souhrnu, CSV / schránce a PDF 2D i 3D. Při neurčitelné vyrovnané rovině se RMS neuvádí.</li>
 <li><b>Opakovatelnost TIN</b>: před triangulací se body seřadí stálým pravidlem. Pokud čtyři body připouštějí obě úhlopříčky (leží na společné kružnici v mezích strojového zaokrouhlení), přednost dostane úhlopříčka podle stálého pořadí názvů bodů, nikoli pořadí řádků v souboru. Shodné názvy mají doplňkové řazení podle souřadnic. Souřadnice ani odchylky se nepřepisují. Téměř nulové okrajové trojúhelníky vzniklé pouze zaokrouhlením se vynechají. Stejné pravidlo používají mapa, vrstevnice, vyhlazení, kubatury i výstupy. U pravidelných sítí může mít volba úhlopříčky vliv na interpolovanou plochu; cílem pravidla je opakovatelné geometrické řešení.</li>
@@ -2107,8 +2107,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <li><b>Plocha stěny</b>: TIN, maximální hrana a vyhlazení se počítají v pohledu (s, Z). Mapa a vrstevnice zobrazují d, v režimu latě h (jen body s latí). Popisy vrstevnic směřují hlavou k vyšším hodnotám a patou k nižším. Souřadnice měření se nemění. Mapa používá všechny zaškrtnuté a nevyřazené body, nezávisle na filtru tabulky.</li>
 <li><b>Kubatury stěny</b>: plocha v m² je průmět do svislé roviny; objem v m³ je mezi stěnou a rovinou. Kladné d znamená odbourání před rovinou, záporné doplnění za ní. Výpočet používá vždy d a lineární TIN všech použitých bodů, i při vyhlazené mapě nebo v režimu latě. Max. hrana omezuje také kubatury. Mimo síť se objem nepočítá.</li>
 <li><b>Vyrovnaný posun roviny</b>: plošně vážený průměr d určí kolmý posun s nulovou bilancí. Kladný posun je vpravo od 1 → 2 shora. Zaokrouhluje se podle Přesnosti; souhrn ukáže objemy a zbytkovou bilanci po zaokrouhlení. <b>Převzít</b> posune oba definiční body stejně a zachová směr roviny. <b>Vrátit</b> obnoví body před tímto převzetím; nabídka „Vrátit zadané body“ nadále vrací začátek celé série posunů. Souřadnice se ukládají s přesností na mikrometry, což může přidat nepatrný zbytek bilance.</li>
-<li><b>CSV a schránka</b>: původní Y, X, Z, staničení s [m], kolmá odchylka d ve zvolených jednotkách a při vyhodnocení latí také h a údaje rozhodující latě. V záhlaví jsou oba definiční body, pravidlo znamének, mezní odchylka a kubatury všech použitých bodů (nezávisle na filtru). Exportované řádky respektují filtr, řazení a zaškrtnutí.</li>
-<li><b>STX</b>: původní Y a X, místo Z kolmá odchylka d v metrech (i při vyhodnocení latí); původní výška Z se do tohoto formátu nezapisuje. Název souboru končí _rovinnost_d.stx. CSV zachovává i původní výšku.</li>
+<li><b>CSV a schránka</b>: Y, X, Z, staničení s [m], kolmá odchylka d ve zvolených jednotkách a při vyhodnocení latí také h a údaje rozhodující latě. V záhlaví jsou oba definiční body, pravidlo znamének, mezní odchylka a kubatury všech použitých bodů (nezávisle na filtru). Exportované řádky respektují filtr, řazení a zaškrtnutí.</li>
+<li><b>STX</b>: Y a X, místo Z kolmá odchylka d v metrech (i při vyhodnocení latí); výška Z se do tohoto formátu nezapisuje. Název souboru končí _rovinnost_d.stx. CSV obsahuje i výšku Z.</li>
 <li><b>PDF A3</b>: celý pohled (s, Z), stejné volby značek, mapy, vyhlazení, vrstevnic a legendy jako na obrazovce; aktuální přiblížení se nepřebírá.</li>
 <li><b>DXF</b>: samostatné tlačítko <b>DXF 2D</b> uloží <b>pohled (s, Z)</b>, tlačítko <b>DXF 3D</b> uloží <b>3D JTSK</b>. Obě mají původní ikonu stahování a velikost tlačítka DXF; stejné volby jsou v sekci Export i v liště pohledu. Shift+S uloží 2D pohled. Pohled je čistě 2D: CAD X = s, CAD Y = výška Z, CAD Z = 0. Ve 3D je CAD X = −Y JTSK, CAD Y = −X JTSK a CAD Z = původní výška Z. Skutečná poloha bodů, jejich značek i popisků obsahuje d; h od latě se nikdy nepoužije místo skutečné souřadnice. Barevná mapa a vrstevnice ve 3D leží na interpolované stěně: v režimu roviny na zvolené ploše d, u latě na lineární ploše d s barvami podle h. Legenda a nadpis leží v referenční rovině. Soubor obsahuje oba definiční body, převod souřadnic a pravidlo znamének v komentářích záhlaví. Texty jsou kvůli kompatibilitě DXF bez diakritiky. PDF a DXF respektují zobrazení bodů včetně volby odškrtnutých a odlehlých; plocha používá všechny použité body.</li></ul>
 <h3>Ovládací krychle: stěny, hrany a rohy</h3>
@@ -2261,7 +2261,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 </div><div id="gFixPanel" class="measure-panel tin-panel" hidden role="region" aria-label="Opravit odchylky">
  <button type="button" class="measure-close" id="gFixClose" aria-label="Zavřít opravy odchylek (Escape)" title="Zavřít (Escape)">×</button>
  <div class="tin-head"><strong>Opravit odchylky</strong><span class="tin-count" id="gFixCount"></span></div>
- <div class="tin-ctx"><div class="tin-pane"><span class="hp" id="gFixHint">Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Opravený popisek je orámovaný fialově. Používejte jen pro špatně změřené středy.</span>
+ <div class="tin-ctx"><div class="tin-pane"><span class="hp" id="gFixHint">Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Poloha středu je po uložení pevná, při změně PD se znovu počítá odchylka. Používejte jen pro špatně změřené středy.</span>
   <div id="gFixEd" style="display:none;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px"><label>Pilota <b id="gFixName"></b>: odchylka <input type="text" id="gFixVal" inputmode="numeric" maxlength="4" size="5" autocomplete="off" aria-label="Nová odchylka v mm"> mm</label><span class="hp" id="gFixOrig"></span><button type="button" class="wi" id="gFixOk">Použít</button><button type="button" class="wi" id="gFixRev" title="Vrátí hodnotu změřeného středu">Vrátit měřenou</button><button type="button" class="wi" id="gFixCancel">Storno</button></div></div></div>
  <div class="tin-foot">
   <p id="gFixStatus" class="hp" role="status" aria-live="polite"></p>
@@ -2438,7 +2438,7 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.433", APP_DATE="23. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
+const APP_VERSION="1.434", APP_DATE="23. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -2610,10 +2610,21 @@ const PLK=GM_KEY("geomat.zss.plan.v1");
 const GLBL_K=GM_KEY("geomat.zss.labels.v1");
 let GLBL={on:false,map:{},hist:[],fut:[],labels:[],drag:null,hover:null,msg:""};
 try{ const v=JSON.parse(localStorage.getItem(GLBL_K)||"null"); if(v&&typeof v==="object"&&!Array.isArray(v)) for(const [k,o] of Object.entries(v)) if(o&&[o.t,o.n].every(Number.isFinite)||o&&[o.x,o.y].every(Number.isFinite)) GLBL.map[k]=o; }catch(e){}   // uložený pohled plánu: přiblížení vůči „celému výkresu“ a střed
-// ruční opravy odchylek (Plán → Opravit odchylky): klíč piloty → nová odchylka od PD v mm; měřený střed se nemění, oprava se aplikuje po výpočtu
+// Opravený střed je pevná poloha v S-JTSK, vázaná na zdrojové body piloty.
 const FIX_K=GM_KEY("geomat.zss.fix.v1");
 let FIX={on:false,map:{},hist:[],fut:[],sel:null,msg:"",lastDown:null};
-try{ const v=JSON.parse(localStorage.getItem(FIX_K)||"null"); if(v&&typeof v==="object"&&!Array.isArray(v)) for(const [k,o] of Object.entries(v)) if(o&&Number.isInteger(o.mm)&&o.mm>=0&&o.mm<=9999&&typeof o.sig==="string") FIX.map[k]={mm:o.mm,sig:o.sig}; }catch(e){}
+try{
+ const saved=JSON.parse(localStorage.getItem(FIX_K)||"null");
+ if(saved&&typeof saved==="object"&&!Array.isArray(saved))for(const [k,o] of Object.entries(saved)){
+  if(!o||typeof o.sig!=="string")continue;
+  if([o.y,o.x].every(Number.isFinite)){
+   const geometry={};
+   for(const kind of ['direct','rim'])if(Array.isArray(o[kind])&&o[kind].every(id=>typeof id==="string"))geometry[kind]=o[kind];
+   FIX.map[k]={y:o.y,x:o.x,sig:o.sig,...geometry};
+  }
+  else if(Number.isInteger(o.mm)&&o.mm>=0&&o.mm<=9999)FIX.map[k]={mm:o.mm,sig:o.sig};
+ }
+}catch(e){}
 let GVZ=null; try{ const v=JSON.parse(localStorage.getItem(PLK)||"null"); if(v&&v.z>0&&isFinite(v.cy)&&isFinite(v.cx)) GVZ=v; }catch(e){}
 function clearView(){ GVZ=null; try{ removeStorage(PLK); }catch(e){} }   // zapomene přiblížení a posun plánu (plán se příště otevře jako celý výkres)
 let gvT=0;
@@ -2837,11 +2848,18 @@ function evaluateCentres(all,only,given,refs,rdist,refOnly,off,limMm){
   const auto=rdist==null?autoRdist(refs,limMm,0):null,limits=new Map(refs.map((p,i)=>[p,auto?auto.per[i]:rdist]));
   if(auto&&refs.length)autoV.rd={v:auto.vMin===auto.vMax?gmDec(auto.vMax):gmDec(auto.vMin)+"–"+gmDec(auto.vMax),why:gmPreviewText("mez pro přiřazení samostatných středů k PD")};
   const inRange=p=>!refs.length||refs.some(q=>Math.hypot(p.y-q.y,p.x-q.x)<=limits.get(q)+1e-8);
+  const corrections=Object.values(FIX.map),hasLegacy=corrections.some(f=>Number.isInteger(f.mm));
   const repeats=new Map();for(const q of cand)repeats.set(q.id,(repeats.get(q.id)||0)+1);
   cand.forEach((q,i)=>{
-    if(![q.y,q.x,q.z].every(Number.isFinite)||refOnly&&!inRange(q))return;
+    if(![q.y,q.x,q.z].every(Number.isFinite))return;
     const key=q.id+"@"+q.line+(q.src>0?"#"+q.src:""),disabled=off.has(key),note=gmPreviewText("Přímo zaměřený střed")+(r>0?gmPreviewText("; průměr zadán ručně (neurčen z měření)"):gmPreviewText("; průměr neurčen"))+(repeats.get(q.id)>1?gmPreviewText("; opakovaný název bodu – zkontrolovat (body se neslučují)"):"");
-    const raw={y:q.y,x:q.x,z:q.z,id:q.id,src:q.src},p={first:key,mem:[{key,id:q.id,on:!disabled,res:null}],i0:i,id:q.id,name:q.id,n:disabled?0:1,ids:[q.id],y:q.y,x:q.x,z:q.z,r,d:2*r,dev:0,direct:true,centresOnly:true,note,pts:disabled?[]:[raw],offPts:disabled?[raw]:[],ref:null,rd:0,dy:0,dx:0,canToggle:disabled};
+    const raw={y:q.y,x:q.x,z:q.z,id:q.id,src:q.src},p={first:key,fixSource:[q],mem:[{key,id:q.id,on:!disabled,res:null}],i0:i,id:q.id,name:q.id,n:disabled?0:1,ids:[q.id],y:q.y,x:q.x,z:q.z,r,d:2*r,dev:0,direct:true,centresOnly:true,note,pts:disabled?[]:[raw],offPts:disabled?[raw]:[],ref:null,rd:0,dy:0,dx:0,canToggle:disabled};
+    if(!disabled&&corrections.length){
+     // Legacy entries recorded the assigned reference ID, not the position.
+     if(hasLegacy) p.ref=refs.find(r=>FIX.map[JSON.stringify([key,r.id])]?.sig===sigOf(p))||null;
+     zssFixApply(p);p.ref=null;
+    }
+    if(refOnly&&!inRange(p))return;
     if(disabled){p.invalid=true;p.note+=gmPreviewText("; bod ručně vyřazen");bad.push(p);}else{out.push(p);used.add(q);}
   });
   const pairs=[];out.forEach((p,i)=>refs.forEach(q=>{const d=Math.hypot(p.y-q.y,p.x-q.x);if(d<=limits.get(q)+1e-8)pairs.push({i,q,d});}));pairs.sort((a,b)=>a.d-b.d);
@@ -2881,6 +2899,13 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
   const cand = only ? all.filter(matches) : all.slice();
   log.push(gmPreviewText("Načteno bodů: ⟦0⟧, ⟦1⟧", [all.length, only?gmPreviewText("s kódem/prefixem ")+["ZSS","PIL","ZSSPIL",...customCodes].join("/")+": "+cand.length:gmPreviewText("(filtr vypnut)")]));
   const n=cand.length, W=5;
+  const corrections=Object.values(FIX.map),rimGroups=new Map();
+  for(const f of corrections)if(f.rim?.length)for(const id of f.rim)rimGroups.set(id,f);
+  const fixedRim=indices=>{
+   if(!rimGroups.size)return false;
+   const f=rimGroups.get(zssFixPointId(cand[indices[0]]));
+   return !!f&&indices.every(j=>rimGroups.get(zssFixPointId(cand[j]))===f)&&nearRef(f.y,f.x);
+  };
   const given=(Array.isArray(r0user)?r0user:[r0user]).filter(x=>x>0);
   let r0s = devFrac>0 ? (given.length?given:estimateRs(cand,rmin,rmax,devFrac,tol)) : [];
   if(!r0s.length) r0s=null;
@@ -2934,7 +2959,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
       if(!cc||cc.r<rmin||cc.r>rmax) continue;
       if(ctrLike([i,b,c])) continue;
       const nr0=refs.length?nearest(cc.y,cc.x):null, dpd=nr0?nr0.d:Infinity, rdL=nr0?rdl(nr0.ref):rdist;   // vzdálenost středu kružnice od nejbližšího bodu PD a jeho mez
-      if(refOnly && !(dpd<=rdL)) continue;
+      if(refOnly&&!(dpd<=rdL)&&!fixedRim([i,b,c])) continue;
       const extAll=[];
       if(tp>0) for(let k=c+1;k<n&&cand[k].src===cand[i].src&&Math.abs(Math.hypot(cand[k].y-cc.y,cand[k].x-cc.x)-cc.r)<=tp;k++) extAll.push(k);
       // zkusí se všechny varianty: jen trojice, trojice + 1 navazující bod … + všechny (první bod sousední piloty, který náhodou leží u kružnice, tak nemusí být přibrán)
@@ -3055,7 +3080,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
           }
           if(c.r<rmin||c.r>rmax||(dvT>0&&devR(c.r)>dvT)) return {why:gmPreviewText("průměr mimo povolené meze")};
           if(!gapOk(c,idx)) return {why:gmPreviewText("nedostatečné rozložení bodů")};
-          if(refOnly&&!nearRef(c.y,c.x)) return {why:gmPreviewText("střed mimo dosah PD")};
+          if(refOnly&&!nearRef(c.y,c.x)&&!fixedRim(idx)) return {why:gmPreviewText("střed mimo dosah PD")};
           if(ctrLike(idx)) return {why:gmPreviewText("body odpovídají zaměřeným středům")};
           return {idx,c,pruned,ss:res.reduce((a,b)=>a+b,0)};
         }
@@ -3069,7 +3094,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
             const cc=circle3(cand[j],cand[nbs[a]],cand[nbs[b]]);
             if(!cc||cc.r<rmin||cc.r>rmax) continue;
             if(dvT>0&&devR(cc.r)>dvT) continue;
-            if(refOnly&&!nearRef(cc.y,cc.x)) continue;
+            if(refOnly&&!nearRef(cc.y,cc.x)&&!fixedRim([j,nbs[a],nbs[b]])) continue;
             if(!gapOk(cc,[j,nbs[a],nbs[b]])) continue;
             const idx=[j,nbs[a],nbs[b]]; if(ctrLike(idx)) continue;
             if(tpi>0) around(cc.y,cc.x,cc.r+tpi,q=>{ if(!idx.includes(q)&&Math.abs(Math.hypot(cand[q].y-cc.y,cand[q].x-cc.x)-cc.r)<=tpi) idx.push(q); });
@@ -3088,7 +3113,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
       if(rejectStats.size) log.push(gmPreviewText("Dopočet mimo pořadí – zamítnuté kombinace po vyrovnání: ")+[...rejectStats].map(([why,n])=>`${why}: ${n}`).join("; "));
     }
   }
-  const usedAll=new Set(), bad=[], badIdx=new Set(), key=j=>cand[j].id+"@"+cand[j].line+(cand[j].src>0?"#"+cand[j].src:""), isOff=j=>off.has(key(j));
+  const usedAll=new Set(), bad=[], badIdx=new Set(), key=j=>zssPointKey(cand[j]), isOff=j=>off.has(key(j));
   P.forEach(p=>{
     const members=p.used.slice(), on=members.filter(j=>!isOff(j)), offIdx=members.filter(isOff);
     let c=p.c, invalid="";
@@ -3103,7 +3128,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
     if(invalid){ members.forEach(j=>badIdx.add(j)); log.push(`Pilota ${cand[members[0]].id}: ${invalid}`);
       bad.push({invalid:true,i0:members[0],id:cand[members[0]].id,name:"–",n:on.length,ids:on.map(j=>cand[j].id),note:invalid+(offNote?"; "+offNote:""),mem:mem(null),first:key(members[0])}); return; }
     let nr=null; if(refs.length) nr=nearest(c.y,c.x);
-    if(refOnly && (!nr||nr.d>rdl(nr.ref))){ members.forEach(j=>usedAll.delete(j)); return; }
+    if(refOnly&&(!nr||nr.d>rdl(nr.ref))&&!fixedRim(members)){ members.forEach(j=>usedAll.delete(j)); return; }
     const pu=on.map(j=>cand[j]);
     const dev=gmMax(pu,q=>Math.abs(Math.hypot(q.y-c.y,q.x-c.x)-c.r));
     let note="";
@@ -3120,7 +3145,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
       note+=(note?"; ":"")+m; log.push(`Pilota ${pu[0].id}: ${m}`); if(p.rep.warn) repW.push(pu[0].id); }
     out.push({i0:members[0],first:key(members[0]),id:pu[0].id,n:pu.length,ids:pu.map(q=>q.id),y:c.y,x:c.x,z:pu.reduce((s2,q)=>s2+q.z,0)/pu.length,r:c.r,dev,note,
       ref:nr&&nr.d<=rdl(nr.ref)?nr.ref:null,rd:nr?nr.d:0,pts:pu.map(q=>({y:q.y,x:q.x,id:q.id,z:q.z,src:q.src})),offPts:offIdx.map(j=>({y:cand[j].y,x:cand[j].x,id:cand[j].id,z:cand[j].z,src:cand[j].src})),
-      mem:mem(c),canToggle:members.length>3||offIdx.length>0,dy:nr?c.y-nr.ref.y:0,dx:nr?c.x-nr.ref.x:0,
+      fixSource:members.map(j=>cand[j]),rimCount:members.length,fixDisabled:offIdx.map(j=>zssFixPointId(cand[j])).sort(),mem:mem(c),canToggle:members.length>3||offIdx.length>0,dy:nr?c.y-nr.ref.y:0,dx:nr?c.x-nr.ref.x:0,
       oldPts:p.rep&&p.rep.old?p.rep.old.map(j=>({y:cand[j].y,x:cand[j].x,id:cand[j].id,z:cand[j].z,src:cand[j].src})):undefined});
   });
   supersed.forEach(j=>usedAll.add(j));
@@ -3179,10 +3204,12 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
       else if(cMode==="direct") m+=gmPreviewText("; použit zaměřený střed");
       if(p.ctrOld) m+=gmPreviewText("; starší zaměření středu nepoužito: ⟦0⟧", [p.ctrOld.map(j=>cand[j].id).join(", ")]);
       p.note+=(p.note?"; ":"")+m; p.ctrPts=p.ctrIdx.map(j=>({y:cand[j].y,x:cand[j].x,id:cand[j].id,z:cand[j].z,src:cand[j].src})).concat((p.ctrOld||[]).map(j=>({y:cand[j].y,x:cand[j].x,id:cand[j].id,z:cand[j].z,src:cand[j].src})));
+      if(use!=="circle")p.fixSource=p.fixSource.concat(p.ctrIdx.map(j=>cand[j]));
       p.ctrDev=e; p.ctrW=wd; log.push(`Pilota ${p.id}: ${m}`); });
     pc.forEach(p=>{ delete p.ctrIdx; delete p.ctrOld; });
     if(badC.length) log.push(gmPreviewText("POZOR: zaměřený střed nesouhlasí s kružnicí u ⟦0⟧ pilot: ⟦1⟧⟦2⟧", [badC.length, badC.slice(0,8).join(", "), badC.length>8?" …":""])), warn=(warn?warn+"; ":"")+gmPreviewText("zaměřený střed nesouhlasí s kružnicí (⟦0⟧): ⟦1⟧⟦2⟧", [badC.length, badC.slice(0,5).join(", "), badC.length>5?" …":""]);
   }
+  if(corrections.length)out.forEach(zssFixApply);
   const rs=out.map(p=>p.r).sort((a,b)=>a-b), rTyp=r0s?r0s[0]:(rs.length?rs[rs.length>>1]:0.25);
   // „Přímý střed do“: zadáno ručně (nejvýš rdist), nebo auto = 40 % nejmenšího typického poloměru (bod na plášti leží ve vzdálenosti poloměru)
   let dDirect;
@@ -3191,6 +3218,7 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
     if(refs.length) autoV.dd={v:f3c(dDirect)};
     if(refs.length) log.push(gmPreviewText("Přímý střed do (auto): ⟦0⟧ m = ", [f3c(dDirect)])+(DD_K*rMin>rdist?gmPreviewText("omezeno „do vzdálenosti“"):gmPreviewText("40 % poloměru ⟦0⟧ m (Ø ⟦1⟧ m⟦2⟧)", [f3c(rMin), f3c(2*rMin), r0s?"":gmPreviewText(", medián nalezených pilot")]))); }
   else { dDirect=Math.min(rdist,ddist); if(refs.length) log.push(gmPreviewText("Přímý střed do (zadáno): ⟦0⟧", [dDirect>0?f3c(dDirect)+" m":"vypnuto"])); }
+  if(opt.measureMode!=="rim")out.push(...zssFixDirectRows(cand,usedAll,isOff,Math.min(rmax,Math.max(rmin,rTyp))));
   const amb=[];   // body, u kterých nejde rozhodnout, zda jde o přímo zaměřený střed, nebo bod pláště
   if(opt.measureMode!=="rim"&&refs.length && dDirect>0){
     if(ddist==null&&!r0s&&!rs.length&&refs.length){ const m=gmPreviewText("průměr pilot nelze z dat odhadnout (žádná kružnice), „Přímý střed do“ je odvozen z Ø ⟦0⟧ m – zadejte typický průměr", [f3c(2*rTyp)]); log.push("POZOR: "+m); warn=warn?warn+"; "+m:m; }
@@ -3207,7 +3235,6 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
       if(!cl.includes(bj)) cl.push(bj);
       let oldC=[]; if(repMode==="newer"){ const mx=gmMax(cl,j=>cand[j].src||0); oldC=cl.filter(j=>(cand[j].src||0)!==mx); if(oldC.length) cl=cl.filter(j=>(cand[j].src||0)===mx); }
       cy=cl.reduce((s,j)=>s+cand[j].y,0)/cl.length; cx=cl.reduce((s,j)=>s+cand[j].x,0)/cl.length;
-      const cz=cl.reduce((s,j)=>s+cand[j].z,0)/cl.length, spr=gmMax(cl,j=>Math.hypot(cand[j].y-cy,cand[j].x-cx));
       cl.sort((a,b)=>a-b); const ids=cl.map(j=>cand[j].id), idTxt=ids.join(", ");
       bd=Math.hypot(cy-r.y,cx-r.x);
       // jiný volný bod (mimo shluk) do průměru piloty od středu, nebo ve vzdálenosti poloměru od bodu PD: pilota je zřejmě zaměřena neúplně (body pláště)
@@ -3218,20 +3245,20 @@ function evaluate(all,rmin,rmax,only,tol,r0user,devFrac,refs,rdist,refOnly,off,d
         return; }
       const rim=rimOf();
       if(rim.length){ log.push(gmPreviewText("Bod PD ⟦0⟧: v okolí leží nepoužité body (⟦1⟧) ve vzdálenosti poloměru – pilota je zřejmě zaměřena neúplně (nebo má jiný průměr), přímý střed nezaložen", [r.id, [...cl,...rim].slice(0,6).map(j=>cand[j].id).join(", ")])); return; }
-      let nt=cl.length>1?gmPreviewText("střed zaměřen přímo ⟦0⟧× (body ⟦1⟧, průměr, rozptyl ⟦2⟧ mm)", [cl.length, idTxt, Math.round(spr*1000)]):gmPreviewText("střed zaměřen přímo (bod ⟦0⟧)", [idTxt]);
+      const p=zssDirectRow(cand,cl,rr); let nt=p.note;
       if(bd>0.3*rr){ nt+=gmPreviewText("; daleko od PD (nad 30 % poloměru) – může jít i o bod pláště, zkontrolujte"); amb.push(gmPreviewText("⟦0⟧ (⟦1⟧ mm od ⟦2⟧, použito)", [idTxt, Math.round(bd*1000), r.id])); }
-      out.push({first:key(cl[0]),mem:[],i0:cl[0],id:cand[cl[0]].id,n:cl.length,ids,y:cy,x:cx,z:cz,r:rr,dev:spr,direct:true,note:nt,pts:cl.map(j=>({y:cand[j].y,x:cand[j].x,id:cand[j].id,z:cand[j].z,src:cand[j].src})),ref:r,rd:bd,dy:cy-r.y,dx:cx-r.x});
+      Object.assign(p,{note:nt,ref:r,rd:bd,dy:cy-r.y,dx:cx-r.x}); if(corrections.length)zssFixApply(p);out.push(p);
       cl.concat(oldC).forEach(j=>{ usedAll.add(j); free.splice(free.indexOf(j),1); });
       log.push(`Pilota ${r.id}: ${nt} – ${Math.round(bd*1000)} mm od PD`);
     });
-    out.sort((a,b)=>a.i0-b.i0);
     if(amb.length){ const m=gmPreviewText("nejasné přímé středy (⟦0⟧): ⟦1⟧⟦2⟧ – zkontrolujte, zda jde o střed s velkou odchylkou, nebo o bod pláště (mez lze změnit v poli „Přímý střed do“)", [amb.length, amb.slice(0,5).join(", "), amb.length>5?" …":""]); warn=warn?warn+"; "+m:m; }
   }
+  out.sort((a,b)=>a.i0-b.i0);
   // jeden bod PD smí dostat nejvýš jednu pilotu: přiřazuje se od nejmenší vzdálenosti (v mezích „do vzdálenosti“);
   // další pilota u téhož bodu zůstane bez názvu z PD a dostane upozornění
   if(refs.length){
     const pairs=[], takenP=new Set(), takenR=new Set();
-    out.forEach((p,i)=>{ if(p.direct){ takenP.add(i); takenR.add(p.ref); return; }
+    out.forEach((p,i)=>{ if(p.direct&&!p.fix){ takenP.add(i); takenR.add(p.ref); return; }
       refs.forEach(r=>{ const d=Math.hypot(p.y-r.y,p.x-r.x); if(d<=rdl(r)) pairs.push({i,r,d}); }); });
     pairs.sort((a,b)=>a.d-b.d);
     pairs.forEach(q=>{ if(takenP.has(q.i)||takenR.has(q.r)) return; const p=out[q.i];
@@ -3321,19 +3348,67 @@ const off=new Set(), skip=new Set(), expanded=new Set(), skipSig=new Map();   //
 let diaNote="", lastDia="zssrmin";   // které pole průměru (rmin / rmax) uživatel naposledy upravil
 let rcTimer=0;   // čekající přepočet po psaní do číselného pole
 const sigOf=p=>p.mem.map(m=>m.key).join(",");
-const fixKey=p=>JSON.stringify([p.first,p.ref?p.ref.id:""]);
-// ruční oprava odchylky: střed se posune po směru ref → střed na zadanou délku; Z a odchylka kružnice (dev) zůstávají; p.fix drží měřené hodnoty
-function fixApplyAll(rows){
-  for(const p of rows){
-    if(p.fix){ p.y=p.fix.y; p.x=p.fix.x; p.rd=p.fix.rd; p.dy=p.fix.dy; p.dx=p.fix.dx; if(p.fix.cNew){ delete p.cy; delete p.cx; } delete p.fix; }
-    if(p.invalid||!p.ref) continue;
-    const f=FIX.map[fixKey(p)]; if(!f||f.sig!==sigOf(p)||mmv(p.rd)===0) continue;   // změřená odchylka 0 mm: směr posunu není určen, oprava se neuplatní
-    const L=f.mm/1000, k=L/p.rd, cNew=p.cy===undefined;
-    p.fix={y:p.y,x:p.x,rd:p.rd,dy:p.dy,dx:p.dx,cNew};
-    if(cNew){ p.cy=p.y; p.cx=p.x; }   // skutečná kružnice z měřených bodů zůstane na měřeném místě
-    p.dy*=k; p.dx*=k; p.y=p.ref.y+p.dy; p.x=p.ref.x+p.dx; p.rd=L;
+const zssPointKey=q=>q.id+"@"+q.line+(q.src>0?"#"+q.src:"");
+const zssFixPointId=q=>JSON.stringify([q.file||"",q.line,q.id]);
+const fixKey=p=>JSON.stringify(p.fixSource.map(zssFixPointId).sort());
+function zssFixSig(p){
+ return JSON.stringify([p.fixSource.map(q=>[zssFixPointId(q),q.y,q.x,q.z]).sort(),p.fixDisabled||[]]);
+}
+function zssFixPosition(p,mm){
+ const dy=p.y-p.ref.y,dx=p.x-p.ref.x,d=Math.hypot(dy,dx);
+ if(d===0&&mm!==0)return null;
+ const k=d?mm/(1000*d):0;
+ return {y:p.ref.y+dy*k,x:p.ref.x+dx*k};
+}
+function zssFixRecord(p,position){
+ const record={...position,sig:zssFixSig(p)};
+ if(p.direct&&!p.centresOnly)record.direct=p.fixSource.map(zssFixPointId);
+ if(p.rimCount)record.rim=p.fixSource.slice(0,p.rimCount).map(zssFixPointId);
+ return record;
+}
+function zssFixApply(p){
+ const k=fixKey(p);
+ let f=FIX.map[k];
+ if(!f&&p.ref){
+  const oldKey=JSON.stringify([p.first,p.ref.id]),old=FIX.map[oldKey];
+  if(old&&Number.isInteger(old.mm)&&old.sig===sigOf(p)){
+   const position=zssFixPosition(p,old.mm);
+   if(position){
+    f=FIX.map[k]=zssFixRecord(p,position);
+    delete FIX.map[oldKey];fixSave();
+   }
   }
-}   // složení piloty (včetně ručně vypnutých bodů)
+ }
+ if(!f||f.sig!==zssFixSig(p))return false;
+ p.fix={y:p.y,x:p.x};
+ const dy=f.y-p.y,dx=f.x-p.x;
+ p.y=f.y;p.x=f.x;
+ if(p.direct)p.pts=p.pts.map(q=>({...q,y:q.y+dy,x:q.x+dx}));
+ else if(p.cy===undefined){p.cy=p.fix.y;p.cx=p.fix.x;} // Kružnice se určuje z obvodových bodů, ručně se mění výsledný střed.
+ return true;
+}
+function zssFixDirectRows(cand,used,isOff,r){
+ const records=Object.values(FIX.map).filter(f=>f.direct?.length);
+ if(!records.length)return [];
+ const byId=new Map(cand.map((q,i)=>[zssFixPointId(q),i])),out=[];
+ for(const f of records){
+  const indices=f.direct.map(id=>byId.get(id));
+  if(indices.some(i=>i===undefined||used.has(i)||isOff(i)))continue;
+  indices.sort((a,b)=>a-b);
+  const p=zssDirectRow(cand,indices,r);
+  if(!zssFixApply(p))continue;
+  indices.forEach(i=>used.add(i));out.push(p);
+ }
+ return out;
+}
+function zssDirectRow(cand,indices,r){
+ const source=indices.map(i=>cand[i]),q=source[0],n=source.length,ids=source.map(p=>p.id);
+ const y=source.reduce((sum,p)=>sum+p.y,0)/n,x=source.reduce((sum,p)=>sum+p.x,0)/n,z=source.reduce((sum,p)=>sum+p.z,0)/n;
+ const dev=gmMax(source,p=>Math.hypot(p.y-y,p.x-x)),names=ids.join(", ");
+ const note=n>1?gmPreviewText("střed zaměřen přímo ⟦0⟧× (body ⟦1⟧, průměr, rozptyl ⟦2⟧ mm)",[n,names,Math.round(dev*1000)]):gmPreviewText("střed zaměřen přímo (bod ⟦0⟧)",[names]);
+ return {first:zssPointKey(q),mem:[],i0:indices[0],id:q.id,n,ids,y,x,z,r,dev,direct:true,note,
+  pts:source.map(p=>({y:p.y,x:p.x,z:p.z,id:p.id,src:p.src})),fixSource:source,ref:null,rd:0,dy:0,dx:0};
+}
 const skipAdd=k=>{ skip.add(k); const p=allRows.find(q=>q.first===k); if(p) skipSig.set(k,sigOf(p)); };
 const skipDel=k=>{ skip.delete(k); skipSig.delete(k); };
 const skipClear=()=>{ skip.clear(); skipSig.clear(); };
@@ -3388,7 +3463,6 @@ function recalc(extra=""){
 
   const nameSelected=points.filter(q=>gmNameRangePass('zss',q.id));
   const r=gmEvaluateZss(nameSelected,rmin,rmax,!$("zssallp").checked,tol,r0list.map(v=>v/2),dvv/100,refs,rdist,$("zssronly").checked&&refs.length>0,off,ddist,$("zssoo").checked,limv,{measureMode:$("zssMeasureMode").value,cMode:$("zsscmode").value,repMode:$("zssrmode").value,sigC:csigv});
-  fixApplyAll(r.all);
   if(gmNameRangeActive('zss'))r.log.unshift(gmPreviewText("Rozsah názvů: ")+(GM_NAME_RANGES.zss.from||gmPreviewText("bez dolní meze"))+gmPreviewText(" až ")+(GM_NAME_RANGES.zss.to||gmPreviewText("bez horní meze"))+gmPreviewText(" (včetně); názvům vyhovuje ")+nameSelected.length+' z '+points.length+gmPreviewText(" bodů."));
   showAuto(r.autoV);
   const filter=$("zssflt");
@@ -3876,7 +3950,7 @@ function projectCADZBind(){const input=$('cadZOffset');
 // Reference placement is a visual background shift only. Never use table display filters.
 function projectCADAutoSource(module){
  if(module==='zss')return allRows.filter(p=>!p.invalid&&!skip.has(p.first)&&Number.isFinite(p.z)).map(p=>p.z);
- const source=rvCodePoints();
+ const source=rvFixApply(rvCodePoints());
  if(RV.defOk){const keys=new Set(source.map(rvKey));return RV.rows.filter(r=>keys.has(r.key)&&r.use&&Number.isFinite(r.z)).map(r=>r.z);}
  if(RV.plane!=='h')throw Error(gmPreviewText("Pro automatické umístění nejprve zadejte platnou rovinu, aby bylo možné vyřadit odlehlé body."));
  // Horizontal robust filtering is independent of the still unspecified reference height.
@@ -4639,8 +4713,8 @@ function buildScene(W,H,v,o){
   };
   // Place more constrained arrow labels first. Sliding along the shaft is preferred to moving away.
   for(const v of vis){
-    if(!v.p.ref)continue;
-    const s=Math.round(v.p.rd*1000)+" mm",size=12*fs,w=tw(s,size),r=Math.max(o.circ!==false?v.rr:0,6*fs)+5*fs;
+    if(!v.p.ref&&!(o.fixEdit&&v.p.fix))continue;
+    const s=v.p.ref?Math.round(v.p.rd*1000)+" mm":v.p.name,size=12*fs,w=tw(s,size),r=Math.max(o.circ!==false?v.rr:0,6*fs)+5*fs;
     let candidates=points(v,w,size,[r,r+10*fs,r+20*fs],-Math.PI/4);
     if(v.arrow){
       let rot=Math.atan2(v.uy,v.ux)*180/Math.PI;
@@ -5232,7 +5306,8 @@ planMeasureToggle=(o=>function(module){ if(module==='zss'&&GLBL.on&&!planMeasure
 /* Plán ZSS → Opravit odchylky: přepis odchylky od PD (celé mm) u špatně změřeného středu; střed se posune po směru šipky. */
 function fixSave(){ if(Object.keys(FIX.map).length) writeStorage(FIX_K,JSON.stringify(FIX.map)); else removeStorage(FIX_K); }
 function fixCopy(){ return JSON.parse(JSON.stringify(FIX.map)); }
-function fixPile(L){ return gPiles().find(p=>p.ref&&gLabelKey(p)===L.key); }
+function fixPile(L){ return gPiles().find(p=>(p.ref||p.fix)&&gLabelKey(p)===L.key); }
+function fixMeasuredDistance(p){ return p.ref?Math.hypot((p.fix||p).y-p.ref.y,(p.fix||p).x-p.ref.x):null; }
 function fixUI(msg){
  if(msg!==undefined)FIX.msg=msg;
  const n=allRows.filter(p=>p.fix).length;
@@ -5245,7 +5320,7 @@ function fixChange(before,msg){ FIX.hist.push(before); if(FIX.hist.length>200)FI
 function fixUndo(redo){ const from=redo?FIX.fut:FIX.hist,to=redo?FIX.hist:FIX.fut; if(!from.length)return; to.push(fixCopy()); FIX.map=from.pop(); fixEdClose(); fixApplyNow(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
 function fixOpen(){
  if(FIX.on)return;
- if(!gPiles().some(p=>p.ref)){ toast(gmPreviewText("Oprava odchylek je dostupná, až budou v plánu odchylky od projektu (PD).")); return; }
+ if(!gPiles().some(p=>p.ref||p.fix)){ toast(gmPreviewText("Oprava odchylek je dostupná, až budou v plánu odchylky od projektu (PD).")); return; }
  if(GLBL.on)gLabelClose(false);
  if(planMeasureState("zss")?.on)planMeasureClear("zss");
  if(PG3&&pg3Active())pg3Face(pg3Home());
@@ -5261,23 +5336,33 @@ function fixClose(redraw=true){
 }
 function fixEdClose(){ FIX.sel=null; $('gFixEd').style.display='none'; $('gFixVal').removeAttribute('aria-invalid'); }
 function fixEdOpen(p){
- const orig=p.fix?p.fix.rd:p.rd;
- if(mmv(orig)===0){ fixEdClose(); fixUI(gmPreviewText("Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.",[p.name])); return; }
+ const orig=fixMeasuredDistance(p);
+ if(p.ref&&mmv(p.rd)===0&&!p.fix){ fixEdClose(); fixUI(gmPreviewText("Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.",[p.name])); return; }
  FIX.sel={key:fixKey(p),k:gLabelKey(p),name:p.name};
- $('gFixName').textContent=p.name; $('gFixVal').value=String(mmv(p.rd)); $('gFixVal').removeAttribute('aria-invalid');
- $('gFixOrig').textContent=gmPreviewText("změřeno ⟦0⟧ mm",[mmv(orig)]);
+ const editable=!!p.ref;
+ $('gFixName').textContent=p.name; $('gFixVal').value=editable?String(mmv(p.rd)):''; $('gFixVal').removeAttribute('aria-invalid');
+ $('gFixVal').disabled=$('gFixOk').disabled=!editable;
+ $('gFixOrig').textContent=editable?gmPreviewText("změřeno ⟦0⟧ mm",[mmv(orig)]):'';
  $('gFixRev').disabled=!p.fix;
- $('gFixEd').style.display='flex'; fixUI(''); $('gFixVal').focus(); $('gFixVal').select();
+ $('gFixEd').style.display='flex'; fixUI(''); if(editable){$('gFixVal').focus();$('gFixVal').select();}else $('gFixRev').focus();
 }
 function fixEdCommit(){
  const s=FIX.sel; if(!s)return;
  const p=gPiles().find(q=>q.ref&&fixKey(q)===s.key); if(!p){ fixEdClose(); return; }
  const v=$('gFixVal').value.trim();
  if(!/^\d{1,4}$/.test(v)){ $('gFixVal').setAttribute('aria-invalid','true'); fixUI(gmPreviewText("Zadejte celé číslo 0 až 9999 (mm).")); $('gFixVal').focus(); return; }
- const mm=parseInt(v,10), orig=mmv(p.fix?p.fix.rd:p.rd), before=fixCopy();
- if(mm===orig){ if(!FIX.map[s.key]){ fixEdClose(); fixUI(''); return; } delete FIX.map[s.key]; }
- else FIX.map[s.key]={mm,sig:sigOf(p)};
- fixEdClose(); fixChange(before,gmPreviewText("Odchylka ⟦0⟧: ⟦1⟧ → ⟦2⟧ mm.",[s.name,orig,mm]));
+ const mm=parseInt(v,10), orig=mmv(fixMeasuredDistance(p)), before=fixCopy();
+ if(mm===mmv(p.rd)){fixEdClose();return;}
+ if(mm===orig&&p.fix)delete FIX.map[s.key];
+ else{
+  const direction=p.rd>0?p:{...p,y:p.fix?.y??p.y,x:p.fix?.x??p.x};
+  const position=zssFixPosition(direction,mm);
+  if(!position){fixUI(gmPreviewText("Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.",[p.name]));return;}
+  FIX.map[s.key]=zssFixRecord(p,position);
+ }
+ fixEdClose();fixChange(before,'');
+ const next=allRows.find(q=>!q.invalid&&q.first===p.first);
+ fixUI(next?.ref?gmPreviewText("Odchylka ⟦0⟧: ⟦1⟧ → ⟦2⟧ mm.",[next.name,orig,mmv(next.rd)]):gmPreviewText("Souřadnice uloženy. V nastavené vzdálenosti není přiřazený bod PD."));
 }
 (()=>{
  const box=$('gsvg'),on=()=>FIX.on&&!(PG3&&pg3Active())&&!$('gm').hidden;
@@ -5963,8 +6048,8 @@ function rvDupes(pts,multi){
   if(np>30) log.push(gmPreviewText("… a dalších ⟦0⟧ dvojic bodů ve stejné poloze", [np-30]));
   return {log,n:dn.size,p:np}; }
 function rvRefreshDupes(){
-  const spatial=RV.plane!=="h";if(RV.dupSource===RV.pts&&RV.dupSpatial===spatial)return;
-  RV.dupSource=RV.pts;RV.dupSpatial=spatial;RV.dup=rvDupes(RV.pts,RV.files.length>1);RV.log=(RV.baseLog||[]).concat(RV.dup.log);rvLogRender();
+  const spatial=RV.plane!=="h",pts=rvFixApply(RV.pts);if(RV.dupSource===pts&&RV.dupSpatial===spatial)return;
+  RV.dupSource=pts;RV.dupSpatial=spatial;RV.dup=rvDupes(pts,RV.files.length>1);RV.log=(RV.baseLog||[]).concat(RV.dup.log);rvLogRender();
 }
 function rvApply(files,restore){
   rvDataChanged();
@@ -6041,7 +6126,7 @@ function rvDfltSync(){ const b=$("rvdflt"); if(!b) return; const d=rvIsDflt(); b
 // kontrola jednoznačnosti roviny: tolerance v metrech (souřadnice se zadávají na mm)
 const RV_TOL=0.001, RV_WEAK=0.01;   // body blíž než 1 mm = shodné / v přímce; výška trojúhelníku pod 1 % nejdelší strany = jen upozornění (slabá geometrie)
 const rvMm=d=>fmtCz((d*1000).toFixed(1))+" mm";
-// Místní souřadnice roviny; původní Y, X, Z měření se nikdy nepřepisují.
+// Místní souřadnice roviny; Y, X, Z měření se nikdy nepřepisují.
 // General plane: geodetic x', y' in the plane. Viewed from +d: +x' down, +y' left.
 // Thus +x' -> +y' is clockwise, and n = ey cross ex in world (Y, X, Z).
 function rvGeneralFrame(points=RV.def.o,reverse=RV.def.oReverse===true){
@@ -6064,7 +6149,7 @@ function rvMnManual(value){
  const out={points,reverse:value.reverse===true},original=rvGeneralOriginal(value.original);if(original)out.original=original;return out;
 }
 function rvMnSource(source){
- const all=source==='pd'?(RVP.pts||[]):rvCodePoints(),rows=new Map((RV.rows||[]).map(r=>[r.key,r]));
+ const all=source==='pd'?(RVP.pts||[]):rvFixApply(rvCodePoints()),rows=new Map((RV.rows||[]).map(r=>[r.key,r]));
  return all.filter(p=>[p.y,p.x,p.z].every(Number.isFinite)&&(source==='pd'||(rows.has(rvKey(p))?rows.get(rvKey(p)).use:!RV.off.has(rvKey(p))))).map(p=>({...p,use:true}));
 }
 function rvMnSignature(points){let a=2166136261,b=5381;const text=points.map(p=>JSON.stringify([p.id,p.y,p.x,p.z,p.file||''])).sort().join('\n');for(let i=0;i<text.length;i++){a=Math.imul(a^text.charCodeAt(i),16777619);b=Math.imul(b,33)^text.charCodeAt(i);}return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0');}
@@ -6545,28 +6630,65 @@ function rvTinSave(){ RV.tinVersion++;
   try{ if(RV_TIN_PLANES.every(t=>rvTinEmpty(RV.tin[t]))){ removeStorage(FK_RVTIN); return; }
     const planes={}; RV_TIN_PLANES.forEach(t=>{ const e=RV.tin[t]; if(rvTinEmpty(e)) return; planes[t]={cuts:[...e.cuts].map(c=>c.split(RV_TIN_SEP)),flips:e.flips,domain:e.domain}; });
     writeStorage(FK_RVTIN,JSON.stringify({ver:RV_TIN_VER,planes})); }catch(e){} }
-/* 1.411 Plán Rovinnosti → Opravit odchylky: ruční přepis odchylky bodu (např. na ploše něco leželo). Bod se posune po normále roviny
-   (vodorovná: jen Z; svislá a obecná: kolmo ke stěně / rovině), takže poloha v plánu zůstane a změní se jen odchylka. Opravy jsou zvlášť pro každý typ roviny:
-   klíč bodu (rvKey) → {d: cílová odchylka v m, sig: měřené souřadnice}; po změně souřadnic bodu se oprava přestane uplatňovat. MNČ rovina se počítá z měřených souřadnic. */
-const RVFIX_K=GM_KEY("geomat.rv.fix.v1"), RVFIX={on:false,map:{h:{},v:{},o:{}},hist:[],fut:[],sel:null,msg:'',lastDown:null,hover:null,labels:[]};
-const rvFixSig=q=>[q.y,q.x,q.z].map(v=>Number(v).toFixed(4)).join(",");
-try{ const a=JSON.parse(localStorage.getItem(RVFIX_K)||"null");
-  if(a&&a.ver===1&&a.planes&&typeof a.planes==="object") RV_TIN_PLANES.forEach(t=>{ const m=a.planes[t]; if(!m||typeof m!=="object"||Array.isArray(m)) return;
-    for(const [k,o] of Object.entries(m)) if(o&&Number.isFinite(o.d)&&Math.abs(o.d)<=10&&typeof o.sig==="string") RVFIX.map[t][k]={d:o.d,sig:o.sig}; }); }catch(e){}
-function rvFixSave(){ try{ if(RV_TIN_PLANES.every(t=>!Object.keys(RVFIX.map[t]).length)){ removeStorage(RVFIX_K); return; } writeStorage(RVFIX_K,JSON.stringify({ver:1,planes:RVFIX.map})); }catch(e){} }
-function rvFixApply(pts,frame){ const m=RVFIX.map[RV.plane]; if(!frame||!m||!Object.keys(m).length) return pts;
-  return pts.map(q=>{ const f=m[rvKey(q)]; if(!f||f.sig!==rvFixSig(q)) return q;
-    const d0=frame.at(q).d, g=[frame.at({...q,y:q.y+1}).d-d0,frame.at({...q,x:q.x+1}).d-d0,frame.at({...q,z:q.z+1}).d-d0], n2=g[0]*g[0]+g[1]*g[1]+g[2]*g[2];   // odchylka je lineární: gradient = normála roviny
-    if(!(n2>1e-12)||!Number.isFinite(d0)) return q; const k=(f.d-d0)/n2, C=["y","x","z"];
-    // 1.412: opravené souřadnice mají stejný počet desetinných míst jako měřené (nejméně 3, jako výpis rvPtFmt); z blízkých zaokrouhlených poloh se vezme ta s odchylkou nejbližší zadané
-    const dec=C.map(c=>{ const t=String(q[c]); return /e/i.test(t)?6:Math.min(6,Math.max(3,(t.split(".")[1]||"").length)); }), st=dec.map(n=>Math.pow(10,-n));
-    const base=C.map((c,i)=>g[i]?Number((q[c]+k*g[i]).toFixed(dec[i])):q[c]); let best=null;
-    for(const a of g[0]?[-1,0,1]:[0]) for(const b of g[1]?[-1,0,1]:[0]) for(const c of g[2]?[-1,0,1]:[0]){
-      const t={...q,y:Number((base[0]+a*st[0]).toFixed(dec[0])),x:Number((base[1]+b*st[1]).toFixed(dec[1])),z:Number((base[2]+c*st[2]).toFixed(dec[2]))}, e=Math.abs(frame.at(t).d-f.d), m=Math.abs(a)+Math.abs(b)+Math.abs(c);
-      if(!best||e<best.e-1e-12||(Math.abs(e-best.e)<=1e-12&&m<best.m)) best={t,e,m}; }
-    return {...best.t,fix:{y:q.y,x:q.x,z:q.z,d:d0}}; }); }
-function rvFixClear(){ RV_TIN_PLANES.forEach(t=>RVFIX.map[t]={}); RVFIX.hist=[]; RVFIX.fut=[]; RVFIX.sel=null; try{ removeStorage(RVFIX_K); }catch(e){} }
-function rvFixTip(r){ return r&&r.fix?gmPreviewText("<br><span class=\"m\">Ručně opravená odchylka (změřeno ⟦0⟧ ⟦1⟧)</span>",[rvDS(r.fix.d),RV.set.u]):""; }
+/* Ruční oprava mění pracovní souřadnice bodu pro všechny typy rovin. Původní souřadnice zůstávají ve vstupních datech pro obnovení. */
+const RVFIX_K=GM_KEY("geomat.rv.fix.v1");
+const RVFIX={on:false,map:{},legacy:{h:{},v:{},o:{}},hist:[],fut:[],sel:null,msg:'',lastDown:null,hover:null,labels:[],cache:new WeakMap()};
+const rvFixSig=q=>JSON.stringify([q.y,q.x,q.z]);
+try{
+ const saved=JSON.parse(localStorage.getItem(RVFIX_K)||"null");
+ if(saved?.ver===2&&saved.points)for(const [k,o] of Object.entries(saved.points)){
+  if(o&&[o.y,o.x,o.z].every(Number.isFinite)&&typeof o.sig==="string")RVFIX.map[k]=o;
+ }
+ const planes=saved?.ver===1?saved.planes:saved?.legacy;
+ if(planes)for(const t of RV_TIN_PLANES)for(const [k,o] of Object.entries(planes[t]||{})){
+  if(o&&Number.isFinite(o.d)&&Math.abs(o.d)<=10&&typeof o.sig==="string")RVFIX.legacy[t][k]=o;
+ }
+}catch(e){}
+function rvFixSave(){
+ try{
+  if(!Object.keys(RVFIX.map).length&&RV_TIN_PLANES.every(t=>!Object.keys(RVFIX.legacy[t]).length))removeStorage(RVFIX_K);
+  else writeStorage(RVFIX_K,JSON.stringify({ver:2,points:RVFIX.map,legacy:RVFIX.legacy}));
+ }catch(e){}
+}
+function rvFixPosition(q,frame,d){
+ const d0=frame.at(q).d,C=["y","x","z"];
+ const g=frame.kind==="h"?[0,0,1]:frame.kind==="v"?[frame.ex,-frame.ey,0]:frame.n;
+ // Uložená poloha respektuje přesnost zdroje, nejméně však 1 mm.
+ const dec=C.map(c=>{const t=String(q[c]);return /e/i.test(t)?6:Math.min(6,Math.max(3,(t.split(".")[1]||"").length));});
+ const step=dec.map(n=>10**-n),base=C.map((c,i)=>g[i]?Number((q[c]+(d-d0)*g[i]).toFixed(dec[i])):q[c]);
+ let best=null;
+ for(const a of g[0]?[-1,0,1]:[0])for(const b of g[1]?[-1,0,1]:[0])for(const c of g[2]?[-1,0,1]:[0]){
+  const shift=[a,b,c],coords=base.map((v,i)=>g[i]?Number((v+shift[i]*step[i]).toFixed(dec[i])):v);
+  const t={y:coords[0],x:coords[1],z:coords[2]},err=Math.abs(frame.at(t).d-d),moves=Math.abs(a)+Math.abs(b)+Math.abs(c);
+  if(!best||err<best.err-1e-12||(Math.abs(err-best.err)<=1e-12&&moves<best.moves))best={t,err,moves};
+ }
+ return best.t;
+}
+function rvFixMigrate(frame){
+ if(!frame)return;
+ const legacy=RVFIX.legacy[RV.plane];
+ if(!Object.keys(legacy).length)return;
+ let changed=false;
+ for(const q of RV.pts){
+  const k=rvKey(q),old=legacy[k];
+  if(!old||old.sig!==[q.y,q.x,q.z].map(v=>v.toFixed(4)).join(","))continue;
+  if(!Object.hasOwn(RVFIX.map,k))RVFIX.map[k]={...rvFixPosition(q,frame,old.d),sig:rvFixSig(q)};
+  for(const t of RV_TIN_PLANES)delete RVFIX.legacy[t][k];
+  changed=true;
+ }
+ if(changed){RVFIX.cache=new WeakMap();rvFixSave();}
+}
+function rvFixApply(pts){
+ if(!Object.keys(RVFIX.map).length)return pts;
+ const cached=RVFIX.cache.get(pts);if(cached)return cached;
+ const working=pts.map(q=>{
+  const f=RVFIX.map[rvKey(q)];
+  return f&&f.sig===rvFixSig(q)?{...q,y:f.y,x:f.x,z:f.z,fix:{y:q.y,x:q.x,z:q.z}}:q;
+ });
+ RVFIX.cache.set(pts,working);
+ return working;
+}
+function rvFixClear(){RVFIX.map={};RVFIX.legacy={h:{},v:{},o:{}};RVFIX.cache=new WeakMap();RVFIX.hist=[];RVFIX.fut=[];RVFIX.sel=null;rvFixSave();}
 // podpis úprav, které rgTinOf skutečně uplatňuje (smazání a otočení hran); mění se jen při změně obsahu
 // smazání jsou množina (řadí se), otočení posloupnost (pořadí rozhoduje, nemění se)
 function rvTinDomainOn(e){ const d=e&&e.domain; return !!(d&&d.on&&(d.outer.length>=3||d.holes.some(r=>r.length>=3))); }
@@ -6894,7 +7016,7 @@ function rvTiltSummary(sum){
  sum.insertAdjacentHTML('beforeend','<span class="vbr"></span>'+rvTiltTexts(t).map(text=>'<span class="sc" title="'+esc(title+(text.startsWith('RMS ')?gmPreviewText(" RMS = odmocnina průměru čtverců kolmých vzdáleností od vyrovnané roviny (dělení počtem bodů). Vyjadřuje rozptyl bodů kolem této roviny, nikoli přesnost měření ani odchylku od zadané roviny."):''))+'">'+esc(text)+'</span>').join(''));
 }
 function rvTiltCsv(f){
- const t=rvTiltGet(),rows=[[gmPreviewText("Odklon_metoda"),gmPreviewText("ortogonalni vyrovnani roviny; stejne vahy")],[gmPreviewText("Odklon_rozsah"),gmPreviewText("vsechny zaskrtnute body; nezavisle na filtru; puvodni XYZ")],[gmPreviewText("Odklon_pocet_bodu"),t.n]];
+ const t=rvTiltGet(),rows=[[gmPreviewText("Odklon_metoda"),gmPreviewText("ortogonalni vyrovnani roviny; stejne vahy")],[gmPreviewText("Odklon_rozsah"),gmPreviewText("vsechny zaskrtnute body; nezavisle na filtru; XYZ")],[gmPreviewText("Odklon_pocet_bodu"),t.n]];
  if(!t.ok)return rows.concat([[gmPreviewText("Odklon_stav"),gmPreviewText(t.why)]]);if(RV.plane==='o'){const m=RV.set.u==='m',pr=RV_PR[RV.set.p];return rows.concat([[gmPreviewText("Odklon_stav"),gmPreviewText("vypocteno")],[gmPreviewText("Odklon_od_zadane_roviny_mm_na_m"),t.ratio==null?'':f(t.ratio,2)],[gmPreviewText("Odklon_od_zadane_roviny_stupne"),f(t.angle,3)],[gmPreviewText("Sklon_d_ve_smeru_plus_x_prime_mm_na_m"),t.slopeX==null?'':f(t.slopeX,2)],[gmPreviewText("Sklon_d_ve_smeru_plus_y_prime_mm_na_m"),t.slopeY==null?'':f(t.slopeY,2)],[gmPreviewText("RMS_k_vyrovnane_rovine_")+RV.set.u,f(m?rvR1(t.rms)/1000:rvR1(t.rms),m?pr.m:pr.mm)],[gmPreviewText("RMS_metoda"),gmPreviewText("sqrt(sum(kolma_vzdalenost^2)/n); stejne vahy; nejde o presnost mereni")]]);}rows.push([gmPreviewText("Odklon_stav"),gmPreviewText("vypocteno")],[RV.plane==='v'?gmPreviewText("Odklon_od_svislice_mm_na_m"):gmPreviewText("Sklon_mm_na_m"),t.ratio==null?'':f(t.ratio,2)],[RV.plane==='v'?gmPreviewText("Odklon_od_svislice_stupne"):gmPreviewText("Sklon_stupne"),f(t.angle,3)]);
  if(RV.plane==='h')rows.push([gmPreviewText("Smer_stoupani_stupne_od_minus_X_k_minus_Y"),t.azimuth==null?'':f((Math.round(t.azimuth*10)%3600)/10,1)],[gmPreviewText("Smer_stoupani_vztah"),gmPreviewText("0 = -X; 90 = -Y; 180 = +X; 270 = +Y; bez korekce meridianove konvergence")]);
  else rows.push([gmPreviewText("Odklon_smer"),gmPreviewText(t.direction)],[gmPreviewText("Natoceni_stopy_stupne"),t.yaw==null?'':f(t.yaw,3)],[gmPreviewText("Natoceni_znamenko"),gmPreviewText("+ ke strane +d; - ke strane -d ve smeru 1 -> 2")]);
@@ -6967,14 +7089,14 @@ function rvPointSummary(rows){
 }
 
 function rvResRender(){
-  rvRefreshDupes();
   rvCodeRender();
   const box=$("rvrzone"); if(!box||!RV.def||!RV.sort) return;   // při startu se volá dřív, než je sekce připravená
   const frame=RV.defOk?rvPlaneFrame():null, vertical=RV.plane==="v", general=RV.plane==="o", zr=frame&&frame.kind==="h"?frame.z:null;
+  rvFixMigrate(frame);rvRefreshDupes();
   rvVerticalUi();
   if((!vertical&&RV.sort.k==="s")||(!general&&["xp","yp"].includes(RV.sort.k))){ RV.sort.k=""; RV.sort.dir=1; }
   const show=!!frame; box.hidden=!show; $("rvszone").hidden=!show&&!RV.pts.length; $("rvxzone").hidden=!show; if(!show){ RV.rows=[]; RV.view=[]; rvHistogramClear(); for(const id of ["rvstx","rvcp","rvcsv"])$(id).disabled=true; return; }
-  const pts=rvFixApply(rvCodePoints(),frame), n=pts.length, tb=$("rvtb"), sum=$("rvsum"), st=$("rvst");
+  const pts=rvFixApply(rvCodePoints()), n=pts.length, tb=$("rvtb"), sum=$("rvsum"), st=$("rvst");
   $("rvtw").classList.toggle("one",RV.files.length<2);
   const stl=!vertical&&RV.def.h[0].s&&RV_ST[RV.def.h[0].s]?` (${gmPreviewText(RV_STL[RV.def.h[0].s])} PD)`:"";
   const flt=$("rvflt"), lat=rvLM(), ldn=lat&&RV.set.lv==="dn";
@@ -6988,7 +7110,7 @@ function rvResRender(){
     sum.innerHTML=general?gmPreviewText("<span class=\"sl\">Obecná rovina 1 → 2 → 3, základna x′ ⟦0⟧ m.</span>", [rvStationFmt(frame.L)]):vertical?gmPreviewText("<span class=\"sl\">Svislá rovina 1 → 2, délka základny ⟦0⟧ m.</span>", [rvStationFmt(frame.L)]):gmPreviewText("<span class=\"sl\">Rovina Z = ⟦0⟧ m⟦1⟧</span>", [rvPtFmt(zr), esc(stl)]);
     st.textContent=RV.pts.length&&gmNameRangeActive('rv')?gmPreviewText("Výběru kódů a rozsahu názvů nevyhovuje žádný z ")+RV.pts.length+gmPreviewText(" načtených bodů. Upravte nebo vymažte rozsah názvů ve skupině Body a výstup."):RV.pts.length&&!RV_CODE.all?gmPreviewText("Filtru kódů ")+RV_FIXED_CODES.concat(RV_CODE.codes).join(" / ")+gmPreviewText(" nevyhovuje žádný z ")+RV.pts.length+gmPreviewText(" načtených bodů. Zapněte Všechny body nebo upravte vlastní kódy ve skupině Body a výstup."):gmPreviewText("Načtěte zaměřené body v sekci 1. MĚŘENÍ, odchylky od roviny se zobrazí tady."); st.className="stw warn"; rvRoffUpd(); rvSearch(false); return; }
   $("rvtw").hidden=false; st.textContent=""; st.className="stw";
-  const rows=pts.map((q,i)=>({i:i+1,key:rvKey(q),id:q.id,y:q.y,x:q.x,z:q.z,...frame.at(q),code:q.code||"",file:q.file||"",fix:q.fix||null}));
+  const rows=pts.map((q,i)=>({i:i+1,key:rvKey(q),id:q.id,y:q.y,x:q.x,z:q.z,...frame.at(q),code:q.code||"",file:q.file||"",fix:q.fix?{...q.fix,d:frame.at(q.fix).d}:null}));
   const rob=rvRobGet(rows);
   rows.forEach(r=>{ r.auto=rob.out.get(r.key)||""; r.kept=!!r.auto&&RV.keep.has(r.key); r.use=!RV.off.has(r.key)&&(!r.auto||r.kept); });
   const nout=rows.filter(r=>r.auto&&!r.kept&&!RV.off.has(r.key)).length;   // automaticky vyřazené (a uživatelem nevrácené)
@@ -7188,7 +7310,7 @@ $("rvrobk").addEventListener("change",()=>{ const t=$("rvrobk").value.trim(), v=
 $("rvroff").onclick=()=>{ RV.off.clear(); rvOffSave(); RV.keep.clear(); rvKeepSave(); $("rvflt").value="all"; RV.sort.k=""; RV.sort.dir=1; $("rvtsr").value=""; $("rvtw").scrollTop=0; $("rvtw").scrollLeft=0; $("rvstf").textContent=""; rvResRender(); };
 // kopírování do schránky: body podle filtru v zobrazeném pořadí, oddělovač tabulátor (vložení do Excelu)
 // tabulka pro kopírování i CSV: body podle filtru v zobrazeném pořadí; sep = oddělovač sloupců (tabulátor / středník)
-function rvCsvCommon(f){return [[gmPreviewText("GeoMAT_verze"),APP_VERSION],[gmPreviewText("Typ_roviny"),RV.plane==='o'?gmPreviewText("obecna"):RV.plane==='v'?gmPreviewText("svisla"):gmPreviewText("vodorovna")],[gmPreviewText("Souradnice"),gmPreviewText("puvodni Y, X, Z v metrech; orientace dle souřadnicových os")],[gmPreviewText("Jednotky_odchylek"),RV.set.u],[gmPreviewText("Presnost_mm"),f(RV_PR[RV.set.p].st,1)],[gmPreviewText("Vyhodnoceni"),rvLM()?gmPreviewText("rovinnost_lati"):gmPreviewText("odchylky_od_roviny")],[gmPreviewText("Rozsah_bodu"),gmPreviewText("zaskrtnute body podle filtru tabulky v zobrazenem poradi")],[gmPreviewText("Rozsah_kubatur"),gmPreviewText("vsechny pouzite body; linearni TIN; nezavisle na filtru")],[gmPreviewText("Rozsah_sklonu_a_odklonu"),gmPreviewText("vsechny zaskrtnute body; puvodni XYZ; nezavisle na filtru") ]].concat(rvCodeCSV(),rvGeneralProjection().ok?[]:[[gmPreviewText("Povrch_stav"),gmPreviewText("nejednoznacny")],[gmPreviewText("Povrch_upozorneni"),rvGeneralProjection().why]]);}
+function rvCsvCommon(f){return [[gmPreviewText("GeoMAT_verze"),APP_VERSION],[gmPreviewText("Typ_roviny"),RV.plane==='o'?gmPreviewText("obecna"):RV.plane==='v'?gmPreviewText("svisla"):gmPreviewText("vodorovna")],[gmPreviewText("Souradnice"),gmPreviewText("Y, X, Z v metrech; orientace dle souřadnicových os")],[gmPreviewText("Jednotky_odchylek"),RV.set.u],[gmPreviewText("Presnost_mm"),f(RV_PR[RV.set.p].st,1)],[gmPreviewText("Vyhodnoceni"),rvLM()?gmPreviewText("rovinnost_lati"):gmPreviewText("odchylky_od_roviny")],[gmPreviewText("Rozsah_bodu"),gmPreviewText("zaskrtnute body podle filtru tabulky v zobrazenem poradi")],[gmPreviewText("Rozsah_kubatur"),gmPreviewText("vsechny pouzite body; linearni TIN; nezavisle na filtru")],[gmPreviewText("Rozsah_sklonu_a_odklonu"),gmPreviewText("vsechny zaskrtnute body; XYZ; nezavisle na filtru") ]].concat(rvCodeCSV(),rvGeneralProjection().ok?[]:[[gmPreviewText("Povrch_stav"),gmPreviewText("nejednoznacny")],[gmPreviewText("Povrch_upozorneni"),rvGeneralProjection().why]]);}
 function rvExpRows(sep){ if(RV.plane==="o")return rvGeneralExpRows(sep); if(RV.plane==="v") return rvWallExpRows(sep); if(RV.plane!=="h") return {n:0,t:""}; const cv=RV.view.filter(r=>r.use);
   const comma=RV.set.c!==false, f=(v,d)=>{ const s=v.toFixed(d); return comma?s.replace(".",","):s; };
   const coord=v=>{ const raw=String(v), t=/e/i.test(raw)||(raw.split(".")[1]||"").length>3?raw:v.toFixed(3); return comma?t.replace(".",","):t; };
@@ -8369,7 +8491,7 @@ function rvPlanSync(){
   if(rgRowCache?.raw!==RV.rows)rgRowCache=rgPointCache=null;
   rvMnAuto();if(RV.plane==='o')rvMnUi();
   const has=rgCan(), unavailable=RV.plane==="v"; rgPlaneUi();
-  for(const id of ["rvcp","rvcsv","rvstx","rvgb"]){ const e=$(id); if(e.dataset.vt0===undefined) e.dataset.vt0=globalThis.GeoMATLanguage?.original(e,'title')??e.title; e.title=unavailable?(id==="rvgb"?gmPreviewText("Otevře pohled na stěnu z kladné strany: s roste doprava, výška Z nahoru. Zkratka V přepíná tabulku, rozdělenou obrazovku a celý pohled."):id==="rvstx"?gmPreviewText("Shift+T: původní Y, X a kolmá odchylka d místo Z v metrech; původní výška se do STX nezapisuje. Použité body podle filtru a řazení."):id==="rvcsv"?gmPreviewText("Shift+C: CSV s definicí roviny, původními Y, X, Z, staničením s, odchylkou d, případně h od latě a kubaturami."):gmPreviewText("Kopíruje tabulku svislé roviny včetně definice a kubatur do schránky (pro Excel). Použité body podle filtru a řazení.")):gmPreviewText(e.dataset.vt0); }
+  for(const id of ["rvcp","rvcsv","rvstx","rvgb"]){ const e=$(id); if(e.dataset.vt0===undefined) e.dataset.vt0=globalThis.GeoMATLanguage?.original(e,'title')??e.title; e.title=unavailable?(id==="rvgb"?gmPreviewText("Otevře pohled na stěnu z kladné strany: s roste doprava, výška Z nahoru. Zkratka V přepíná tabulku, rozdělenou obrazovku a celý pohled."):id==="rvstx"?gmPreviewText("Shift+T: původní Y, X a kolmá odchylka d místo Z v metrech; výška Z se do STX nezapisuje. Použité body podle filtru a řazení."):id==="rvcsv"?gmPreviewText("Shift+C: CSV s definicí roviny, souřadnicemi Y, X, Z, staničením s, odchylkou d, případně h od latě a kubaturami."):gmPreviewText("Kopíruje tabulku svislé roviny včetně definice a kubatur do schránky (pro Excel). Použité body podle filtru a řazení.")):gmPreviewText(e.dataset.vt0); }
   $("rvgbs").dataset.t0=gmPreviewText("Plán nebo pohled je k dispozici po načtení měření a zadání platné roviny.");
   const planButton=$("rvgb"), wasOff=planButton.disabled;
   $("rvgbs").disabled=planButton.disabled=!has;
@@ -8380,8 +8502,8 @@ function rvPlanSync(){
   if(RV.plane==="o"){
     const used=!!RV.defOk&&(RV.view||[]).some(r=>r.use);
     for(const id of ['rvcp','rvcsv','rvstx'])$(id).disabled=!used;
-    $('rvcp').title=gmPreviewText("Kopíruje použité body podle filtru a řazení: původní Y, X, Z, místní x′, y′, d a případně h; včetně definice roviny a kubatur.");
-    $('rvcsv').title=gmPreviewText("Shift+C: CSV – původní Y, X, Z, místní x′, y′ a d, případně h od latě, definice, jednotky, znaménko a kubatury.");
+    $('rvcp').title=gmPreviewText("Kopíruje použité body podle filtru a řazení: Y, X, Z, místní x′, y′, d a případně h; včetně definice roviny a kubatur.");
+    $('rvcsv').title=gmPreviewText("Shift+C: CSV – Y, X, Z, místní x′, y′ a d, případně h od latě, definice, jednotky, znaménko a kubatury.");
     $('rvstx').title=gmPreviewText("Shift+T: původní Y, X a kolmá odchylka d místo Z, vždy v metrech a podle nastavené přesnosti; nejde o výšku Z ani h od latě. Použité body podle filtru a řazení.");
     for(const p of ['rv','rg']){ $(p+'pdf').title=gmPreviewText("Shift+P: PDF 2D – celý místní pohled na obecnou rovinu A3, x′ dolů, y′ doleva; definice roviny v původních Y, X, Z.");$(p+'dxf').title=gmPreviewText("Shift+S: DXF 2D – místní pohled, CAD X = −y′, CAD Y = −x′, CAD Z = 0; vše v metrech. Vazba na JTSK v záhlaví.");$(p+'dxf3').title=gmPreviewText("DXF 3D JTSK: CAD X = −Y, CAD Y = −X, CAD Z = původní výška Z. Skutečné body a plocha bez zvětšení d; popisky v rovině x′, y′.");}
     $('rvgb').title=gmPreviewText("Místní pohled: x′ roste dolů, y′ doleva. Kostka / Shift + tažení otevře 3D; V přepíná zobrazení, F zobrazí celý výkres.");
@@ -8658,13 +8780,13 @@ if(window.ResizeObserver){ let rgSz=''; new ResizeObserver(()=>{ const b=$("rgsv
 (()=>{ const box=$("rgsvg"), tip=$("rgtip"); let drag=null, dn=null;
   const hitAt=(cx,cy)=>{ const r=box.getBoundingClientRect(), mx=cx-r.left, my=cy-r.top; let best=null, bd=1e9;
     RGP.forEach(p=>{ const d=Math.hypot(mx-p.px,my-p.py); if(d<=Math.max(p.rad+4,10)&&d<=bd&&(!rg3Active()||d<bd-1e-9||!best||p.depth>=best.depth)&&(!rg3Active()||rg3PointVisible(p))){ bd=d; best=p; } }); return best; };
-  const tipHtml=p=>{ if(RV.plane==='o')return rgGeneralPointTip(p.r)+rvFixTip(p.r);const r=p.r, ov=rvOver(r.d), u=RV.set.u, multi=RV.files.length>1, vertical=RV.plane==="v";
+  const tipHtml=p=>{ if(RV.plane==='o')return rgGeneralPointTip(p.r);const r=p.r, ov=rvOver(r.d), u=RV.set.u, multi=RV.files.length>1, vertical=RV.plane==="v";
     return `<b>${esc(r.id)}</b>`+(r.code?` <span class="m">(${esc(r.code)})</span>`:"")
       +`<br>Y ${rvPtFmt(r.y)}, X ${rvPtFmt(r.x)}, Z ${rvPtFmt(r.z)} m`
       +(RV.plane==="o"?`<br>x′ ${rvStationFmt(r.xp)}, y′ ${rvStationFmt(r.yp)} m<br>d: <span class="${ov?"bad":"ok"}">${rvDS(r.d)} ${u}</span> <span class="m">(${r.d>0?gmPreviewText("před rovinou, k pozorovateli"):r.d<0?gmPreviewText("za rovinou"):gmPreviewText("v rovině")})</span>`:vertical?`<br>s ${rvStationFmt(r.s)} m · ${rvLM()?gmPreviewText("d (informativně)"):"d"}: <span class="${rvLM()?"":ov?"bad":"ok"}">${rvDS(r.d)} ${u}</span> <span class="m">(${r.d>0?gmPreviewText("před rovinou"):r.d<0?gmPreviewText("za rovinou"):gmPreviewText("v rovině")})</span>`+(rvLM()?(r.lat?gmPreviewText("<br>h (lať ⟦0⟧ – ⟦1⟧): <span class=\"⟦2⟧\">⟦3⟧ ⟦4⟧</span>", [esc(r.lat.aid), esc(r.lat.bid), rvOvE(r)?"bad":"ok", rvDS(r.h), u])+(rvHiE(r)?gmPreviewText(" <span class=\"m\">(nad 150 % mezní odchylky latě)</span>"):""):gmPreviewText("<br><span class=\"m\">Bez latě</span>")):""):rvLM()?`<br>ΔZ: ${rvDS(r.d)} ${u}`+(r.lat?gmPreviewText("<br>h (lať ⟦0⟧ – ⟦1⟧): <span class=\"⟦2⟧\">⟦3⟧ ⟦4⟧</span>", [esc(r.lat.aid), esc(r.lat.bid), rvOvE(r)?"bad":"ok", rvDS(r.h), u])+(rvHiE(r)?gmPreviewText(" <span class=\"m\">(nad 150 % mezní odchylky latě)</span>"):""):gmPreviewText("<br><span class=\"m\">Bez latě</span>"))
         :`<br>ΔZ: <span class="${ov?"bad":"ok"}">${rvDS(r.d)} ${u}</span>`+(rvHi(r.d)?gmPreviewText(" <span class=\"m\">(nad 150 % mezní odchylky)</span>"):""))
       +(r.auto&&!r.kept?gmPreviewText("<br><span class=\"bad\">Odlehlý bod, vyřazen:</span> <span class=\"m\">⟦0⟧</span>", [esc(r.auto)]):(r.auto&&r.kept?gmPreviewText("<br><span class=\"m\">Odlehlý bod vrácený do výpočtu</span>"):(!r.use?gmPreviewText("<br><span class=\"m\">Odškrtnutý bod (nezapočítá se)</span>"):"")))
-      +rvFixTip(r)+(multi&&r.file?gmPreviewText("<br><span class=\"m\">Soubor: ⟦0⟧</span>", [esc(r.file)]):""); };
+      +(multi&&r.file?gmPreviewText("<br><span class=\"m\">Soubor: ⟦0⟧</span>", [esc(r.file)]):""); };
   const hideTip=()=>{ tip.hidden=true; if(!drag) box.style.cursor="grab"; };
   const mapTip=(cx,cy)=>{ if(rg3Active()){const r=box.getBoundingClientRect();return rg3MapTip(cx-r.left,cy-r.top,box.clientWidth,box.clientHeight);} if(!RGV||!rgMapOn()) return null; const T=rgTin(); if(!T.ok) return null;   // mimo bod: interpolovaná odchylka z plochy (TIN) v místě kurzoru
     const r=box.getBoundingClientRect(), pl=rgPlot(box.clientWidth,box.clientHeight), mx=cx-r.left, my=cy-r.top;
@@ -8923,7 +9045,7 @@ planMeasureToggle=(o=>function(module){ if(module==="rv"&&!planMeasureState("rv"
     if(tool){ e.preventDefault(); e.stopImmediatePropagation(); rgTinSetTool(tool); $("rgTinPanel").querySelector('[data-rg-tin-tool="'+tool+'"]').focus({preventScroll:true}); } },true);
 })();
 /* ---------- Rovinnost: panel Opravit odchylky (obdoba ZSS pilot, viz RVFIX) ---------- */
-function rvFixCopy(){ return JSON.parse(JSON.stringify(RVFIX.map)); }
+function rvFixCopy(){ return JSON.parse(JSON.stringify({map:RVFIX.map,legacy:RVFIX.legacy})); }
 function rvFixRow(key){ return (RV.rows||[]).find(r=>r.key===key); }
 function rvFixUnitTxt(){ return RV.set.u==="m"?"m":"mm"; }
 function rvFixVal(d){ const v=rvR1(d), pr=RV_PR[RV.set.p], t=RV.set.u==="m"?(v/1000).toFixed(pr.m):v.toFixed(pr.mm); return (v<0?"-":"")+fmtCz(t.replace(/^-/,"")); }   // hodnota do pole: zaokrouhlená jako popisek, místo − obyčejný minus
@@ -8932,12 +9054,12 @@ function rvFixUI(msg){
  if(msg!==undefined)RVFIX.msg=msg;
  const n=(RV.rows||[]).filter(r=>r.fix).length;
  $('rgFixCount').innerHTML=n?gmPreviewText("Opravené odchylky: <b>⟦0⟧</b>",[n]):esc(gmPreviewText("Žádná odchylka není ručně opravená."));
- $('rgFixUndo').disabled=!RVFIX.hist.length; $('rgFixRedo').disabled=!RVFIX.fut.length; $('rgFixReset').disabled=!Object.keys(RVFIX.map[RV.plane]||{}).length;
+ $('rgFixUndo').disabled=!RVFIX.hist.length; $('rgFixRedo').disabled=!RVFIX.fut.length; $('rgFixReset').disabled=!Object.keys(RVFIX.map).length&&RV_TIN_PLANES.every(t=>!Object.keys(RVFIX.legacy[t]).length);
  $('rgFixStatus').textContent=rvFixBlocked()||RVFIX.msg||'';
 }
-function rvFixApplyNow(msg){ rvFixSave(); rvResRender(); if(RVFIX.on)rvFixUI(msg); }
+function rvFixApplyNow(msg){ RVFIX.cache=new WeakMap();rvFixSave();rvResRender();if(RVFIX.on)rvFixUI(msg); }
 function rvFixChange(before,msg){ RVFIX.hist.push(before); if(RVFIX.hist.length>200)RVFIX.hist.shift(); RVFIX.fut=[]; rvFixApplyNow(msg); }
-function rvFixUndo(redo){ const from=redo?RVFIX.fut:RVFIX.hist,to=redo?RVFIX.hist:RVFIX.fut; if(!from.length)return; to.push(rvFixCopy()); RVFIX.map=from.pop(); rvFixEdClose(); rvFixApplyNow(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
+function rvFixUndo(redo){ const from=redo?RVFIX.fut:RVFIX.hist,to=redo?RVFIX.hist:RVFIX.fut; if(!from.length)return; to.push(rvFixCopy()); const state=from.pop(); RVFIX.map=state.map;RVFIX.legacy=state.legacy; rvFixEdClose(); rvFixApplyNow(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
 function rvFixOpen(){
  if(RVFIX.on)return;
  if(!["h","v","o"].includes(RV.plane)||!rgRows().length){ toast(gmPreviewText("Oprava odchylek je dostupná, až budou v plánu zobrazené body s odchylkami od roviny.")); return; }
@@ -8969,9 +9091,11 @@ function rvFixEdCommit(){
  const v=$('rgFixVal').value.trim().replace(/\s/g,'').replace(/[\u2212\u2013]/g,'-').replace(',','.');
  const num=/^[+-]?\d+(\.\d+)?$/.test(v)?parseFloat(v):NaN, d=Number.isFinite(num)?Math.round((RV.set.u==="m"?num:num/1000)*1e5)/1e5:NaN;
  if(!Number.isFinite(d)||Math.abs(d)>10){ $('rgFixVal').setAttribute('aria-invalid','true'); rvFixUI(gmPreviewText("Zadejte číslo v ⟦0⟧, zápornou odchylku se znaménkem minus (nejvýše 10 m).",[rvFixUnitTxt()])); $('rgFixVal').focus(); return; }
- const q=r.fix||r, orig=r.fix?r.fix.d:r.d, before=rvFixCopy(), m=RVFIX.map[RV.plane];
+ const frame=rvPlaneFrame();if(!frame){rvFixEdClose();return;}
+ const q=r.fix||r, orig=r.fix?r.fix.d:r.d, before=rvFixCopy(), m=RVFIX.map;
+ if(rvR1(d)===rvR1(r.d)){rvFixEdClose();return;}
  if(rvR1(d)===rvR1(orig)){ if(!m[s.key]){ rvFixEdClose(); rvFixUI(''); return; } delete m[s.key]; }
- else m[s.key]={d,sig:rvFixSig(q)};
+ else m[s.key]={...rvFixPosition(r,frame,d),sig:rvFixSig(q)};
  rvFixEdClose(); rvFixChange(before,""); const nr=rvFixRow(s.key); rvFixUI(gmPreviewText("Odchylka ⟦0⟧: ⟦1⟧ → ⟦2⟧ ⟦3⟧.",[s.name,rvDS(orig),rvDS(nr?nr.d:d),rvFixUnitTxt()]));   // po zaokrouhlení souřadnic se výsledná odchylka může o zaokrouhlení lišit od zadané
 }
 function rvFixLabelAt(x,y){ const b0=$('rgsvg').getBoundingClientRect(),mx=x-b0.left,my=y-b0.top;
@@ -8982,10 +9106,10 @@ function rvFixLabelAt(x,y){ const b0=$('rgsvg').getBoundingClientRect(),mx=x-b0.
  $('rgFixClose').addEventListener('click',()=>rvFixClose());
  $('rgFixUndo').addEventListener('click',()=>rvFixUndo(false));
  $('rgFixRedo').addEventListener('click',()=>rvFixUndo(true));
- $('rgFixReset').addEventListener('click',()=>{ if(!Object.keys(RVFIX.map[RV.plane]||{}).length)return; const before=rvFixCopy(); RVFIX.map[RV.plane]={}; rvFixEdClose(); rvFixChange(before,gmPreviewText("Všem bodům se vrátily změřené odchylky.")); });
+ $('rgFixReset').addEventListener('click',()=>{ if($('rgFixReset').disabled)return; const before=rvFixCopy(); RVFIX.map={};RVFIX.legacy={h:{},v:{},o:{}};rvFixEdClose();rvFixChange(before,gmPreviewText("Všem bodům se vrátily změřené odchylky.")); });
  $('rgFixOk').addEventListener('click',rvFixEdCommit);
  $('rgFixCancel').addEventListener('click',()=>{ rvFixEdClose(); rvFixUI(''); });
- $('rgFixRev').addEventListener('click',()=>{ const s=RVFIX.sel,m=RVFIX.map[RV.plane]; if(!s||!m[s.key])return; const before=rvFixCopy(); delete m[s.key]; rvFixEdClose(); rvFixChange(before,gmPreviewText("Odchylka ⟦0⟧: vrácena změřená hodnota.",[s.name])); });
+ $('rgFixRev').addEventListener('click',()=>{ const s=RVFIX.sel,m=RVFIX.map; if(!s||!m[s.key])return; const before=rvFixCopy(); delete m[s.key]; rvFixEdClose(); rvFixChange(before,gmPreviewText("Odchylka ⟦0⟧: vrácena změřená hodnota.",[s.name])); });
  $('rgFixVal').addEventListener('input',e=>{ const c=e.target.value.replace(/[^\d,.+\-\u2212]/g,''); if(c!==e.target.value)e.target.value=c; e.target.removeAttribute('aria-invalid'); });
  $('rgFixVal').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); rvFixEdCommit(); } });
  box.addEventListener('pointerdown',e=>{ if(!on()||e.button!==0)return; const L=rvFixLabelAt(e.clientX,e.clientY); if(!L)return;
@@ -15165,7 +15289,7 @@ gmJobResume();
  "svisla": "vertical",
  "vodorovna": "horizontal",
  "Souradnice": "Coordinates",
- "puvodni Y, X, Z v metrech; orientace dle souřadnicových os": "original Y, X, Z in metres, aligned with the coordinate axes",
+ "Y, X, Z v metrech; orientace dle souřadnicových os": "Y, X, Z in metres, aligned with the coordinate axes",
  "Jednotky_odchylek": "Deviation_units",
  "Presnost_mm": "Precision_mm",
  "Vyhodnoceni": "Assessment",
@@ -15176,7 +15300,7 @@ gmJobResume();
  "Rozsah_kubatur": "Volume_scope",
  "vsechny pouzite body; linearni TIN; nezavisle na filtru": "all included points, linear TIN, independent of table filter",
  "Rozsah_sklonu_a_odklonu": "Slope_and_tilt_scope",
- "vsechny zaskrtnute body; puvodni XYZ; nezavisle na filtru": "all included points, original XYZ, independent of table filter",
+ "vsechny zaskrtnute body; XYZ; nezavisle na filtru": "all included points, XYZ, independent of table filter",
  "Povrch_stav": "Surface_status",
  "nejednoznacny": "ambiguous",
  "Povrch_upozorneni": "Surface_warning",
@@ -15608,7 +15732,7 @@ gmJobResume();
  "(první tlačítko v sekci 4. Export, zkratka": "(the first button in section 4, Export, shortcut",
  "): uloží použité měřené body podle aktuálního filtru a pořadí jako „název Y X ΔZ [kód]“. Místo absolutní výšky Z obsahuje čtvrtý sloupec ΔZ u vodorovné nebo kolmou odchylku d u svislé a obecné roviny, nikoli h od latě. Y, X i odchylka jsou vždy v metrech, s desetinnou tečkou; přesnost odchylky odpovídá nastavení. Název souboru končí _rovinnost_dZ.stx u vodorovné a _rovinnost_d.stx u ostatních rovin. Odškrtnuté a automaticky vyřazené nevrácené body se neexportují.": ") writes included survey points in filtered and sorted order as name Y X ΔZ [code]. The fourth column holds ΔZ for horizontal planes or perpendicular d for vertical and general planes. It does not store straightedge h. Y, X and deviations are in metres with a decimal point. Deviation precision follows the setting. The filename ends in _rovinnost_dZ.stx for horizontal planes or _rovinnost_d.stx for other planes. Manually excluded points and outliers still excluded are omitted.",
  "(sekce 4. Export, zkratka": "(section 4, Export, shortcut",
- "): uloží stejnou tabulku jako soubor CSV pro Excel (oddělovač středník, název podle načteného souboru s příponou _rovinnost.csv). V záhlaví je definice roviny a mezní odchylka, u každého bodu původní Y, X, Z, odchylka ΔZ / d a případně h ve zvolených jednotkách a přesnosti; svislá rovina přidává staničení s a obecná místní x′, y′; následuje vyhodnocení (do mezní odchylky / nad mezní odchylkou / nad 150 % mezní odchylky). Stejné sloupce má i kopírování do schránky.": ") exports the same table as a semicolon-delimited CSV for Excel, with filename suffix _rovinnost.csv. The header includes the plane and tolerance. Rows contain original Y, X, Z, ΔZ or d, optional h, stationing s for a vertical plane or local x′ and y′ for a general plane, and a tolerance result. Deviations use the selected units and precision. The clipboard has the same columns.",
+ "): uloží stejnou tabulku jako soubor CSV pro Excel (oddělovač středník, název podle načteného souboru s příponou _rovinnost.csv). V záhlaví je definice roviny a mezní odchylka, u každého bodu Y, X, Z, odchylka ΔZ / d a případně h ve zvolených jednotkách a přesnosti; svislá rovina přidává staničení s a obecná místní x′, y′; následuje vyhodnocení (do mezní odchylky / nad mezní odchylkou / nad 150 % mezní odchylky). Stejné sloupce má i kopírování do schránky.": ") exports the same table as a semicolon-delimited CSV for Excel, with filename suffix _rovinnost.csv. The header includes the plane and tolerance. Rows contain Y, X, Z, ΔZ or d, optional h, stationing s for a vertical plane or local x′ and y′ for a general plane, and a tolerance result. Deviations use the selected units and precision. The clipboard has the same columns.",
  "): uloží celý 2D plán jako jednostránkové": ") saves the full 2D drawing on one",
  "(na šířku nebo na výšku podle tvaru výkresu): půdorys vodorovné plochy nebo místní pohled na svislou či obecnou rovinu, s barvami podle ΔZ / d nebo h, popisky, mřížkou, legendou a volitelnou hlavičkou podle voleb plánu. Nezávisí na aktuálním přiblížení; velikost písma určuje posuvník Písmo v plánu. Stejné tlačítko je i v liště plánu.": "(landscape or portrait to suit the drawing). It shows a horizontal plan or a local elevation of a vertical or general plane. Colours follow ΔZ, d or h. Labels, grid, legend and optional header follow the plan settings. Zoom does not affect the export. The Font slider controls label sizes. The button is also in the plan toolbar.",
  "): uloží 2D půdorys nebo místní pohled pro CAD podle typu roviny (pro skutečnou prostorovou polohu slouží samostatné DXF 3D): měřené body jako křížky (bodové prvky – blok KRIZEK; vrstvy BODY_mereno do mezní odchylky, BODY_nad nad mezní odchylkou, BODY_vyrazeno odškrtnuté, BODY_odlehle odlehlé, v režimu latě BODY_bezlate body bez latě), odchylky ΔZ (ODCHYLKY_ok / ODCHYLKY_nad), názvy bodů (BODY_popis), nadpis, hlavičku a legendu v samostatných vrstvách. Texty mají velikost podle posuvníku Písmo.": ") saves the 2D plan or local view for CAD. Use 3D DXF for actual spatial positions. Survey crosses use the KRIZEK block, on layers BODY_mereno (within tolerance), BODY_nad (outside), BODY_vyrazeno (excluded), BODY_odlehle (outlier) or BODY_bezlate (no straightedge). Deviations use ODCHYLKY_ok and ODCHYLKY_nad; point names use BODY_popis. The title, header and legend have separate layers. Text size follows the Font slider.",
@@ -15630,7 +15754,7 @@ gmJobResume();
  "Posun v mm a min/max/průměr/medián kolmých odchylek všech PD se známou výškou posouvají všechny tři definiční body stejně, bez změny sklonu. Nabídka Podle bodů PD umožňuje vrátit původní body i orientaci před prvním posunem. Výběr z nabídky platí ihned; číselný posun se provede Enterem nebo opuštěním pole. Čelní 2D plán ukazuje průměty měřených bodů: x′ roste dolů, y′ doleva. Značka kruhu s tečkou a +d označuje směr k pozorovateli. Volitelná Rovina 1–2–3 (ve výchozím stavu vypnutá) zobrazí tři definiční body a přerušovaný trojúhelník; Celý výkres zahrne i tyto body. Názvy, skutečné výšky Z, odchylky d, mřížka, legenda, měřítko a propojení s tabulkou používají stejné ovládání jako ostatní plány. Kolečko přibližuje kolem kurzoru, tažení posouvá, F přizpůsobí celý výkres a V přepíná tabulku, rozdělenou obrazovku a celý plán.": "A manual offset in mm or the minimum, maximum, mean or median perpendicular deviation of design points with known elevation moves all three definition points equally and preserves inclination. By design points can restore the points and orientation before the first offset. Menu choices apply immediately. Enter or leave the numeric field to apply a manual offset. The 2D front view shows projected survey points, with x′ down and y′ left. A dotted circle and +d indicate the direction towards the viewer. Optional Plane 1–2–3 (off by default) shows the three definition points and a dashed triangle. Fit drawing includes them. Names, actual Z, deviations, grid, legend, scale and table linking work as in the other plans. Scroll to zoom at the cursor, drag to pan, press F to fit the drawing or V to cycle table, split and full plan.",
  "Lať i robustní filtrace pracují v místní soustavě x′, y′, d. Barvy, mapa a vrstevnice v režimu latě používají h; kubatury vždy skutečné d a lineární TIN, nezávisle na vyhlazení i filtru tabulky. Plocha se měří v referenční rovině x′, y′. Vyrovnaný posun vychází z plošně váženého průměru d; Převzít posune všechny tři definiční body kolmo, Vrátit posun obnoví předchozí zadání. Úhel vůči zadané rovině a RMS vycházejí z ortogonálního vyrovnání původních XYZ všech použitých bodů, nezávisle na filtru a hodnotách h. Body se stejným průmětem a různým d vyvolají upozornění a zablokují lať, mapu i kubatury, dokud neodškrtnete body dalších povrchů. V malém okně se legenda podle potřeby zkrátí: zachová barevné intervaly, podrobné kubatury zůstanou v souhrnu pod tabulkou.": "Straightedge and robust filtering use local x′, y′ and d. In straightedge mode colours, map and contours use h. Volumes always use actual d and the linear TIN, regardless of smoothing and the table filter. Area is measured in the x′, y′ reference plane. The area-weighted mean of d determines the balanced offset. Apply moves all three definition points normal to the plane. Undo offset restores the previous definition. The tilt relative to the defined plane and RMS use an orthogonal fit to the original XYZ of all included points, independently of the filter and h. Points with the same projection and different d cause a warning and suspend straightedge, mapping and volumes until points on the other surfaces are deselected. In a small viewport, a compact legend retains the colour intervals and the summary keeps detailed volumes.",
  "Prostorový plán otevřete natočením kostky nebo Shift + tažením v plánu. Kostka ukazuje ±x′, ±y′ a ±d; šipky překlápějí pohled po 90°, zatočené šipky otáčejí v rovině pohledu. Pohled na rovinu, dvojklik na kostku nebo Home vrátí původní místní 2D pohled včetně přiblížení a posunu. Zvětšení d 1–2–5–10–20–50–100 mění jen zobrazení ve směru normály; popisky, výšky Z i výpočty zůstávají skutečné. Volba Rovina zobrazí referenční plochu d = 0 a kolmé spojnice měřených bodů. Rovina 1–2–3 ovládá i prostorový definiční trojúhelník. TIN, barvy i vrstevnice lze zobrazit v prostoru; při latění se barvy řídí h, poloha povrchu vždy d. Souřadnicová mřížka používá místní x′, y′. Bez WebGL zůstává dostupný 2D plán.": "Rotate the cube or hold Shift and drag in the plan to open 3D. The cube shows ±x′, ±y′ and ±d. Straight arrows turn the view by 90°; curved arrows rotate it in its own plane. Return to 2D, double-click the cube or press Home to restore the local 2D zoom and pan. The d exaggeration settings 1–2–5–10–20–50–100 affect only display along the normal. Labels, elevations and calculations keep actual values. Plane shows the d = 0 reference and perpendicular lines to the measured points. Plane 1–2–3 also controls the 3D definition triangle. TIN, map and contours are available in 3D. In straightedge mode colours follow h and geometry follows d. The grid uses local x′ and y′. The 2D plan is available without WebGL.",
- "CSV a schránka obsahují původní Y, X, Z, místní x′, y′, kolmou odchylku d, případně h od latě, definici a orientaci roviny, jednotky, kubatury a ortogonální odklon. Exportují použité body podle filtru a řazení; kubatury i odklon se nadále počítají ze všech použitých bodů. STX obsahuje původní Y, X a d místo výšky Z, vždy v metrech, nikoli h od latě. PDF 2D obsahuje celý místní pohled na A3; PDF 3D zachytí aktuální natočení, přiblížení a označené zvětšení d jako statický obrázek s textovými popisky. Obě PDF obsahují definiční body a vysvětlení místní soustavy. DXF 2D zachová místní pohled (CAD X = −y′, CAD Y = −x′, CAD Z = 0). DXF 3D zachová skutečnou polohu v JTSK (CAD X = −Y, CAD Y = −X, CAD Z = Z), bez natočení kamery a bez zvětšení d. Definice a báze místní soustavy jsou v záhlaví DXF; vrstva BODY_souradnice obsahuje původní měřené body, ROVINA_souradnice definiční body při zapnuté volbě Rovina 1–2–3. Popisy a značky leží rovnoběžně s referenční rovinou; plocha v režimu latě používá skutečné d z lineárního TIN, barvy a vrstevnice h.": "CSV and copied tables include original Y, X, Z, local x′ and y′, perpendicular d, optional straightedge h, plane definition and orientation, units, volumes and orthogonal tilt. Exports use included rows in filtered and sorted order. Volumes and tilt use all included points. STX writes original Y and X and d instead of Z, always in metres. The 2D PDF shows the whole local view on A3. The 3D PDF captures current rotation, zoom and d exaggeration as a static image with text labels. Both PDFs include the definition points and local axes. 2D DXF preserves the local view (CAD X = −y′, CAD Y = −x′, CAD Z = 0). 3D DXF preserves actual S-JTSK locations (CAD X = −Y, CAD Y = −X, CAD Z = Z), independent of camera and exaggeration. The DXF header includes the local basis and definition. BODY_souradnice holds the original survey points and ROVINA_souradnice the definition points when enabled. Labels and symbols are parallel to the reference plane. In straightedge mode the linear TIN uses actual d for geometry and h for colours and contours.",
+ "CSV a schránka obsahují Y, X, Z, místní x′, y′, kolmou odchylku d, případně h od latě, definici a orientaci roviny, jednotky, kubatury a ortogonální odklon. Exportují použité body podle filtru a řazení; kubatury i odklon se nadále počítají ze všech použitých bodů. STX obsahuje původní Y, X a d místo výšky Z, vždy v metrech, nikoli h od latě. PDF 2D obsahuje celý místní pohled na A3; PDF 3D zachytí aktuální natočení, přiblížení a označené zvětšení d jako statický obrázek s textovými popisky. Obě PDF obsahují definiční body a vysvětlení místní soustavy. DXF 2D zachová místní pohled (CAD X = −y′, CAD Y = −x′, CAD Z = 0). DXF 3D zachová skutečnou polohu v JTSK (CAD X = −Y, CAD Y = −X, CAD Z = Z), bez natočení kamery a bez zvětšení d. Definice a báze místní soustavy jsou v záhlaví DXF; vrstva BODY_souradnice obsahuje původní měřené body, ROVINA_souradnice definiční body při zapnuté volbě Rovina 1–2–3. Popisy a značky leží rovnoběžně s referenční rovinou; plocha v režimu latě používá skutečné d z lineárního TIN, barvy a vrstevnice h.": "CSV and copied tables include Y, X, Z, local x′ and y′, perpendicular d, optional straightedge h, plane definition and orientation, units, volumes and orthogonal tilt. Exports use included rows in filtered and sorted order. Volumes and tilt use all included points. STX writes Y and X and d instead of Z, always in metres. The 2D PDF shows the whole local view on A3. The 3D PDF captures current rotation, zoom and d exaggeration as a static image with text labels. Both PDFs include the definition points and local axes. 2D DXF preserves the local view (CAD X = −y′, CAD Y = −x′, CAD Z = 0). 3D DXF preserves actual S-JTSK locations (CAD X = −Y, CAD Y = −X, CAD Z = Z), independent of camera and exaggeration. The DXF header includes the local basis and definition. BODY_souradnice holds the original survey points and ROVINA_souradnice the definition points when enabled. Labels and symbols are parallel to the reference plane. In straightedge mode the linear TIN uses actual d for geometry and h for colours and contours.",
  "Zadejte dva různé body Y, X ručně nebo výběrem z PD. Otevření nabídky pole bodu zobrazí všechny možnosti, i když pole obsahuje zvolený bod. Teprve psaní nabídku filtruje podle názvu. Šipka u pole vždy znovu nabídne vše; výběr lze provést myší nebo šipkami a Enterem. Rovina je svislá a nekonečná, výšky definičních bodů nejsou potřeba.": "Enter two distinct Y, X points manually or select design points. Open the point list to see all choices even if a point is selected. Typing filters by name. Click the arrow to show all choices again, then choose using the mouse or arrow keys and Enter. The infinite vertical plane does not require elevations for the definition points.",
  "je kolmá vodorovná odchylka: kladná vpravo od směru 1 → 2 při pohledu shora (před rovinou, vystupuje), záporná vlevo (za rovinou, ustupuje). Přebývající materiál lze takto interpretovat, pokud kladná strana míří do volného prostoru.": "is the perpendicular horizontal deviation. Viewed from above along 1 → 2 it is positive on the right (in front) and negative on the left (behind). A positive deviation indicates excess material if the positive side faces open space.",
  "je staničení průmětu bodu po stopě roviny od bodu 1 směrem k bodu 2. Body mimo úsek se také vyhodnotí. Tlačítko": "is the stationing of the projected point along the plane trace from point 1 towards point 2. Points beyond the segment are included. The",
@@ -15640,8 +15764,8 @@ gmJobResume();
  ": zadejte kladnou nebo zápornou hodnotu (čárka i tečka) a potvrďte Enterem nebo opuštěním pole. Během psaní se rovina neposouvá. Kladný posun míří vpravo od 1 → 2 při pohledu shora, záporný vlevo. Další změna hodnoty provede další posun. Enter následovaný opuštěním pole provede posun pouze jednou. Vypočtené souřadnice se v polích zobrazují na 3 desetinná místa v metrech; výpočet zachovává vyšší přesnost, dostupnou v tooltipu.": "accepts a positive or negative value with a comma or point. Press Enter or leave the field to apply it. Typing alone does not move the plane. Positive is right of 1 → 2 viewed from above; negative is left. A new value applies another offset. Pressing Enter and then leaving the field applies the offset once. Coordinates are displayed to three decimals in metres and retain higher precision, shown in the tooltip.",
  ": po zadání dvou různých bodů lze rovinu rovnoběžně posunout podle minima, maxima, průměru nebo mediánu kolmých odchylek všech načtených PD. Výšky PD nejsou potřeba. Min posune rovinu na nejmenší kolmou souřadnici PD, max na největší; průměr vynuluje průměrnou odchylku PD, medián jejich medián. Výběr statistiky provede posun ihned; nabídka se pak vrátí na „Vybrat…“, takže lze znovu vybrat i stejnou statistiku. Oba definiční body dostanou stejný kolmý posun; nové zadání se uloží. Další změny PD rovinu automaticky neposouvají.": "offsets the plane parallel to itself after two distinct points have been defined. It uses the minimum, maximum, mean or median perpendicular deviation of all loaded design points. Their elevations are optional. Min and max use the extreme perpendicular coordinates; mean and median set the corresponding deviation statistic to zero. The choice applies immediately. The menu returns to Select… so the same statistic can be applied again. Both definition points receive the same perpendicular offset, and the updated definition is saved. Later design changes do not move the plane automatically.",
  "Fungují tabulka, řazení, filtry, zaškrtávání, jednotky, přesnost a statistiky. Definice se pamatuje po obnovení stránky. Krátká základna vůči rozsahu měření vyvolá upozornění.": "The table, sorting, filters, point selection, units, precision and statistics are available. The definition survives a reload. A baseline short relative to the survey extent triggers a warning.",
- ": zobrazí se z kladné strany roviny; staničení s roste doprava a výška Z nahoru. Barvy a popisky ukazují kolmou odchylku d. Kolečko přibližuje kolem kurzoru, tažení posouvá, F vrátí celý výkres. V přepíná tabulku, rozdělenou obrazovku a celý pohled. Kliknutí propojuje bod s tabulkou; šipky mění výběr. Názvy, výšky, odchylky, značky, písmo, mřížka a legenda jsou nastavitelné. Osy mají stejné měřítko, původní Y, X, Z se nemění. Ve 2D plánu i PDF je dole měřítková lišta v metrech, která se přizpůsobuje přiblížení; platí také pro půdorys vodorovné plochy. Mřížku lze zapnout samostatně ve 2D i 3D, ve 3D také při skryté výplni referenční roviny.": "shows the positive side with s increasing to the right and Z upwards. Colours and labels show d. Scroll to zoom at the cursor, drag to pan, press F to fit or V to cycle table, split and full view. Clicking a point links it with the table and the arrow keys change selection. Names, elevations, deviations, symbols, font, grid and legend are configurable. The axes have equal scale and original XYZ is preserved. The 2D plan and PDF have a scale bar in metres that follows zoom. The grid can be enabled independently in 2D and 3D, including when the reference plane fill is hidden.",
- ": pod souhrnem se zobrazuje výsledek ortogonálního vyrovnání roviny ze všech zaškrtnutých bodů, se stejnou vahou a ze skutečných Y, X, Z. Filtr tabulky ani režim latě rozsah výpočtu nemění; vyřazené body se nepoužijí, ručně vrácené ano. U vodorovné plochy je sklon v mm/m a stupních a směr největšího stoupání od osy −X směrem k −Y (0° = −X, 90° = −Y, 180° = +X, 270° = +Y); nejde o zeměpisný azimut a neuplatňuje se meridiánová konvergence. U svislé plochy je odklon od svislice, jeho směr k +d / −d a samostatné natočení vůči stopě 1 → 2; kladné natočení stáčí stopu ve směru 1 → 2 ke straně +d. Jde o informaci o celkovém náklonu; zadaná rovina, odchylky, mezní odchylka a kubatury se nemění. Údaje jsou také v PDF 2D, PDF 3D a záhlaví CSV / kopírované tabulky; u exportů je uvedeno, že platí pro všechny zaškrtnuté body bez ohledu na filtr. Je potřeba alespoň 3 plošně rozmístěné body; téměř přímkové nebo prostorově nejednoznačné soubory se označí jako nespolehlivé. U vodorovné plochy bez sklonu se směr stoupání neurčuje.": "is calculated by orthogonally fitting the original Y, X, Z of all included points with equal weights. Table filtering and straightedge mode do not affect the fit. Excluded points are omitted and reinstated points are included. For horizontal surfaces the slope is in mm/m and degrees. The steepest uphill direction runs from −X towards −Y (0° = −X, 90° = −Y, 180° = +X, 270° = +Y). This is a grid direction and does not apply meridian convergence. For vertical surfaces the summary gives tilt from vertical, direction towards +d or −d, and rotation relative to trace 1 → 2. Positive rotation turns the trace towards +d. Tilt is informational and does not alter the reference plane, deviations, tolerance or volumes. 2D and 3D PDFs and CSV or clipboard headers include it and state the point selection. At least three suitably distributed points are required. Nearly collinear or spatially ambiguous inputs are flagged as unreliable. A level surface has no uphill direction.",
+ ": zobrazí se z kladné strany roviny; staničení s roste doprava a výška Z nahoru. Barvy a popisky ukazují kolmou odchylku d. Kolečko přibližuje kolem kurzoru, tažení posouvá, F vrátí celý výkres. V přepíná tabulku, rozdělenou obrazovku a celý pohled. Kliknutí propojuje bod s tabulkou; šipky mění výběr. Názvy, výšky, odchylky, značky, písmo, mřížka a legenda jsou nastavitelné. Osy mají stejné měřítko, Y, X, Z se nemění. Ve 2D plánu i PDF je dole měřítková lišta v metrech, která se přizpůsobuje přiblížení; platí také pro půdorys vodorovné plochy. Mřížku lze zapnout samostatně ve 2D i 3D, ve 3D také při skryté výplni referenční roviny.": "shows the positive side with s increasing to the right and Z upwards. Colours and labels show d. Scroll to zoom at the cursor, drag to pan, press F to fit or V to cycle table, split and full view. Clicking a point links it with the table and the arrow keys change selection. Names, elevations, deviations, symbols, font, grid and legend are configurable. The axes have equal scale and original XYZ is preserved. The 2D plan and PDF have a scale bar in metres that follows zoom. The grid can be enabled independently in 2D and 3D, including when the reference plane fill is hidden.",
+ ": pod souhrnem se zobrazuje výsledek ortogonálního vyrovnání roviny ze všech zaškrtnutých bodů, se stejnou vahou a ze skutečných Y, X, Z. Filtr tabulky ani režim latě rozsah výpočtu nemění; vyřazené body se nepoužijí, ručně vrácené ano. U vodorovné plochy je sklon v mm/m a stupních a směr největšího stoupání od osy −X směrem k −Y (0° = −X, 90° = −Y, 180° = +X, 270° = +Y); nejde o zeměpisný azimut a neuplatňuje se meridiánová konvergence. U svislé plochy je odklon od svislice, jeho směr k +d / −d a samostatné natočení vůči stopě 1 → 2; kladné natočení stáčí stopu ve směru 1 → 2 ke straně +d. Jde o informaci o celkovém náklonu; zadaná rovina, odchylky, mezní odchylka a kubatury se nemění. Údaje jsou také v PDF 2D, PDF 3D a záhlaví CSV / kopírované tabulky; u exportů je uvedeno, že platí pro všechny zaškrtnuté body bez ohledu na filtr. Je potřeba alespoň 3 plošně rozmístěné body; téměř přímkové nebo prostorově nejednoznačné soubory se označí jako nespolehlivé. U vodorovné plochy bez sklonu se směr stoupání neurčuje.": "is calculated by orthogonally fitting the Y, X, Z of all included points with equal weights. Table filtering and straightedge mode do not affect the fit. Excluded points are omitted and reinstated points are included. For horizontal surfaces the slope is in mm/m and degrees. The steepest uphill direction runs from −X towards −Y (0° = −X, 90° = −Y, 180° = +X, 270° = +Y). This is a grid direction and does not apply meridian convergence. For vertical surfaces the summary gives tilt from vertical, direction towards +d or −d, and rotation relative to trace 1 → 2. Positive rotation turns the trace towards +d. Tilt is informational and does not alter the reference plane, deviations, tolerance or volumes. 2D and 3D PDFs and CSV or clipboard headers include it and state the point selection. At least three suitably distributed points are required. Nearly collinear or spatially ambiguous inputs are flagged as unreliable. A level surface has no uphill direction.",
  ": odmocnina průměru čtverců kolmých vzdáleností všech použitých bodů od ortogonálně vyrovnané roviny, tedy √(Σd²/n). Má stejné jednotky a zobrazenou přesnost jako odchylky. Ukazuje, jak těsně body přiléhají k jedné rovině; nevyjadřuje přesnost měření a nenahrazuje kontrolu vůči zadané rovině ani vyhodnocení latí. Filtr tabulky výsledek nemění. Je v souhrnu, CSV / schránce a PDF 2D i 3D. Při neurčitelné vyrovnané rovině se RMS neuvádí.": "is the root mean square of perpendicular distances of all included points from the orthogonally fitted plane, √(Σd²/n). It uses the same units and precision as the deviations and describes how closely the points lie on one plane. It does not measure survey accuracy or replace checks against the reference plane or straightedge. The table filter does not affect RMS. The summary, CSV, clipboard and both PDFs include it when the fit defines a plane.",
  ": před triangulací se body seřadí stálým pravidlem. Pokud čtyři body připouštějí obě úhlopříčky (leží na společné kružnici v mezích strojového zaokrouhlení), přednost dostane úhlopříčka podle stálého pořadí názvů bodů, nikoli pořadí řádků v souboru. Shodné názvy mají doplňkové řazení podle souřadnic. Souřadnice ani odchylky se nepřepisují. Téměř nulové okrajové trojúhelníky vzniklé pouze zaokrouhlením se vynechají. Stejné pravidlo používají mapa, vrstevnice, vyhlazení, kubatury i výstupy. U pravidelných sítí může mít volba úhlopříčky vliv na interpolovanou plochu; cílem pravidla je opakovatelné geometrické řešení.": "uses a stable point order before triangulation. When four points allow either diagonal (they are concyclic within floating-point precision), a stable point-name order determines the diagonal. Coordinate order breaks ties between identical names. Original coordinates and deviations are retained. Near-zero boundary triangles caused only by rounding are skipped. The map, contours, smoothing, volumes and exports share the rule. On regular grids the chosen diagonal can affect interpolation.",
  ": výpočet probíhá v pohledu (s, Z) a výškovou veličinou je kolmá odchylka d. h je rozdíl d bodu a interpolované odchylky spojnice konců latě. Zůstávají délka, min. rozpětí, pás, mezní odchylka a varianty ± / jen prohlubeň. Mezní odchylka stěny je uživatelská; podlahové kategorie se pro ni nepoužívají. Vybráním bodu s latí se rozhodující spojnice vyznačí v pohledu.": "uses the (s, Z) view and takes perpendicular deviation d as the height variable. h is point d minus the interpolated d between the straightedge endpoints. Length, minimum span, band, tolerance and both variants are available. Enter a custom wall tolerance; floor categories do not apply. Selecting a point with a result highlights its governing straightedge in the view.",
@@ -15651,8 +15775,8 @@ gmJobResume();
  ": plošně vážený průměr d určí kolmý posun s nulovou bilancí. Kladný posun je vpravo od 1 → 2 shora. Zaokrouhluje se podle Přesnosti; souhrn ukáže objemy a zbytkovou bilanci po zaokrouhlení.": "is the area-weighted mean d giving zero net volume. Positive offset points right of 1 → 2 as seen from above. Rounding follows the selected precision. The summary shows volumes and residual balance after rounding.",
  "posune oba definiční body stejně a zachová směr roviny.": "moves both definition points equally and preserves the direction of the plane.",
  "obnoví body před tímto převzetím; nabídka „Vrátit zadané body“ nadále vrací začátek celé série posunů. Souřadnice se ukládají s přesností na mikrometry, což může přidat nepatrný zbytek bilance.": "restores the points immediately before Apply. Restore entered points returns to the start of the offset series. Coordinates are stored to micrometre precision, which can leave a small residual balance.",
- ": původní Y, X, Z, staničení s [m], kolmá odchylka d ve zvolených jednotkách a při vyhodnocení latí také h a údaje rozhodující latě. V záhlaví jsou oba definiční body, pravidlo znamének, mezní odchylka a kubatury všech použitých bodů (nezávisle na filtru). Exportované řádky respektují filtr, řazení a zaškrtnutí.": "include original XYZ, stationing s in metres, perpendicular d in the selected units and, in straightedge mode, h and the governing straightedge. The header gives both definition points, sign convention, tolerance and volumes for all included points. Exported rows follow filtering, sorting and checkboxes.",
- ": původní Y a X, místo Z kolmá odchylka d v metrech (i při vyhodnocení latí); původní výška Z se do tohoto formátu nezapisuje. Název souboru končí _rovinnost_d.stx. CSV zachovává i původní výšku.": "writes original Y and X and perpendicular d in metres instead of Z, including in straightedge mode. Its suffix is _rovinnost_d.stx. Use CSV to retain original Z.",
+ ": Y, X, Z, staničení s [m], kolmá odchylka d ve zvolených jednotkách a při vyhodnocení latí také h a údaje rozhodující latě. V záhlaví jsou oba definiční body, pravidlo znamének, mezní odchylka a kubatury všech použitých bodů (nezávisle na filtru). Exportované řádky respektují filtr, řazení a zaškrtnutí.": "include original XYZ, stationing s in metres, perpendicular d in the selected units and, in straightedge mode, h and the governing straightedge. The header gives both definition points, sign convention, tolerance and volumes for all included points. Exported rows follow filtering, sorting and checkboxes.",
+ ": Y a X, místo Z kolmá odchylka d v metrech (i při vyhodnocení latí); výška Z se do tohoto formátu nezapisuje. Název souboru končí _rovinnost_d.stx. CSV obsahuje i výšku Z.": "writes Y and X and perpendicular d in metres instead of Z, including in straightedge mode. Its suffix is _rovinnost_d.stx. Use CSV to retain original Z.",
  ": celý pohled (s, Z), stejné volby značek, mapy, vyhlazení, vrstevnic a legendy jako na obrazovce; aktuální přiblížení se nepřebírá.": "shows the whole (s, Z) view, using the same symbols, map, smoothing, contours and legend as on screen. It does not use the current zoom.",
  ": samostatné tlačítko": "has separate buttons. The",
  "uloží": "button exports the",
@@ -16297,7 +16421,7 @@ gmJobResume();
  "Odklon_metoda": "Tilt_method",
  "ortogonalni vyrovnani roviny; stejne vahy": "orthogonal plane fit, equal weights",
  "Odklon_rozsah": "Tilt_scope",
- "vsechny zaskrtnute body; nezavisle na filtru; puvodni XYZ": "all included points, independent of filter, original XYZ",
+ "vsechny zaskrtnute body; nezavisle na filtru; XYZ": "all included points, independent of filter, XYZ",
  "Odklon_pocet_bodu": "Tilt_point_count",
  "Odklon_stav": "Tilt_status",
  "vypocteno": "calculated",
@@ -16392,8 +16516,8 @@ gmJobResume();
  ", k odbourání": ", for removal",
  ", k doplnění": ", for fill",
  "Otevře pohled na stěnu z kladné strany: s roste doprava, výška Z nahoru. Zkratka V přepíná tabulku, rozdělenou obrazovku a celý pohled.": "Open the wall elevation from the positive side. Stationing s increases to the right and Z upwards. V cycles through table, split and full view.",
- "Shift+T: původní Y, X a kolmá odchylka d místo Z v metrech; původní výška se do STX nezapisuje. Použité body podle filtru a řazení.": "Shift+T: export original Y and X with perpendicular d in place of Z, in metres. Uses included points in filtered, sorted order.",
- "Shift+C: CSV s definicí roviny, původními Y, X, Z, staničením s, odchylkou d, případně h od latě a kubaturami.": "Shift+C: CSV with plane definition, original XYZ, stationing s, deviation d, optional straightedge h and volumes.",
+ "Shift+T: původní Y, X a kolmá odchylka d místo Z v metrech; výška Z se do STX nezapisuje. Použité body podle filtru a řazení.": "Shift+T: export Y and X with perpendicular d in place of Z, in metres. Uses included points in filtered, sorted order.",
+ "Shift+C: CSV s definicí roviny, souřadnicemi Y, X, Z, staničením s, odchylkou d, případně h od latě a kubaturami.": "Shift+C: CSV with plane definition, original XYZ, stationing s, deviation d, optional straightedge h and volumes.",
  "Kopíruje tabulku svislé roviny včetně definice a kubatur do schránky (pro Excel). Použité body podle filtru a řazení.": "Copy the vertical-plane table with its definition and volumes for Excel, using included points in filtered, sorted order.",
  "Plán nebo pohled je k dispozici po načtení měření a zadání platné roviny.": "The plan becomes available after loading a survey and defining a valid plane.",
  "V aktuálním výběru není žádný zobrazený bod pro export. Změňte filtr nebo zapněte odškrtnuté a odlehlé body.": "No visible point to export. Change the filter or show excluded points and outliers.",
@@ -16401,9 +16525,9 @@ gmJobResume();
  "DXF 3D JTSK: skutečná poloha stěny. CAD X = −Y, CAD Y = −X, CAD Z = původní výška. Oba definiční body jsou v záhlaví.": "3D S-JTSK DXF: actual wall position, CAD X = −Y, CAD Y = −X and original Z. The header contains both definition points.",
  "Shift+S: DXF 2D – pohled na stěnu. CAD X = staničení s, CAD Y = výška Z, CAD Z = 0. Oba definiční body jsou v záhlaví.": "Shift+S: 2D wall elevation DXF. CAD X = stationing s, CAD Y = elevation Z and CAD Z = 0. The header contains both definition points.",
  "DXF 3D JTSK: skutečná poloha bodů a plochy. CAD X = −Y, CAD Y = −X, CAD Z = skutečná výška. Nezávisí na natočení ani zvětšení ΔZ.": "3D S-JTSK DXF: actual points and surface, independent of rotation and ΔZ exaggeration. CAD X = −Y, CAD Y = −X, CAD Z = actual elevation.",
- "Kopíruje použité body podle filtru a řazení: původní Y, X, Z, místní x′, y′, d a případně h; včetně definice roviny a kubatur.": "Copy included points in filtered, sorted order with original XYZ, local x′, y′, d and optional h, plus plane definition and volumes.",
- "Shift+C: CSV – původní Y, X, Z, místní x′, y′ a d, případně h od latě, definice, jednotky, znaménko a kubatury.": "Shift+C: CSV with original XYZ, local x′, y′ and d, optional straightedge h, plane definition, units, sign convention and volumes.",
- "Shift+T: původní Y, X a kolmá odchylka d místo Z, vždy v metrech a podle nastavené přesnosti; nejde o výšku Z ani h od latě. Použité body podle filtru a řazení.": "Shift+T: export original Y and X with perpendicular d in place of Z, in metres at the selected precision. Uses included points in filtered, sorted order.",
+ "Kopíruje použité body podle filtru a řazení: Y, X, Z, místní x′, y′, d a případně h; včetně definice roviny a kubatur.": "Copy included points in filtered, sorted order with original XYZ, local x′, y′, d and optional h, plus plane definition and volumes.",
+ "Shift+C: CSV – Y, X, Z, místní x′, y′ a d, případně h od latě, definice, jednotky, znaménko a kubatury.": "Shift+C: CSV with original XYZ, local x′, y′ and d, optional straightedge h, plane definition, units, sign convention and volumes.",
+ "Shift+T: původní Y, X a kolmá odchylka d místo Z, vždy v metrech a podle nastavené přesnosti; nejde o výšku Z ani h od latě. Použité body podle filtru a řazení.": "Shift+T: export Y and X with perpendicular d in place of Z, in metres at the selected precision. Uses included points in filtered, sorted order.",
  "Shift+P: PDF 2D – celý místní pohled na obecnou rovinu A3, x′ dolů, y′ doleva; definice roviny v původních Y, X, Z.": "Shift+P: full local view of the general plane on A3, x′ down and y′ left. The plane definition uses original XYZ.",
  "Shift+S: DXF 2D – místní pohled, CAD X = −y′, CAD Y = −x′, CAD Z = 0; vše v metrech. Vazba na JTSK v záhlaví.": "Shift+S: local 2D DXF in metres, CAD X = −y′, CAD Y = −x′ and CAD Z = 0. The header documents the S-JTSK transformation.",
  "DXF 3D JTSK: CAD X = −Y, CAD Y = −X, CAD Z = původní výška Z. Skutečné body a plocha bez zvětšení d; popisky v rovině x′, y′.": "3D S-JTSK DXF: CAD X = −Y, CAD Y = −X and original Z. Points and surface use true values of d, with labels in the x′, y′ plane.",
@@ -16414,7 +16538,7 @@ gmJobResume();
  "Jednotková normála n v (Y, X, Z): (": "Unit normal n in (Y, X, Z): (",
  "Kladná strana je obrácená.": "The positive side is reversed.",
  "Výchozí orientace: bod 3 má kladné y′.": "Default orientation: point 3 has positive y′.",
- "STX: původní Y, X a kolmá odchylka d místo výšky Z; všechny hodnoty v metrech.": "STX: original Y and X with perpendicular d instead of elevation Z, all in metres.",
+ "STX: původní Y, X a kolmá odchylka d místo výšky Z; všechny hodnoty v metrech.": "STX: Y and X with perpendicular d instead of elevation Z, all in metres.",
  "Uloženo PDF 2D: místní pohled na obecnou rovinu A3.": "Saved the local 2D view of the general plane as an A3 PDF.",
  "Uloženo PDF: pohled na stěnu A3.": "Saved the wall elevation as an A3 PDF.",
  "Uloženo PDF: plán bodů A3.": "Saved the points plan as an A3 PDF.",
@@ -17171,7 +17295,7 @@ gmJobResume();
  "Opravit odchylky": "Correct deviations",
  "Opravit odchylky: dvojklik na popisek odchylky umožní přepsat hodnotu (mm) u špatně změřeného středu. Střed se posune po směru šipky k bodu PD a přepočtou se souřadnice, ΔY, ΔX a vyhodnocení.": "Correct deviations: double-click a deviation label to overwrite its value (mm) for a wrongly measured centre. The centre moves along the arrow towards the PD point and the coordinates, ΔY, ΔX and the evaluation are recalculated.",
  "Zavřít opravy odchylek (Escape)": "Close deviation corrections (Escape)",
- "Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Opravený popisek je orámovaný fialově. Používejte jen pro špatně změřené středy.": "Double-click a deviation label to enter a new value (number only, mm). The pile centre moves along the arrow towards the PD point; the centre coordinates, ΔY, ΔX and the evaluation against the tolerance are recalculated. Height Z does not change. A corrected label has a purple frame. Use only for wrongly measured centres.",
+ "Dvojklikem na popisek odchylky zadejte novou hodnotu (jen číslo, mm). Střed piloty se posune po směru šipky k bodu PD, přepočtou se souřadnice středu, ΔY, ΔX i vyhodnocení vůči mezní odchylce. Výška Z se nemění. Poloha středu je po uložení pevná, při změně PD se znovu počítá odchylka. Používejte jen pro špatně změřené středy.": "Double-click a deviation label to enter a new value (number only, mm). The pile centre moves along the arrow towards the PD point; the centre coordinates, ΔY, ΔX and the evaluation against the tolerance are recalculated. Height Z stays unchanged. The saved centre position stays fixed and its deviation is recalculated when the design changes. Use only for wrongly measured centres.",
  "Pilota": "Pile",
  ": odchylka": ": deviation",
  "Nová odchylka v mm": "New deviation in mm",
@@ -17189,6 +17313,7 @@ gmJobResume();
  "Opravené odchylky: <b>⟦0⟧</b>": "Corrected deviations: <b>⟦0⟧</b>",
  "Všem pilotám se vrátily změřené odchylky.": "All piles are back to their measured deviations.",
  "Zadejte celé číslo 0 až 9999 (mm).": "Enter a whole number from 0 to 9999 (mm).",
+ "Souřadnice uloženy. V nastavené vzdálenosti není přiřazený bod PD.": "Coordinates saved. No design point is matched within the selected distance.",
  "Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.": "The measured deviation of ⟦0⟧ is 0 mm: the direction of the centre shift is not defined, a correction cannot be entered.",
  "změřeno ⟦0⟧ mm": "measured ⟦0⟧ mm",
  "Žádná odchylka není ručně opravená.": "No deviation is corrected manually.",
@@ -17199,7 +17324,7 @@ gmJobResume();
  "změřeno ⟦0⟧ ⟦1⟧": "measured ⟦0⟧ ⟦1⟧",
  "Zadejte číslo v ⟦0⟧, zápornou odchylku se znaménkem minus (nejvýše 10 m).": "Enter a number in ⟦0⟧, a negative deviation with a minus sign (at most 10 m).",
  "Všem bodům se vrátily změřené odchylky.": "All points are back to their measured deviations.",
- "Dvojklikem na popisek odchylky zadejte novou hodnotu (číslo se znaménkem v jednotkách odchylek). Bod se posune kolmo k rovině (u vodorovné roviny změní jen Z), přepočtou se jeho souřadnice, odchylka, vyhodnocení, mapa i kubatury. Souřadnice se zaokrouhlí na počet desetinných míst měření. Opravený popisek je orámovaný fialově. Používejte jen pro body, kde na ploše něco překáželo.": "Double-click a deviation label to enter a new value (a signed number in the deviation units). The point moves perpendicular to the plane (for a horizontal plane only Z changes), and its coordinates, deviation, evaluation, map and volumes are recalculated. The coordinates are rounded to the number of decimal places of the survey. A corrected label is framed in purple. Use only for points where something was in the way on the surface.",
+ "Dvojklikem na popisek odchylky zadejte novou hodnotu (číslo se znaménkem v jednotkách odchylek). Bod se posune kolmo k rovině (u vodorovné roviny změní jen Z), přepočtou se jeho souřadnice, odchylka, vyhodnocení, mapa i kubatury. Uložená poloha bodu platí pro všechny typy rovin. Po změně roviny se přepočítá odchylka. Používejte jen pro body, kde na ploše něco překáželo.": "Double-click a deviation label to enter a new value (a signed number in the deviation units). The point moves perpendicular to the plane (for a horizontal plane only Z changes), and its coordinates, deviation, evaluation, map and volumes are recalculated. The saved point position applies to all plane types. Its deviation is recalculated when the plane changes. Use only for points where something was in the way on the surface.",
  "(skupina Nástroje plánu, pro všechny typy rovin): slouží k opravě bodu, kde při měření na ploše něco leželo nebo překáželo. Dvojklikem na popisek odchylky otevřete zadání nové hodnoty (číslo se znaménkem v nastavených jednotkách odchylek, mm nebo m). Bod se posune kolmo k rovině tak, aby měl zadanou odchylku: u vodorovné roviny se změní jen Z, u svislé roviny Y a X kolmo ke stěně, u obecné roviny Y, X i Z ve směru normály. Opravené souřadnice se zaokrouhlí na stejný počet desetinných míst jako měřené (nejméně 3); u svislé a obecné roviny se proto výsledná odchylka může od zadané lišit o zaokrouhlení. Poloha v plánu zůstane. Přepočítají se souřadnice bodu, ΔZ / d, vyhodnocení vůči mezní odchylce, souhrn, mapa, vrstevnice i kubatury; opravené souřadnice platí v tabulce, plánu, PDF, DXF, STX, CSV i protokolu. V režimu úprav jsou popisky odchylek orámované, opravený fialově; bublina bodu uvádí změřenou hodnotu. Tlačítko Vrátit měřenou vrátí změřené souřadnice (stejně pomůže zadat původní hodnotu), Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky, Vrátit všechny opravy zruší opravy zobrazeného typu roviny. Opravy se ukládají v prohlížeči a v zakázce zvlášť pro každý typ roviny; zadaná odchylka platí i po změně zadání roviny. Po změně souřadnic bodu v souboru se oprava přestane uplatňovat. MNČ obecná rovina se vyrovnává ze změřených souřadnic. Opravy nelze zadávat v prostorovém pohledu a v režimu latě; vymaže je Vymazat měření i Reset.": "(Plan Tools group, for all plane types): corrects a point where something lay on the surface or was in the way during the survey. Double-click a deviation label to enter a new value (a signed number in the set deviation units, mm or m). The point moves perpendicular to the plane so that it has the entered deviation: for a horizontal plane only Z changes, for a vertical plane Y and X perpendicular to the wall, for a general plane Y, X and Z along the normal. The corrected coordinates are rounded to the same number of decimal places as the measured ones (at least 3); for a vertical or general plane the resulting deviation may therefore differ from the entered one by the rounding. The position in the plan is kept. The point coordinates, ΔZ / d, evaluation against the tolerance, summary, map, contours and volumes are recalculated; the corrected coordinates apply in the table, plan, PDF, DXF, STX, CSV and the protocol. In edit mode deviation labels are framed, a corrected one in purple; the point tooltip shows the measured value. Restore measured returns the measured coordinates (entering the original value does the same), Undo and Redo (Ctrl+Z, Ctrl+Y) step through changes, Undo all corrections removes the corrections for the displayed plane type. Corrections are saved in the browser and in the job separately for each plane type; the entered deviation still applies after the plane definition changes. Once the point coordinates change in the file, the correction no longer applies. The least-squares general plane is fitted from the measured coordinates. Corrections cannot be entered in the 3D view or in straightedge mode; Clear measurement and Reset remove them.",
  "Opravit odchylky: dvojklik na popisek odchylky umožní přepsat hodnotu u bodu, kde na ploše něco překáželo. Bod se posune kolmo k rovině a přepočtou se souřadnice, odchylka i vyhodnocení.": "Correct deviations: double-clicking a deviation label lets you overwrite the value for a point where something was in the way on the surface. The point moves perpendicular to the plane and its coordinates, deviation and evaluation are recalculated.",
  "Vrátí změřené souřadnice bodu": "Restores the measured point coordinates",
@@ -17344,7 +17469,7 @@ gmJobResume();
  "vyplněno": "filled in",
  "nevyplněno (nepovinné)": "not filled in (optional)",
  "nevyplněno (povinné)": "not filled in (required)",
- "GeoMAT verze 1.433 · Autor: Jan Bartůněk": "GeoMAT version 1.433 · Author: Jan Bartůněk"
+ "GeoMAT verze 1.434 · Autor: Jan Bartůněk": "GeoMAT version 1.434 · Author: Jan Bartůněk"
 }</script>
 <script data-gm-language-runtime>
 function gmPreviewText(message,params=[]){
