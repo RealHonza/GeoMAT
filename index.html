@@ -32,8 +32,8 @@ Pokud obdoba neexistuje, zvol řešení co nejbližší stávajícímu stylu a u
 
 Postup:
 1. Uchovej zálohu originálu a upravuj cíleně.
-2. Při každém dodání zvyš verzi všude: APP_VERSION, meta titulek gm-auth,
-   gmAuthVersion, gmAuthAccountVersion a položku slovníku.
+2. Při každém dodání zvyš APP_VERSION. Přihlášení, účet a titulky
+   přebírají číslo z této konstanty.
 3. Zkontroluj syntaxi všech inline skriptů včetně jádra
    (script type="application/x-geomat" data-gm-core="2"), například přes Node.js (kontrola syntaxe).
 4. Otestuj v prohlížeči změněná okna a funkce a ověř, že nevznikají chyby stránky.
@@ -50,6 +50,77 @@ Postup:
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GeoMAT</title>
+<script>const APP_VERSION="1.471", APP_DATE="25. 11. 2026";
+// Keep the previous settings until the file transaction has durably committed.
+const GM_JOB_JOURNAL='geomat.project.restore.v1', GM_JOB_COMMIT='geomat-job-commit';
+const GM_JOB_DATABASES={
+ zss:['geomat-files','manifests'],rov:['geomat-files','manifests'],terrain:['geomat-terrain','groups']
+};
+function gmJobLocked(action){
+ const locks=globalThis.navigator?.locks;
+ return locks?locks.request(GM_JOB_JOURNAL,action):action();
+}
+function gmJobPending(){
+ try{return localStorage.getItem(GM_JOB_JOURNAL);}catch(e){return null;}
+}
+function gmJobWriteSettings(entries){
+ for(const [key] of entries)localStorage.removeItem(key);
+ for(const [key,value] of entries)if(value!==null)localStorage.setItem(key,value);
+}
+function gmJobRollback(journal){
+ if(localStorage.getItem(GM_JOB_JOURNAL)!==journal.raw)return;
+ gmJobWriteSettings(journal.previous);
+ localStorage.removeItem(GM_JOB_JOURNAL);
+}
+function gmJobStage(module,state){
+ if(localStorage.getItem(GM_JOB_JOURNAL)!==null)throw Error(gmPreviewText("Dokončete obnovu uložené zakázky opětovným otevřením GeoMATu."));
+ const changed=state.filter(([key,value])=>localStorage.getItem(key)!==value);
+ const previous=changed.map(([key])=>[key,localStorage.getItem(key)]);
+ const token=globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+ const raw=JSON.stringify({module,token,previous});
+ localStorage.setItem(GM_JOB_JOURNAL,raw);
+ return {raw,previous,token,changed};
+}
+function gmJobReadCommit(module){
+ const [database,store]=GM_JOB_DATABASES[module];
+ return new Promise((resolve,reject)=>{
+  let db,request,tx,done=false,absent=false,value;
+  const finish=(error)=>{
+   if(done)return;done=true;clearTimeout(timer);db?.close();
+   if(error)reject(error);else resolve(value);
+  };
+  const failure=()=>Error(gmPreviewText("Obnovu zakázky se nepodařilo dokončit. Otevřete GeoMAT znovu."));
+  const timer=setTimeout(()=>{try{tx?.abort();}catch(e){}finish(failure());},10000);
+  try{
+   request=indexedDB.open(database);
+   request.onupgradeneeded=()=>{absent=true;request.transaction.abort();};
+   request.onerror=()=>{if(absent)finish();else finish(request.error||failure());};
+   request.onblocked=()=>finish(failure());
+   request.onsuccess=()=>{
+    db=request.result;if(done){db.close();return;}
+    try{
+     tx=db.transaction([store],'readonly');
+     const get=tx.objectStore(store).get(GM_JOB_COMMIT);
+     get.onsuccess=()=>{value=get.result?.token;};
+     tx.oncomplete=()=>finish();
+     tx.onabort=()=>finish(tx.error||failure());
+    }catch(e){finish(e);}
+   };
+  }catch(e){finish(e);}
+ });
+}
+async function gmJobRecoverPending(){
+ const raw=gmJobPending();if(raw===null)return;
+ const {module,token,previous}=JSON.parse(raw);
+ if((module!=='home'&&!Object.hasOwn(GM_JOB_DATABASES,module))||typeof token!=='string'||!Array.isArray(previous)||
+    !previous.every(e=>Array.isArray(e)&&e.length===2&&typeof e[0]==='string'&&(e[1]===null||typeof e[1]==='string')))
+  throw Error(gmPreviewText("Obnovu zakázky se nepodařilo dokončit. Otevřete GeoMAT znovu."));
+ const committed=module!=='home'&&await gmJobReadCommit(module)===token;
+ if(gmJobPending()!==raw)return;
+ if(committed)localStorage.removeItem(GM_JOB_JOURNAL);
+ else gmJobRollback({raw,previous});
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E">
 <style>
 /* 1.367: zaoblení A2 – modální okna beze změny (pevné hodnoty), hlavní obdélníky sekcí na půl cesty mezi původním stavem a A1, ostatní prvky A1 */
@@ -635,6 +706,8 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-sec>h3 .zprt-rq{text-transform:none;letter-spacing:0;font-weight:400}
 #zprt .zprt-sec>.zprt-grid{margin:0}
 #zprt .zprt-sec-ta .zprt-f>span:not(.zprt-in){position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}   /* popisek nahrazuje nadpis sekce, zůstává pro čtečky */
+#zprt .zprt-attachments textarea{min-height:58px}
+@media (max-width:1000px){#zprt .zprt-attachments{order:1}}
 #zprt .zprt-sec-note{margin:6px 0 0;font-size:12px;color:var(--mut)}
 /* 1.433: široké okno se sekcemi ve dvou sloupcích (vlevo Zakázka, Identifikace, Popis; vpravo Měřické údaje, Podpisy) a hustší řádky – vejde se na výšku bez posouvání; pod 1000 px jeden sloupec */
 #zprt .card{max-width:1180px}
@@ -669,8 +742,8 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-job-line{--job-height:27px;display:flex;align-items:stretch;gap:6px}
 #zprt .zprt-job-line>.zprt-in{flex:1;min-width:0}
 #zprt .zprt-job-line input{display:block;height:var(--job-height)}
-#zprt #zprtTaskRow[hidden]{display:none}
 #zprt #zprtTaskKind{width:100%;min-width:0;height:27px;padding:3px 8px;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:3px;font:inherit;font-size:13.5px}
+#zprt #zprtTaskKind:disabled{appearance:none;background:var(--bg);color:var(--fg);-webkit-text-fill-color:var(--fg);opacity:1}
 #zprt #zprtTaskKind:focus-visible{outline:2px solid var(--ac);outline-offset:0}
 /* 1.459: tlačítko Protokol (úvodní stránka i moduly) má obrys v barvě modulu jako dřív Protokol PDF. 1.457: Geodetický protokol na úvodní stránce má vzhled exportní lišty (.xzone.zexp): záhlaví s ikonou ve čtverci a tlačítko s obrysem jako Protokol PDF */
 #gmHomeProtocol.xzone.zexp{margin:0 0 10px}
@@ -1151,9 +1224,11 @@ summary .gm-info[hidden]{display:none}
 #zsssprt,#rvprt,#trxprt,#gmHomeProtocolOpen{border-width:1.5px}   /* Protokol: obrys 1,5 px jako ohraničení karet */
 #zsssprt:hover:not(:disabled),#rvprt:hover:not(:disabled),#trxprt:hover:not(:disabled),#gmHomeProtocolOpen:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--ac)}   /* Protokol při najetí myší: obrys 2 px (okraj + vnitřní stín), tlačítko neposkočí; na displeji 1× se okraj 1,5 px vykreslí jako 1 px */
 @media (min-resolution:1.5dppx){#zsssprt:hover:not(:disabled),#rvprt:hover:not(:disabled),#trxprt:hover:not(:disabled),#gmHomeProtocolOpen:hover:not(:disabled){box-shadow:inset 0 0 0 .5px var(--ac)}}
-/* 1.453: Uložit protokol PDF bez výplně – obrys 1,5 px a stín při najetí jako tlačítko Protokol, které okno otevírá */
+/* Úplný protokol zvýrazní obě tlačítka uložení barvou modulu. */
 #zprt #zprtGo{background:var(--card);color:var(--ac);border:1.5px solid var(--ac);filter:none}
 #zprt #zprtGo:hover:not(:disabled){background:var(--card);filter:none;box-shadow:inset 0 0 0 1px var(--ac)}
+#zprt #zprtForm.zprt-ready :is(#zprtGo,#zprtWord){background:var(--ac);color:var(--acfg)}
+#zprt #zprtForm.zprt-ready :is(#zprtGo,#zprtWord):hover:not(:disabled){filter:brightness(1.1)}
 @media (min-resolution:1.5dppx){#zprt #zprtGo:hover:not(:disabled){box-shadow:inset 0 0 0 .5px var(--ac)}}
 .zcard>.zh,.xzone.zset>.zh,.zsplit>.zcol>.zh{box-sizing:border-box;margin:calc(-1*var(--zpt) - 1px) calc(-1*var(--zhp) - 1px) 12px;padding:calc(var(--zpt) + 1px - var(--zhl)) calc(var(--zhp) + 1px - var(--zhl)) 10px;min-height:calc(var(--zpt) + 1px + 30px + 10px + var(--zhl));border:var(--zhl) solid var(--zhc);border-radius:10px 10px 0 0}
 .xzone.zset>.zh{padding-right:calc(var(--zhp) + 72px)}
@@ -1964,7 +2039,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <p class="zprt-leg" aria-hidden="true"><span><i class="st-fill"></i>vyplněno</span><span><i class="st-opt"></i>nevyplněno (nepovinné)</span><span><i class="st-req"></i>nevyplněno (povinné)</span></p>
 <div class="zprt-cols"><!-- 1.433: dva sloupce sekcí, okno se vejde na výšku monitoru bez posouvání -->
 <div class="zprt-col">
-<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_zakazka">Číslo zakázky<i class="zprt-rq">(nepovinné)</i></label><div class="zprt-job-line"><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" spellcheck="false" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><button type="button" id="zprtJobIS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9"/></svg><span>IS</span></button></div></div><label id="zprtTaskRow" class="zprt-f" hidden for="zprtTaskKind"><span id="zprtTaskLabel">Typ úlohy</span><select id="zprtTaskKind"><option value="custom">Vlastní úloha</option><option value="gdsps">G-DSPS</option><option value="topo">Polohopis a výškopis</option><option value="zss">ZSS pilot</option><option value="flatness">Rovinnost</option></select></label></div><div id="zprtJobISNote" role="status"></div></section>
+<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_zakazka">Číslo zakázky<i class="zprt-rq">(nepovinné)</i></label><div class="zprt-job-line"><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" spellcheck="false" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><button type="button" id="zprtJobIS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9"/></svg><span>IS</span></button></div></div><label id="zprtTaskRow" class="zprt-f" for="zprtTaskKind"><span id="zprtTaskLabel">Typ úlohy</span><select id="zprtTaskKind"><option value="custom">Vlastní úloha</option><option value="gdsps">G-DSPS</option><option value="topo">Polohopis a výškopis</option><option value="zss">ZSS pilot</option><option value="flatness">Rovinnost</option><option value="terrain" hidden disabled>DMT</option></select></label></div><div id="zprtJobISNote" role="status"></div></section>
 <section class="zprt-sec"><h3>Identifikace</h3><div class="zprt-grid"><label class="zprt-f"><span>Číslo protokolu<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_cislo" required autocomplete="off" maxlength="160" placeholder="např. 27/2026"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavba<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_akce" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavební objekt<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_usek" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Předmět<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_nazev" required autocomplete="off" maxlength="160" title="Předmět na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název."><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Investor<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_inv" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Objednatel<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_obj" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Zhotovitel měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zhot" required list="zp_zhot_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 </label><label class="zprt-f"><span>Katastrální území<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_ku" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Datum měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zamereno" required list="zp_zamereno_options" autocomplete="off" title="Nabídka vychází z data poslední změny naposledy načteného souboru měření." maxlength="160" placeholder="datum měření"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_zamereno_options">
@@ -1974,6 +2049,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 </datalist>
 </label></div></section>
 <section class="zprt-sec zprt-sec-ta"><h3>Popis a vyhodnocení<i class="zprt-rq">(nepovinné)</i></h3><div class="zprt-grid"><label class="zprt-f zprt-w"><span>Popis a vyhodnocení<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in zprt-in-ta"><textarea id="zp_pozn" rows="4" maxlength="1200"></textarea><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
+<section class="zprt-sec zprt-attachments"><h3>Přílohy<i class="zprt-rq">(nepovinné)</i></h3>
+<div class="zprt-grid"><label class="zprt-f zprt-w"><span>Jedna příloha na řádek</span><span class="zprt-in zprt-in-ta"><textarea id="zp_prilohy" rows="3" maxlength="1200"></textarea><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
 </div><div class="zprt-col">
 <section class="zprt-sec"><h3>Měřické údaje</h3><div class="zprt-grid"><label class="zprt-f"><span>Bodové pole<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_bpole" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Souřadnicový systém<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_sys" required list="zp_sys_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_sys_options">
@@ -2390,7 +2467,7 @@ function gmCameraFit(points,rotate,plot,minSpan,margin,depthMargin){
   depth:Math.max(1,depth*depthMargin)};
 }
 
-const GM_STABLE_MESSAGES={"report.task.zss.label":{"cs":"ZSS pilot","en":"ABS piles"},"report.task.flatness.label":{"cs":"Rovinnost","en":"Flatness"},"report.general.title":{"cs":"Geodetický protokol","en":"Survey report"},"report.general.open":{"cs":"Protokol","en":"Report"},"report.general.note":{"cs":"Úvodní stranu můžete uložit jako PDF nebo jako editovatelný DOCX.","en":"Save the cover sheet as a PDF or an editable DOCX."},"report.task.label":{"cs":"Typ úlohy","en":"Survey task"},"report.task.replace":{"cs":"Použít novou šablonu a nahradit ručně upravený předmět, metodu nebo popis?","en":"Apply the new template and replace edited subject, method or description fields?"},"report.task.custom.label":{"cs":"Vlastní úloha","en":"Custom task"},"report.task.gdsps.label":{"cs":"G-DSPS","en":"G-DSPS"},"report.task.gdsps.nazev":{"cs":"Geodetická dokumentace skutečného provedení stavby","en":"As-built survey documentation"},"report.task.gdsps.metoda":{"cs":"Zaměření skutečného provedení stavby","en":"As-built survey"},"report.task.gdsps.pozn":{"cs":"Bylo provedeno geodetické zaměření skutečného provedení stavby v rozsahu [doplňte rozsah].\n\nPorovnání s projektovou dokumentací\n[Doplňte podklady, zjištěné odchylky a závěr vyhodnocení.]","en":"An as-built survey was carried out for [specify the scope].\n\nComparison with the design documentation\n[Specify the reference documents, measured deviations and assessment conclusion.]"},"report.task.topo.label":{"cs":"Polohopis a výškopis","en":"Topographic survey"},"report.task.topo.nazev":{"cs":"Polohopisné a výškopisné zaměření","en":"Horizontal and vertical topographic survey"},"report.task.topo.metoda":{"cs":"Polohopisné a výškopisné zaměření zájmového území","en":"Horizontal and vertical survey of the area of interest"},"report.task.topo.pozn":{"cs":"Bylo provedeno polohopisné a výškopisné zaměření území [doplňte rozsah].\n\nRozsah a výstupy\n[Doplňte zaměřené prvky, způsob zpracování, výstupy a případná omezení.]","en":"A topographic survey was carried out for [specify the area].\n\nScope and deliverables\n[Describe the surveyed features, processing, deliverables and any limitations.]"},"report.is.label":{"cs":"Načíst údaje z firemního IS","en":"Load details from the company system"},"report.is.pending":{"cs":"Napojení na firemní IS je v přípravě. Načtení údajů zatím není dostupné.","en":"The company system integration is in development. Loading details is not available yet."},"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"report.flatness.title":{"cs":"Zaměření rovinnosti","en":"Flatness survey"},"report.terrain.title":{"cs":"Výpočet kubatur","en":"Volume calculation"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 20 souborů v jedné sekci.","en":"Each section accepts up to 20 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vložte do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vložte do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
+const GM_STABLE_MESSAGES={"report.task.terrain.label":{"cs":"DMT","en":"DTM"},"report.task.zss.label":{"cs":"ZSS pilot","en":"ABS piles"},"report.task.flatness.label":{"cs":"Rovinnost","en":"Flatness"},"report.general.title":{"cs":"Geodetický protokol","en":"Survey report"},"report.general.open":{"cs":"Protokol","en":"Report"},"report.general.note":{"cs":"Úvodní stranu můžete uložit jako PDF nebo jako editovatelný DOCX.","en":"Save the cover sheet as a PDF or an editable DOCX."},"report.task.label":{"cs":"Typ úlohy","en":"Survey task"},"report.task.replace":{"cs":"Použít novou šablonu a nahradit ručně upravený předmět, metodu nebo popis?","en":"Apply the new template and replace edited subject, method or description fields?"},"report.task.custom.label":{"cs":"Vlastní úloha","en":"Custom task"},"report.task.gdsps.label":{"cs":"G-DSPS","en":"G-DSPS"},"report.task.gdsps.nazev":{"cs":"Geodetická dokumentace skutečného provedení stavby","en":"As-built survey documentation"},"report.task.gdsps.metoda":{"cs":"Zaměření skutečného provedení stavby","en":"As-built survey"},"report.task.gdsps.pozn":{"cs":"Bylo provedeno geodetické zaměření skutečného provedení stavby v rozsahu [doplňte rozsah].\n\nPorovnání s projektovou dokumentací\n[Doplňte podklady, zjištěné odchylky a závěr vyhodnocení.]","en":"An as-built survey was carried out for [specify the scope].\n\nComparison with the design documentation\n[Specify the reference documents, measured deviations and assessment conclusion.]"},"report.task.topo.label":{"cs":"Polohopis a výškopis","en":"Topographic survey"},"report.task.topo.nazev":{"cs":"Polohopisné a výškopisné zaměření","en":"Horizontal and vertical topographic survey"},"report.task.topo.metoda":{"cs":"Polohopisné a výškopisné zaměření zájmového území","en":"Horizontal and vertical survey of the area of interest"},"report.task.topo.pozn":{"cs":"Bylo provedeno polohopisné a výškopisné zaměření území [doplňte rozsah].\n\nRozsah a výstupy\n[Doplňte zaměřené prvky, způsob zpracování, výstupy a případná omezení.]","en":"A topographic survey was carried out for [specify the area].\n\nScope and deliverables\n[Describe the surveyed features, processing, deliverables and any limitations.]"},"report.is.label":{"cs":"Načíst údaje z firemního IS","en":"Load details from the company system"},"report.is.pending":{"cs":"Napojení na firemní IS je v přípravě. Načtení údajů zatím není dostupné.","en":"The company system integration is in development. Loading details is not available yet."},"report.piles.title":{"cs":"Zaměření skutečného stavu (ZSS) pilot","en":"As-built survey (ABS) of pile locations"},"report.flatness.title":{"cs":"Zaměření rovinnosti","en":"Flatness survey"},"report.terrain.title":{"cs":"Výpočet kubatur","en":"Volume calculation"},"camera.view.top":{"cs":"Půdorys","en":"Top view"},"camera.view.front":{"cs":"Čelní pohled","en":"Front view"},"camera.view.plane":{"cs":"Pohled na rovinu","en":"Plane view"},"camera.return.top":{"cs":"Vrátí původní 2D půdorys včetně přiblížení a posunu.","en":"Restore the original 2D top view with its zoom and pan."},"camera.return.flatness.top":{"cs":"Vrátí původní 2D půdorys i jeho poslední přiblížení a posun.","en":"Restore the original 2D plan with its last zoom and pan."},"camera.return.front":{"cs":"Vrátí Líc: čelní 2D pohled z kladné strany odchylek, včetně posledního přiblížení a posunu.","en":"Restore the 2D front view from the positive side, with its last zoom and pan."},"camera.return.plane":{"cs":"Vrátí původní místní 2D pohled z +d i poslední přiblížení a posun (x′ dolů, y′ doleva).","en":"Restore the local 2D view from +d with its last zoom and pan (x′ down, y′ left)."},"camera.face.front.return":{"cs":"Líc – návrat do 2D","en":"Front face – return to 2D"},"camera.face.top.return":{"cs":"Půdorys – návrat do 2D","en":"Plan view – return to 2D"},"camera.error.webgl":{"cs":"Prohlížeč neposkytuje WebGL. 2D půdorys zůstává dostupný.","en":"The browser does not provide WebGL. The 2D top view is still available."},"camera.error.context":{"cs":"Ztracený grafický kontext.","en":"Graphics context lost."},"camera.error.context.reopen":{"cs":"Prostorový pohled ztratil grafický kontext. Otevřete jej znovu.","en":"The 3D view lost its graphics context. Open it again."},"camera.error.unavailable":{"cs":"3D není dostupné. Zůstává původní 2D půdorys.","en":"3D is unavailable. The original 2D top view is still available."},"camera.error.history":{"cs":"3D není dostupné; historie pohledů zůstává zachována.","en":"3D is unavailable. View history was retained."},"camera.error.pending":{"cs":"3D pohled není připravený.","en":"The 3D view is not ready."},"camera.help.piles":{"cs":"Tažení / Shift + tažení: natočení. Stěny, hrany a rohy: přesné pohledy. Šipky: 90°. Home / dvojklik: půdorys.","en":"Drag or Shift + drag to rotate. Select a face, edge or corner for a fixed view. Arrow buttons rotate 90°. Home or double-click returns to plan view."},"camera.help.plane":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky: 90°. Stěny: ±x′, ±y′, ±d. Dvojklik / Home: Pohled na rovinu (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Faces: ±x′, ±y′, ±d. Double-click or Home returns to the 2D plane view."},"camera.help.flatness":{"cs":"Tažení kostky / Shift + tažení: natočení. Šipky kolem kostky: 90°. Kliknutí na stěnu: standardní pohled. Dvojklik / Home: ⟦0⟧ (2D).","en":"Drag the cube or Shift-drag to rotate. Arrows turn by 90°. Click a face for a standard view. Double-click or Home: ⟦0⟧ (2D)."},"camera.error.webgl.view":{"cs":"Prohlížeč neposkytuje WebGL pro prostorový pohled. Původní 2D pohled zůstává dostupný.","en":"This browser does not provide WebGL for the 3D view. The original 2D view is available."},"import.points.extension":{"cs":"Soubor „⟦0⟧“ nelze načíst.\nPovolené přípony: STX, TXT, CSV (textový soubor se sloupci název bodu, Y, X, Z).","en":"Cannot load “⟦0⟧”.\nSupported extensions: STX, TXT, CSV (text files with point name, Y, X and Z columns)."},"import.points.extensions":{"cs":"Tyto soubory nelze načíst (povolené přípony: STX, TXT, CSV): ⟦0⟧.","en":"Unsupported files (allowed extensions STX, TXT and CSV): ⟦0⟧."},"import.points.limit":{"cs":"Najednou lze načíst nejvýš ⟦0⟧ souborů. Načte se prvních ⟦1⟧, nenačtené: ⟦2⟧.","en":"Load at most ⟦0⟧ files in one batch. Loading the first ⟦1⟧ and skipping: ⟦2⟧."},"import.read.failed":{"cs":"Soubor se nepodařilo přečíst","en":"Could not read the file"},"import.read.cancelled":{"cs":"Čtení souboru bylo přerušeno.","en":"File reading was interrupted."},"import.read.unavailable":{"cs":"Čtení souboru nelze zahájit","en":"Could not start reading the file"},"import.read.reason":{"cs":"chyba čtení","en":"read error"},"import.points.rejected":{"cs":"Tyto soubory měření nebyly načteny:\n","en":"These survey files were not loaded:\n"},"import.dxf.invalid":{"cs":"Neplatný obsah DXF.","en":"Invalid DXF contents."},"import.dxf.failed":{"cs":"DXF se nepodařilo zpracovat.","en":"Could not process the DXF file."},"import.dxf.loading":{"cs":"Zpracovávám DXF: ","en":"Processing DXF: "},"import.dxf.limit":{"cs":"DXF překračuje limit 64 MiB.","en":"The DXF exceeds the 64 MiB limit."},"import.project.extensions":{"cs":"Tyto soubory projektu nelze načíst (povolené přípony: STX, TXT, CSV, DXF): ","en":"Cannot load these design files (allowed: STX, TXT, CSV, DXF): "},"import.project.empty":{"cs":"Tyto soubory projektu jsou prázdné nebo neobsahují použitelné body a nebyly přidány: ","en":"These project files were skipped because they are empty or contain no usable points: "},"import.project.rejected":{"cs":"Tyto soubory projektu nebyly načteny: ","en":"These design files were not loaded: "},"import.terrain.settings":{"cs":"Informace a nastavení souboru","en":"File information and settings"},"import.terrain.title":{"cs":"Import dat terénu","en":"Import terrain data"},"import.terrain.breaklines":{"cs":"Import povinných hran z DXF","en":"Import DXF breaklines"},"import.terrain.apply":{"cs":"Použít změny","en":"Apply changes"},"import.terrain.accept.breaklines":{"cs":"Převzít hrany a výšky DXF","en":"Use DXF lines and elevations"},"import.terrain.confirm":{"cs":"Potvrdit načtení","en":"Confirm import"},"import.terrain.settings.failed":{"cs":"Nastavení souboru se nepodařilo otevřít. ","en":"Could not open file settings. "},"import.terrain.busy":{"cs":"Nejprve dokončete otevřený import terénu.","en":"Finish the open terrain import first."},"import.terrain.restoring":{"cs":"Obnovuji uložená data a načítám soubory…","en":"Restoring saved data and loading files…"},"import.terrain.filename.size":{"cs":"Neplatný název nebo velikost nad 64 MiB.","en":"Invalid file name or larger than 64 MiB."},"import.terrain.dwg":{"cs":"DWG zatím není podporované; použijte LandXML nebo DXF 3DFACE.","en":"DWG is unsupported. Use LandXML or DXF 3DFACE."},"import.terrain.unsupported":{"cs":"Nepodporovaný typ souboru.","en":"Unsupported file type."},"import.terrain.file.count":{"cs":"Nejvýše 20 souborů v jedné sekci.","en":"Each section accepts up to 20 files."},"import.terrain.group.size":{"cs":"Sekce překračuje 128 MiB vstupních souborů.","en":"The section exceeds 128 MiB of input files."},"import.terrain.loading":{"cs":"Načítám ","en":"Loading "},"export.failed":{"cs":"Export ⟦0⟧ se nepodařilo vytvořit.","en":"Could not create the ⟦0⟧ export."},"export.pdf.failed":{"cs":"PDF se nepodařilo vytvořit. ","en":"Could not create the PDF. "},"export.pdf.three.failed":{"cs":"PDF 3D se nepodařilo uložit. ","en":"Could not save the 3D PDF. "},"export.busy":{"cs":"Export právě probíhá.","en":"An export is already in progress."},"export.reference.shift.failed":{"cs":"Export posunuté Reference se nezdařil: ","en":"Could not export shifted reference: "},"export.reference.overlap.pending":{"cs":"Připravuji průnik Reference s měřením…","en":"Preparing the overlap between reference and survey…"},"export.delta.pending":{"cs":"Připravuji rozdílový model ΔZ…","en":"Preparing the ΔZ difference model…"},"export.clipboard.piles":{"cs":"Zkopírováno do schránky (vložte do Excelu).","en":"Copied to the clipboard for pasting into Excel."},"export.clipboard.flatness":{"cs":"Zkopírováno do schránky: ⟦0⟧ ⟦1⟧ (vložte do Excelu).","en":"Copied ⟦0⟧ ⟦1⟧ to the clipboard for pasting into Excel."},"storage.read.pending":{"cs":"Obnovuji uložené soubory…","en":"Restoring saved files…"},"storage.write.pending":{"cs":"Ukládám soubory…","en":"Saving files…"},"storage.write.warning":{"cs":"Aktuální data nebo nastavení se nepodařilo uložit či obnovit v prohlížeči. Ponechte stránku otevřenou a uschovejte zdrojové soubory. ","en":"Current data or settings could not be saved or restored in this browser. Keep the page open and retain the source files. "},"storage.reset.warning":{"cs":"Data byla odebrána z této stránky, ale reset se nepodařilo zcela uložit. Zkontrolujte upozornění úložiště.","en":"Data was removed from this page, but the reset could not be fully saved. Check the storage warning."},"terrain.tin.pending":{"cs":"Probíhá tvorba TIN na pozadí…","en":"Building the TIN in the background…"},"terrain.volume.pending":{"cs":"Probíhá výpočet kubatur…","en":"Calculating volumes…"},"terrain.volume.failed":{"cs":"Kubatury se nepodařilo spočítat: ","en":"Could not calculate volumes: "},"terrain.volume.not.ready":{"cs":"Kubatury nejsou dostupné: ","en":"Volumes unavailable: "},"terrain.compare.pending":{"cs":"Počítám průniky měření a Reference…","en":"Calculating intersections of survey and reference…"},"terrain.table.visibility.failed":{"cs":"Viditelnost zdrojů v tabulce se nepodařilo aktualizovat.","en":"Could not update source visibility in the table."},"flatness.plan.failed":{"cs":"Plán rovinnosti se nepodařilo aktualizovat.","en":"Could not update the flatness plan."}};
 function gmT(id,params=[]){
     const entry=GM_STABLE_MESSAGES[id];
     if(!entry||!Object.hasOwn(GM_STABLE_MESSAGES,id))throw Error('Unknown translation ID: '+id);
@@ -2498,7 +2575,6 @@ function PoseSelect(faces,animate=true){
 }
 
 var PLAN_MEASURE=null;
-const APP_VERSION="1.465", APP_DATE="24. 11. 2026";   // jediné místo s číslem verze, ostatní texty se doplní skriptem
 // Bounded argument count even for very large point lists; preserve Math extrema semantics.
 function gmMin(values,value=v=>v){let result=Infinity,i=0;for(const v of values)result=Math.min(result,value(v,i++));return result;}
 function gmMax(values,value=v=>v){let result=-Infinity,i=0;for(const v of values)result=Math.max(result,value(v,i++));return result;}
@@ -2645,11 +2721,12 @@ const GM_KEY=(()=>{ const use=new Map(); let ls=null; try{ ls=localStorage; }cat
  return k=>use.get(k)||k; })();
 const TP_PREFS_K=GM_KEY('geomat.tr.plan.v1');
 function writeStorage(k,value){
-  if(globalThis.GM_FULL_RESET) return false;   // 1.381: během generálního resetu nic neukládat
+  if(globalThis.GM_FULL_RESET||gmJobPending()!==null) return false;   // 1.381: během generálního resetu nic neukládat
   try{ localStorage.setItem(k,value); storageErrors.delete(k); storageNotice(); return true; }
   catch(e){ gmDiagnostic('settings.write',e); storageErrors.add(k); storageNotice(); return false; }
 }
 function removeStorage(k){
+  if(gmJobPending()!==null)return false;
   try{ localStorage.removeItem(k); storageErrors.delete(k); storageNotice(); return true; }
   catch(e){ gmDiagnostic('settings.remove',e); storageErrors.add(k); storageNotice(); return false; }
 }
@@ -3394,7 +3471,7 @@ function refCells(p,lim,showZ=hasRefHeights()){
     `<td class="n">${mmv(p.dy)}</td><td class="n">${mmv(p.dx)}</td>`+
     (showZ?zCell(p):"");
 }
-let allRows=[], lastExtra="", lastWarn="", lastInfo="";
+let allRows=[], measSkippedRows=0, lastWarn="", lastInfo="";
 // řazení tabulky: sortCol = index sloupce (0 = původní pořadí), sortDir 1 vzestupně / -1 sestupně; prázdné hodnoty jdou vždy na konec
 let sortCol=null, sortDir=1;
 let GSEL=null;   // pilota označená v tabulce / plánu (jen když je plán otevřený)
@@ -3487,7 +3564,7 @@ const fltPass=(p,fv,lim,rlim)=>{   // filtr pilot (tabulka, plán i exporty)
   const ov=lim>0&&!p.invalid&&!!p.ref&&pdOver(p.rd*1000,lim), inn=lim>0&&!p.invalid&&!!p.ref&&!pdOver(p.rd*1000,lim), sus=!p.invalid&&rlim>0&&p.n>3&&mmv(p.dev)>rlim;
   return fv==="in"?inn:fv==="over"?ov:fv==="sus"?sus:fv==="inv"?!!p.invalid:fv==="prob"?(!!p.invalid||ov||sus):true; };
 let fltRefs=new Set();   // body PD pilot, které filtr skryl (nekreslí se jako „PD bez piloty“)
-function recalc(extra=""){
+function recalc(){
   gmNameRangeRender('zss');
   clearTimeout(rcTimer);const centresOnly=$("zssMeasureMode").value==="centres";syncMeasureMode();
   if(!gmNumericReady(GM_ZSS_NUM.filter(id=>!centresOnly||['zssrdist','zsslim','zsscsig'].includes(id)))) return;
@@ -3502,7 +3579,6 @@ function recalc(extra=""){
     const f3=v=>gmDec(v);
     diaNote=gmPreviewText("průměr upraven na Min ⟦0⟧ m, Max ⟦1⟧ m (Min musí být menší než Max)", [f3(dmin), f3(dmax)]);
   }
-  if(diaNote) extra=(extra?extra+" · ":"")+diaNote;
   const isAuto=id=>$(id).value.trim()==="";           // prázdné pole = automatický výpočet
   const rdist=isAuto("zssrdist")?null:cl(num("zssrdist"),RD_MIN,RD_MAX);          // „do vzdálenosti“: auto, nebo 0,01–1 m
   const ddist=isAuto("zssddist")?null:cl(num("zssddist"),0,rdist??RD_MAX);       // „Přímý střed do“: auto, nebo 0 (vypnuto) až „do vzdálenosti“
@@ -3530,7 +3606,7 @@ function recalc(extra=""){
   const fv=filter.value; fltRefs=new Set();
   piles=r.out.filter(p=>{ if(skip.has(p.first)) return false; if(fltPass(p,fv,limv,rlimv)) return true; if(p.ref) fltRefs.add(p.ref); return false; }); allRows=r.all;   // filtr pilot platí i pro plán a exporty
   // do „všech měřených bodů“ patří i body odškrtnutých pilot
-  unusedPts=(r.unusedPts||[]).concat(r.out.filter(p=>skip.has(p.first)).flatMap(p=>(p.pts||[]).concat(p.offPts||[],p.ctrPts||[]))).concat(r.out.flatMap(p=>skip.has(p.first)?[]:(p.oldPts||[]))); lastExtra=extra; lastWarn=r.warn||"";
+  unusedPts=(r.unusedPts||[]).concat(r.out.filter(p=>skip.has(p.first)).flatMap(p=>(p.pts||[]).concat(p.offPts||[],p.ctrPts||[]))).concat(r.out.flatMap(p=>skip.has(p.first)?[]:(p.oldPts||[]))); lastWarn=r.warn||"";
   {  // odškrtnuté piloty a ručně vypnuté body jsou vázané na body měření; po změně parametrů se piloty mohou přeskupit
     const byFirst=new Map(allRows.map(p=>[p.first,p])), memKeys=new Set(allRows.flatMap(p=>p.mem.map(m=>m.key)));
     let gone=0, moved=0, offGone=0;
@@ -3645,7 +3721,8 @@ function renderTable(){
   const refd=piles.filter(p=>!p.invalid&&p.ref).length, overPD=piles.filter(isOver).length;
   const logN=$("zsslog").textContent?$("zsslog").textContent.split("\n").length:0;
   const seg=[`${esc(fname)} – pilot: <b>${piles.length}</b>`];
-  if(lastExtra) seg.push(esc(lastExtra));
+  if(measSkippedRows) seg.push(esc(gmPreviewText("(přeskočených řádků: ⟦0⟧, viz log)", [measSkippedRows])));
+  if(diaNote) seg.push(esc(diaNote));
   if(lim>0&&refd) seg.push(overPD?gmPreviewText("<span class=\"stk\" title=\"Piloty s odchylkou od projektu nad nastavenou mezní odchylkou.\">⚠ nad mezní odchylkou od PD: ⟦0⟧</span>", [overPD]):gmPreviewText("vše do mezní odchylky od PD"));
   if(devBad) seg.push(gmPreviewText("<span class=\"stk\" title=\"Piloty, u kterých leží některý bod dál od kružnice, než je nastavená mez (filtr „jen podezřelé“).\">⚠ podezřelých pilot: ⟦0⟧</span>", [devBad]));
   if(skipVis) seg.push(gmPreviewText("nepoužito pilot: ⟦0⟧", [skipVis]));
@@ -3721,9 +3798,9 @@ $("zsstsr").addEventListener("keydown",e=>{
 
 $("zsstb").addEventListener("click",e=>{
   const us=e.target.closest("input[data-use]");
-  if(us){ if(us.checked) skipDel(us.dataset.use); else skipAdd(us.dataset.use); recalc(lastExtra); return; }
+  if(us){ if(us.checked) skipDel(us.dataset.use); else skipAdd(us.dataset.use); recalc(); return; }
   const cb=e.target.closest("input[data-pt]");
-  if(cb){ if(cb.checked) off.delete(cb.dataset.pt); else off.add(cb.dataset.pt); recalc(lastExtra); return; }
+  if(cb){ if(cb.checked) off.delete(cb.dataset.pt); else off.add(cb.dataset.pt); recalc(); return; }
   if(e.target.closest("label.chip")) return;
   const tr0=e.target.closest("tr.pile");
   if(tr0&&!$("gm").hidden&&!e.target.closest("button.chev")&&!String(window.getSelection()).length) selPile(tr0.dataset.k,"table");
@@ -3754,11 +3831,11 @@ $("zsstw").querySelector("thead").addEventListener("click",e=>{
   if(typeof saveSet==="function") saveSet();
   renderTable();
 });
-$("zssflt").addEventListener("change",()=>{ if(points.length) recalc(lastExtra); else renderTable(); });
+$("zssflt").addEventListener("change",()=>{ if(points.length) recalc(); else renderTable(); });
 function clearMeasurement(preserveSaved){planMeasureClear("zss");GSEL=null;if(!RESTORING&&preserveSaved!==true){ FIX.map={};FIX.hist=[];FIX.fut=[];try{ removeStorage(FIX_K); }catch(e){} }if(PG3){pg3Release();if(preserveSaved!==true)PG3.yaw=PG3.pitch=PG3.roll=0;} if(!RESTORING) clearView();   // úplné odebrání měření: data, odškrtnutí, tabulka, log i stavy
   if(preserveSaved!==true)projectSaveText('zss',false,[]);
   zssHistogramClear();
-  points=[]; piles=[]; unusedPts=[]; allRows=[]; lastExtra=""; lastWarn=""; lastInfo=""; parseLog=[];gmZssEvaluation=null;gmZssEvaluationLog=[];gmZssSelectionLog=[]; fname=""; measFiles=[];coordCheckRefresh('zss');
+  points=[]; piles=[]; unusedPts=[]; allRows=[]; measSkippedRows=0; lastWarn=""; lastInfo=""; parseLog=[];gmZssEvaluation=null;gmZssEvaluationLog=[];gmZssSelectionLog=[]; fname=""; measFiles=[];coordCheckRefresh('zss');
   off.clear(); skipClear(); expanded.clear();gmNameRangeRender('zss');
   for(const o of $("zssflt").options) if(o.dataset.l!==undefined) o.textContent=o.dataset.l; $("zsstb").innerHTML=""; $("zsssum").innerHTML=""; $("zssfcnt").textContent=""; $("zsslog").textContent=""; $("zssst").textContent=gmPreviewText("Čekám na soubor."); $("zssst").style.color=""; $("zssstf").textContent="";
   $("zssmst").textContent=""; $("zssmst").style.color="";   // bez měření je záhlaví sekce bez stavu, návod je v přerušovaném poli
@@ -3766,8 +3843,8 @@ function clearMeasurement(preserveSaved){planMeasureClear("zss");GSEL=null;if(!R
   syncBtns(); syncExp(); if(preserveSaved!==true) saveSet();
 }
 $("zssmclr").onclick=clearMeasurement;
-$("zssroff").onclick=()=>{ off.clear(); skipClear(); expanded.clear(); $("zssflt").value="all"; sortCol=null; sortDir=1; $("zsstsr").value=""; $("zsstw").scrollTop=0; $("zsstw").scrollLeft=0; if(typeof saveSet==="function") saveSet(); recalc(lastExtra); };   // výchozí stav sekce 5: ruční výběr, filtr, řazení, hledání, rozbalené řádky
-$("zssusall").addEventListener("change",()=>{ skipClear(); if(!$("zssusall").checked) allRows.forEach(p=>{ if(!p.invalid) skipAdd(p.first); }); recalc(lastExtra); });
+$("zssroff").onclick=()=>{ off.clear(); skipClear(); expanded.clear(); $("zssflt").value="all"; sortCol=null; sortDir=1; $("zsstsr").value=""; $("zsstw").scrollTop=0; $("zsstw").scrollLeft=0; if(typeof saveSet==="function") saveSet(); recalc(); };   // výchozí stav sekce 5: ruční výběr, filtr, řazení, hledání, rozbalené řádky
+$("zssusall").addEventListener("change",()=>{ skipClear(); if(!$("zssusall").checked) allRows.forEach(p=>{ if(!p.invalid) skipAdd(p.first); }); recalc(); });
 const bodu=n=>gmPreviewText(n===1?"bod":n>=2&&n<=4?"body":"bodů");
 const CHECK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
 function setStat(el,t){ el.innerHTML=CHECK+" <span>"+esc(t)+"</span>"; el.style.color="var(--fg)"; }
@@ -4175,18 +4252,18 @@ function projectFileOpen(){
 }
 function projectFileBuffer(value){if(Object.prototype.toString.call(value)==='[object ArrayBuffer]')return value;if(ArrayBuffer.isView(value))return value.buffer.slice(value.byteOffset,value.byteOffset+value.byteLength);return null;}
 function projectFileUid(id){return id+'|'+(globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+(++PROJECT_FILE_SERIAL).toString(36)+'-'+Math.random().toString(36).slice(2));}
-function projectFileSnapshot(id,files){
+function projectFileSnapshot(id,files,identities=PROJECT_FILE_STATE[id].identities){
  const state=PROJECT_FILE_STATE[id],seen=new Set(),descriptors=[],contents=[];
  if(files.length>PROJECT_FILE_SPEC[id].max)throw Error('Překročen počet souborů projektu nebo měření.');
  for(const value of files){const kind=value&&/\.dxf$/i.test(value.n)?'dxf':'text',file=kind==='dxf'?projectCADRecord(value):value;
   if(!file||typeof file.n!=='string'||!file.n||seen.has(file.n)||kind==='text'&&typeof file.t!=='string'||kind==='dxf'&&!PROJECT_FILE_SPEC[id].project)throw Error('Neplatný nebo duplicitní uložený soubor.');seen.add(file.n);
-  const body=kind==='dxf'?file.bytes:file.t,old=state.identities.get(kind+'|'+file.n),sid=old&&old.body===body?old.id:projectFileUid(id);
-  state.identities.set(kind+'|'+file.n,{body,id:sid});
+  const body=kind==='dxf'?file.bytes:file.t,old=identities.get(kind+'|'+file.n),sid=old&&old.body===body?old.id:projectFileUid(id);
+  identities.set(kind+'|'+file.n,{body,id:sid});
   const descriptor={id:sid,n:file.n,kind};if(kind==='dxf'){descriptor.size=file.size;const cfg=projectCADConfig(file.cfg);if(cfg)descriptor.cfg=cfg;}
   if(kind==='text'&&Number.isFinite(file.lastModified))descriptor.lastModified=file.lastModified;
   descriptors.push(descriptor);contents.push(kind==='dxf'?{id:sid,bucket:id,kind,bytes:body}:{id:sid,bucket:id,kind,t:body});
  }
- for(const key of state.identities.keys())if(!seen.has(key.slice(key.indexOf('|')+1)))state.identities.delete(key);
+ for(const key of identities.keys())if(!seen.has(key.slice(key.indexOf('|')+1)))identities.delete(key);
  return {manifest:{id,schema:2,files:descriptors,updated:Date.now(),...(state.resetToken?{resetToken:state.resetToken}:{})},contents};
 }
 async function projectFileRead(id){
@@ -4206,19 +4283,28 @@ async function projectFileRead(id){
   }catch(error){if(error.name==='InvalidStateError')projectFileUnavailable(error,db);finish(false,error);}
  });
 }
+function projectFileQueueWrite(tx,id,snapshot,arm,abort,valid=()=>true){
+ const manifests=tx.objectStore('manifests'),data=tx.objectStore('contents'),get=manifests.get(id);
+ get.onsuccess=()=>{arm();try{
+  if(!valid()){tx.abort();return;}
+  const keep=new Set(snapshot.manifest.files.map(f=>f.id)),old=get.result;
+    if(!snapshot.manifest.files.length&&typeof IDBKeyRange!=='undefined'){const del=data.delete(IDBKeyRange.bound(id+'|',id+'|\uffff'));del.onsuccess=arm;}
+    else if(old&&Array.isArray(old.files))for(const f of old.files)if(typeof f.id==='string'&&f.id.startsWith(id+'|')&&!keep.has(f.id)){const del=data.delete(f.id);del.onsuccess=arm;}
+    for(const record of snapshot.contents){const key=data.getKey(record.id);key.onsuccess=()=>{arm();try{if(key.result===undefined){const put=data.put(record);put.onsuccess=arm;}}catch(error){abort(error);}};}
+    const put=manifests.put(snapshot.manifest);put.onsuccess=arm;
+ }catch(error){abort(error);}};
+}
 async function projectFileWrite(id,snapshot,revision){
  const state=PROJECT_FILE_STATE[id];if(projectFileResetToken(id)!==state.resetToken)throw Error('Data byla resetována v jiné kartě. Obnovte tuto kartu; starý obsah se neuložil.');const db=await projectFileOpen();if(revision!==state.revision)return false;
  return new Promise((resolve,reject)=>{let tx,failed,done=false,timer;
   const finish=(ok,value)=>{if(done)return;done=true;clearTimeout(timer);if(state.transaction===tx)state.transaction=null;ok?resolve(value):reject(value);};
   const arm=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(done)return;const error=Error('Ukládání souborů nepostupuje déle než 10 sekund.');finish(false,error);try{tx?.abort();}catch(e){}projectFileUnavailable(error,db);},PROJECT_FILE_IO_MS);};
   try{tx=db.transaction(['manifests','contents'],'readwrite');state.transaction=tx;arm();
-   const manifests=tx.objectStore('manifests'),data=tx.objectStore('contents'),get=manifests.get(id);
-   get.onsuccess=()=>{if(done)return;arm();try{if(revision!==state.revision){tx.abort();return;}if(projectFileResetToken(id)!==state.resetToken){failed=Error('Data byla resetována v jiné kartě. Starý obsah se neuložil.');tx.abort();return;}const keep=new Set(snapshot.manifest.files.map(f=>f.id)),old=get.result;
-    if(!snapshot.manifest.files.length&&typeof IDBKeyRange!=='undefined'){const del=data.delete(IDBKeyRange.bound(id+'|',id+'|\uffff'));del.onsuccess=()=>{if(!done)arm();};}
-    else if(old&&Array.isArray(old.files))for(const f of old.files)if(typeof f.id==='string'&&f.id.startsWith(id+'|')&&!keep.has(f.id)){const del=data.delete(f.id);del.onsuccess=()=>{if(!done)arm();};}
-    for(const record of snapshot.contents){const key=data.getKey(record.id);key.onsuccess=()=>{if(done)return;arm();try{if(key.result===undefined){const put=data.put(record);put.onsuccess=()=>{if(!done)arm();};}}catch(error){failed=error;tx.abort();}};}
-    const put=manifests.put(snapshot.manifest);put.onsuccess=()=>{if(!done)arm();};
-   }catch(error){failed=error;tx.abort();}};
+   projectFileQueueWrite(tx,id,snapshot,()=>{if(!done)arm();},error=>{failed=error;tx.abort();},()=>{
+    if(done||revision!==state.revision)return false;
+    if(projectFileResetToken(id)!==state.resetToken)throw Error('Data byla resetována v jiné kartě. Starý obsah se neuložil.');
+    return true;
+   });
    tx.oncomplete=()=>{if(done)return;state.persisted=new Set(snapshot.manifest.files.map(f=>f.id));finish(true,true);};
    tx.onabort=()=>{if(revision!==state.revision)finish(true,false);else finish(false,failed||tx.error||Error('Uložení souborů bylo přerušeno.'));};tx.onerror=()=>{};
   }catch(error){try{tx?.abort();}catch(e){}if(error.name==='InvalidStateError')projectFileUnavailable(error,db);finish(false,error);}
@@ -4403,7 +4489,7 @@ function applyMeas(files,restore,keep){
       r.skipped.forEach(t=>sk.push(gmDeferredText(()=>multi?`[${f.n}] ${t}`:t)));
       if(multi) info.push(gmDeferredText(()=>gmPreviewText("Soubor ⟦0⟧/⟦1⟧ „⟦2⟧“: ⟦3⟧ ⟦4⟧", [k+1, files.length, f.n, r.pts.length, bodu(r.pts.length)])+(r.pts.length?"":gmPreviewText(" – nenašel se žádný použitelný řádek"))+(r.bad?gmPreviewText(", přeskočeno řádků: ⟦0⟧", [r.bad]):""))); });
     if(!restore) rangeToast(gmPreviewText("měření"),rng);   // po F5 se toast neopakuje
-    points=pts; measFiles=files; fname=listName(files,70); syncBtns();coordCheckRefresh('zss');
+    points=pts; measFiles=files; measSkippedRows=bad; fname=listName(files,70); syncBtns();coordCheckRefresh('zss');
     parseLog=info.concat(sk.slice(0,30)); if(sk.length>30) parseLog.push(gmDeferredText(()=>gmPreviewText("… a dalších ⟦0⟧ přeskočených řádků", [sk.length-30])));
     if(!points.length){
       const m=gmPreviewText("⟦0⟧ – nenašel se žádný použitelný řádek (očekává se: název bodu, Y, X, Z, [kód])", [fname]);
@@ -4411,7 +4497,7 @@ function applyMeas(files,restore,keep){
     $("zssmclr").hidden=false; gmSetImportStat($("zssmst"),()=>`${points.length} ${bodu(points.length)}`+(multi?` z ${files.length} ${zsouboru(files.length)}`:""));
     projectSaveText('zss',false,files);   // uloží pro obnovení po F5
     if(!refs.length&&!restore) nudge($("zssrefrow"));   // měření načteno, projekt ještě ne: lesk přes blok 2. PROJEKT
-    recalc(bad?gmPreviewText("(přeskočených řádků: ⟦0⟧, viz log)", [bad]):""); }
+    recalc(); }
 function download(name,text,bom,mime){
   const b=new Blob([(bom?"\uFEFF":"")+text],{type:mime||"text/plain;charset=utf-8"});
   downloadBlob(name,b);
@@ -5445,7 +5531,7 @@ function fixUI(msg){
  $('gFixUndo').disabled=!FIX.hist.length; $('gFixRedo').disabled=!FIX.fut.length; $('gFixReset').disabled=!Object.keys(FIX.map).length;
  $('gFixStatus').textContent=(PG3&&pg3Active())?gmPreviewText("Odchylky lze opravovat jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home."):FIX.msg||'';
 }
-function fixApplyNow(msg){ fixSave(); if(points.length)recalc(lastExtra); else renderTable(); fixUI(msg); }
+function fixApplyNow(msg){ fixSave(); if(points.length)recalc(); else renderTable(); fixUI(msg); }
 function fixChange(before,msg){ FIX.hist.push(before); if(FIX.hist.length>200)FIX.hist.shift(); FIX.fut=[]; fixApplyNow(msg); }
 function fixUndo(redo){ const from=redo?FIX.fut:FIX.hist,to=redo?FIX.hist:FIX.fut; if(!from.length)return; to.push(fixCopy()); FIX.map=from.pop(); fixEdClose(); fixApplyNow(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
 function fixOpen(){
@@ -5618,7 +5704,7 @@ $("gdxf").onclick=saveDxf; $("zsssdxf").onclick=saveDxf;
    Každý modul má vlastní režim (ZPRT_MODES): klíč úložiště, výchozí název, popis v okně, zdroj dat a obsah příloh. */
 const ZPRT_GENERAL_K="geomat.general.protocol.v1";
 const ZPRT_K="geomat.zss.protocol.v1", ZPRT_RV_K="geomat.rv.protocol.v1", ZPRT_TR_K="geomat.tr.protocol.v1";
-const ZPRT_F=[["zakazka",""],["cislo",""],["nazev",""],["akce",""],["ku",""],["obj",""],["datum",""],["zamereno",""],["meril",""],["zprac",""],["pristroj",""],["usek","-"],["sys","S-JTSK"],["vys","-"],["sxy",""],["sz",""],["pozn",""],["inv",""],["bpole",""],["podk",""],["metoda",""],["pozad",""],["azi",""],["overc",""],["overd",""],["zhot",""],["sw",""],["prohl",""]];   // 1.428: i dříve pevné údaje úvodní strany (Zhotovitel měření, Použitý software, prohlášení) lze přepsat   // 1.421: další údaje šablony 2027 (nepovinné)
+const ZPRT_F=[["zakazka",""],["cislo",""],["nazev",""],["akce",""],["ku",""],["obj",""],["datum",""],["zamereno",""],["meril",""],["zprac",""],["pristroj",""],["usek","-"],["sys","S-JTSK"],["vys","-"],["sxy",""],["sz",""],["pozn",""],["prilohy",""],["inv",""],["bpole",""],["podk",""],["metoda",""],["pozad",""],["azi",""],["overc",""],["overd",""],["zhot",""],["sw",""],["prohl",""]];   // 1.428: i dříve pevné údaje úvodní strany (Zhotovitel měření, Použitý software, prohlášení) lze přepsat   // 1.421: další údaje šablony 2027 (nepovinné)
 const PDF_WB=[0, 556, 722, 556, 667, 389, 722, 611, 722, 389, 611, 743, 722, 611, 722, 549, 549, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611, 611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556, 500, 389, 280, 389, 584, 350, 556, 350, 278, 556, 500, 1000, 556, 556, 333, 1000, 667, 333, 1000, 350, 611, 350, 350, 278, 278, 500, 500, 350, 556, 1000, 333, 1000, 556, 333, 944, 350, 500, 667, 278, 333, 556, 556, 556, 556, 280, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 611, 556, 278, 333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611, 611, 611, 611, 584, 611, 611, 611, 611, 611, 556, 611, 556];
 function zprtWidth(t,size,bold){ const W=bold?PDF_WB:PDF_W; let w=0; for(const ch of t){ const c=PDF_EXTRA[ch]!==undefined?PDF_EXTRA[ch]:ch.charCodeAt(0); w+=(W[c]||556)/1000; } return w*size; }
 // nabídka směrodatných odchylek [m] podle modulu (nejčastější hodnoty, „-“ = neuvádí se); pole jsou výchozí prázdná, hodnotu volí uživatel
@@ -5679,13 +5765,13 @@ const ZPRT_MODES={
     can:()=>window.GeoMATHasUser?.()===true,files:()=>[],render:()=>{},
     pdf:v=>zprtDoc(v,zprtCover(v,ZPRT_ATTACHMENTS.general),null,ZPRT_MODES.general.doc),
     done:name=>toast(gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]))},
-  zss:{key:ZPRT_K,title:"report.piles.title",kind:"ZSS_pilot",doc:[" – ZSS pilot"," – ABS piles"],
+  zss:{task:"zss",key:ZPRT_K,title:"report.piles.title",kind:"ZSS_pilot",doc:[" – ZSS pilot"," – ABS piles"],
     can:()=>needPiles(),files:()=>measFiles,render:()=>{ if(!$("gm").hidden) gRender(); },
     pdf:v=>zprtPdf(v),done:name=>flash(gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]))},
-  rv:{key:ZPRT_RV_K,title:"report.flatness.title",kind:"rovinnost",doc:[" – rovinnost"," – flatness"],
+  rv:{task:"flatness",key:ZPRT_RV_K,title:"report.flatness.title",kind:"rovinnost",doc:[" – rovinnost"," – flatness"],
     can:()=>rgExportCan(),files:()=>RV.files||[],render:()=>{ if(!$("rgm").hidden) rgRender(); },
     pdf:v=>rvPrtPdf(v),done:name=>{ $("rvstf").textContent=gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]); }},
-  tr:{key:ZPRT_TR_K,title:"report.terrain.title",kind:"kubatury",doc:[" – kubatury"," – volumes"],
+  tr:{task:"terrain",key:ZPRT_TR_K,title:"report.terrain.title",kind:"kubatury",doc:[" – kubatury"," – volumes"],
     can:()=>trPrtCan(),issue:()=>trPrtIssue(),files:()=>TERRAIN.m.files||[],render:()=>{},
     pdf:v=>trPrtPdf(v),done:name=>toast(gmPreviewText("Uloženo: Protokol PDF (⟦0⟧).",[name]))}};
 const zprtM=()=>ZPRT_MODES[zprtMode];
@@ -5698,8 +5784,9 @@ const ZPRT_PROHL=["Náležitostmi a přesností odpovídá právním předpisům
 const ZPRT_COMPANY="Geodetická kancelář Nedoma & Řezník, s.r.o.";
 /* 1.431: Zhotovitel měření má výchozí hodnotu (ZPRT_COMPANY) i v roletové nabídce zp_zhot_options */
 function zprtDef(k){ const en=globalThis.GeoMATLanguage?.get?.()==="en";
-  return k==="nazev"?zprtTitle():k==="zhot"?ZPRT_COMPANY:k==="sw"?"GeoMAT "+APP_VERSION:k==="prohl"?ZPRT_PROHL[en?1:0]:undefined; }
+  return k==="prilohy"?zprtAttachmentText():k==="nazev"?zprtTitle():k==="zhot"?ZPRT_COMPANY:k==="sw"?"GeoMAT "+APP_VERSION:k==="prohl"?ZPRT_PROHL[en?1:0]:undefined; }
 function zprtNorm(k,v){   // uložená hodnota → hodnota pole (výchozí texty sledují jazyk a verzi programu)
+  if(k==="prilohy") return zprtAttachmentText(v);
   if(k==="nazev") return zprtTitle(v);
   if(k==="sw") return typeof v!=="string"||/^GeoMAT \d+\.\d+$/.test(v.trim())?zprtDef(k):v;
   if(k==="prohl") return typeof v!=="string"||ZPRT_PROHL.includes(v.trim())?zprtDef(k):v;
@@ -5826,7 +5913,9 @@ zprtJobField.addEventListener("paste",event=>{
 
 function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().key)||"{}")||{}; }catch(e){ o={}; }
   zprtTask=zprtMode==="general"&&ZPRT_TASKS.includes(o.task)?o.task:"custom";
-  $("zprtTaskKind").value=zprtTask;
+  const taskSelect=$("zprtTaskKind"), fixedTask=zprtM().task;
+  taskSelect.disabled=!!fixedTask;
+  taskSelect.value=fixedTask||zprtTask;
   ZPRT_F.forEach(([k,d])=>{
     const field=$("zp_"+k);
     if(zprtMode==="general"&&ZPRT_TASK_FIELDS.includes(k)){
@@ -5850,7 +5939,7 @@ function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k
 function zprtResetSync(){ gmResetIdle($("zprtReset"),zprtTask==="custom"&&ZPRT_F.every(([k])=>{ const v=zprtFieldValue(k); const dv=zprtDef(k); return dv!==undefined?v===dv:v===""; }),"Všechna pole protokolu už jsou prázdná, není co mazat."); }
 function zprtSave(){ const o=zprtMode==="general"?{task:zprtTask}:{}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k); }); writeStorage(zprtM().key,JSON.stringify(o)); zprtResetSync(); }
 let zprtOpener=null;
-function zprtOpen(mode){ zprtMode=Object.hasOwn(ZPRT_MODES,mode)?mode:"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; $("zprtTaskRow").hidden=zprtMode!=="general"; zprtTaskLocalize(); zprtNoteTx(); zprtLoad(); zprtResetSync(); zprtClrSync(); $("zprt").hidden=false; zprtJobFocus(); }   // 1.430: fokus na první pole (Číslo zakázky)
+function zprtOpen(mode){ zprtMode=Object.hasOwn(ZPRT_MODES,mode)?mode:"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; zprtTaskLocalize(); zprtNoteTx(); zprtLoad(); zprtResetSync(); zprtClrSync(); $("zprt").hidden=false; zprtJobFocus(); }   // 1.430: fokus na první pole (Číslo zakázky)
 function zprtClose(){ $("zprt").hidden=true; if(zprtOpener&&zprtOpener.focus) zprtOpener.focus({preventScroll:true}); }
 /* kreslení: souřadnice y shora (jako ve scénách plánu), převod na PDF uvnitř */
 function zprtCanvas(W,H){
@@ -5970,10 +6059,9 @@ function zprtCoverBlocks(v,att,cell,row){
     pair(21.95,zprtL("Přesnost polohy","Horizontal accuracy"),sd(v.sxy),zprtL("Přesnost výšky","Vertical accuracy"),sd(v.sz)),
     field(zprtL("Požadavky","Requirements"),v.pozad)
   ];
-  const attachments=att.length?[
-    heading(zprtL("PŘÍLOHY","ATTACHMENTS")),
-    ...att.map(([cs,en],i)=>row(21,lab(0,2,"P"+(i+1)),val(2,12,zprtL(cs,en))))
-  ]:[];
+  const attachmentNames=zprtAttachmentText(v.prilohy,att).split(/\r?\n/).map(name=>name.trim()).filter(Boolean);
+  const attachmentHeading=heading(zprtL("PŘÍLOHY","ATTACHMENTS"));
+  const attachments=attachmentNames.map((name,i)=>row(21,lab(0,2,"P"+(i+1)),val(2,12,name)));
   const declaration=val(6,12,v.prohl||"");
   const verification=[
     row(38.25,lab(0,2,zprtL("Měřil","Surveyed by")),val(2,6,v.meril||""),declaration),
@@ -5985,7 +6073,7 @@ function zprtCoverBlocks(v,att,cell,row){
     ].map(([label,value])=>row(38.25,lab(0,2,label),val(2,6,value||"")))
   ];
   const desc=cell(0,12,v.pozn||"",{top:true,ind:false});
-  return {title,details,survey,attachments,verification,desc,heading,val,
+  return {title,details,survey,attachments,attachmentHeading,verification,desc,heading,val,
     descTitle:zprtL("POPIS A VYHODNOCENÍ","DESCRIPTION AND EVALUATION")};
 }
 /* Geodetický protokol GK. Only the description may continue on the next page. */
@@ -5995,6 +6083,13 @@ const ZPRT_ATTACHMENTS={
   rv:[["Seznam odchylek bodů od roviny","List of point deviations from the plane"],["Plán odchylek od roviny","Plane deviation plan"]],
   tr:[["Výpočet kubatur","Volume calculation"],["Plán DMT","DTM plan"]]
 };
+function zprtAttachmentText(value,defaults=ZPRT_ATTACHMENTS[zprtMode]){
+  if(typeof value!=="string")return defaults.map(pair=>zprtL(...pair)).join("\n");
+  return value.split(/\r?\n/).map(name=>{
+    const pair=defaults.find(labels=>labels.includes(name));
+    return pair?zprtL(...pair):name;
+  }).join("\n");
+}
 function zprtCover(v,att=ZPRT_ATTACHMENTS.zss,makePage=zprtCanvas){
   const K=ZPGK.K,BOT=ZPGK.BOT,top=ZPGK.TOP+(3*21.75+8.1)*K,gap=11.1*K,pages=[];
   let cv,y;
@@ -6010,10 +6105,10 @@ function zprtCover(v,att=ZPRT_ATTACHMENTS.zss,makePage=zprtCanvas){
     else y+=before;
   };
   const block=(rows,before=0)=>{keep(height(rows),before);rows.forEach(draw);};
-  const {title,details,survey,attachments,verification,desc,heading,val,descTitle}=zprtCoverBlocks(v,att,cell,row);
+  const {title,details,survey,attachments,attachmentHeading,verification,desc,heading,val,descTitle}=zprtCoverBlocks(v,att,cell,row);
   block([...title,{h:12*K,cells:[]},...details]);
   block(survey,gap);
-  const tail=(attachments.length?gap+height(attachments):0)+12*K+height(verification);
+  const tail=(attachments.length?gap+attachmentHeading.h+height(attachments):0)+12*K+height(verification);
   for(let i=0;i<desc.lines.length;){
     const title=i?zprtL("POPIS A VYHODNOCENÍ (pokračování)","DESCRIPTION AND EVALUATION (continued)"):
       descTitle;
@@ -6031,7 +6126,18 @@ function zprtCover(v,att=ZPRT_ATTACHMENTS.zss,makePage=zprtCanvas){
     i+=count;
     if(i<desc.lines.length)newPage();
   }
-  if(attachments.length)block(attachments,gap);
+  if(attachments.length){
+    if(attachmentHeading.h+height(attachments)<=BOT-top){
+      block([attachmentHeading,...attachments],gap);
+    }else{
+      keep(attachmentHeading.h+attachments[0].h,gap);
+      draw(attachmentHeading);
+      for(const item of attachments){
+        if(y+item.h>BOT+1e-7){newPage();keep(attachmentHeading.h+item.h);draw(attachmentHeading);}
+        draw(item);
+      }
+    }
+  }
   keep(height(verification),12*K);
   cv.gkKeep?.(y,height(verification));
   const stampTop=y+verification[0].h;
@@ -6382,7 +6488,8 @@ const zprtFile=(v,kind,extension="pdf")=>{ const raw=String(v.cislo||"").trim(),
 $("gmHomeProtocolOpen").onclick=()=>zprtOpen("general");
 $("zsssprt").onclick=()=>zprtOpen("zss");
 $("zprtReset").onclick=()=>{
-  zprtTask=$("zprtTaskKind").value="custom";
+  zprtTask="custom";
+  $("zprtTaskKind").value=zprtM().task||zprtTask;
   ZPRT_F.forEach(([key])=>{
     const field=$("zp_"+key);
     field.value=zprtDef(key)??"";
@@ -6400,7 +6507,9 @@ $("zprt").addEventListener("keydown",e=>{
   if(e.key==="Tab"){ const f=[...$("zprt").querySelectorAll("input,textarea,select,button")].filter(x=>!x.disabled&&x.offsetParent!==null); if(!f.length) return;
     const i=f.indexOf(document.activeElement); if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&i===f.length-1){ e.preventDefault(); f[0].focus(); } } });
 function zprtClrSync(){ for(const b of $("zprt").querySelectorAll(".zprt-clr")){ const f=b.parentElement.querySelector("input,textarea"); const value=f?zprtFieldValue(f.id.slice(3)):""; b.hidden=!value;
-    if(f){ const st=value.trim()?"st-fill":f.required?"st-req":"st-opt"; f.classList.remove("st-fill","st-opt","st-req"); f.classList.add(st); } } }   // 1.427: křížek jen u vyplněného pole; 1.430: podbarvení podle stavu (vyplněno / nevyplněno nepovinné / nevyplněno povinné)
+    if(f){ const st=value.trim()?"st-fill":f.required?"st-req":"st-opt"; f.classList.remove("st-fill","st-opt","st-req"); f.classList.add(st); } }
+  $("zprtForm").classList.toggle("zprt-ready",ZPRT_F.every(([key])=>!zprtFieldMissing(key,zprtFieldValue(key).trim())));
+}   // 1.427: křížek jen u vyplněného pole; 1.430: podbarvení podle stavu (vyplněno / nevyplněno nepovinné / nevyplněno povinné)
 $("zprt").addEventListener("click",e=>{ const b=e.target.closest?.(".zprt-clr"); if(!b) return; const f=b.parentElement.querySelector("input,textarea"); if(!f) return;
   f.value="";
   if(f===zprtJobField){zprtJobInit();zprtJobFocus();}
@@ -6415,12 +6524,15 @@ $("zprtForm").addEventListener("input",e=>{
   zprtSave();
   if(e.target.id==="zp_akce") zprtM().render();   // druhý řádek nadpisu plánu se řídí polem Stavba (zp_akce)
 });
+function zprtFieldMissing(key,value){
+  if(key==="zakazka")return zprtJobMasked()&&zprtJobDraft!==ZPRT_JOB_TEMPLATE&&zprtJobDraft.includes(ZPRT_JOB_MARK);
+  return $("zp_"+key).required&&!value;
+}
 function zprtValidate(values){
   let firstMissing=null;
-  const unfinishedJob=zprtJobMasked()&&zprtJobDraft!==ZPRT_JOB_TEMPLATE&&zprtJobDraft.includes(ZPRT_JOB_MARK);
   for(const [key] of ZPRT_F){
     const field=$("zp_"+key);
-    if((key==="zakazka"&&unfinishedJob)||(field.required&&!values[key])){
+    if(zprtFieldMissing(key,values[key])){
       field.setAttribute("aria-invalid","true");
       firstMissing??=field;
     }else field.removeAttribute("aria-invalid");
@@ -6436,7 +6548,7 @@ function zprtValidate(values){
     zprtJobISText();
     zprtTaskLocalize();
     if(!$("zprt").hidden){ zprtNoteTx(); zprtSdOptions(); }
-    ["nazev","prohl"].forEach(k=>{
+    ["nazev","prohl","prilohy"].forEach(k=>{
       if(zprtMode==="general"&&k==="nazev")return;
       const field=$("zp_"+k); field.value=zprtNorm(k,field.value);
     });
@@ -11569,7 +11681,14 @@ function trDiffDXF(d,parts){const a=[],g=(c,v)=>a.push(String(c),String(v)),num=
  if(baOn)for(const [u,v] of parts.flatMap(p=>trBADrape(p.faces.map(f=>f.map(i=>({y:p.verts[i].y,x:p.verts[i].x,z:p.verts[i].d})))))){g(0,'LINE');g(8,'ROZDIL_DZ_PLOCHA_BILANCE');g(10,num(-u.y));g(20,num(-u.x));g(30,num(u.z));g(11,num(-v.y));g(21,num(-v.x));g(31,num(v.z));}
  const H=ext*.018;info.forEach((line,i)=>{g(0,'TEXT');g(8,'ROZDIL_DZ_INFO');g(7,'STANDARD');g(10,num(min[0]));g(20,num(max[1]+H*(1.6*(info.length-i)+.6)));g(30,'0.000000');g(40,num(i?H*.7:H));g(1,dxfAscii(line).slice(0,250));g(50,0);});
  g(0,'ENDSEC');g(0,'EOF');return a.join('\n')+'\n';}
-function trDiffSTX(d,parts){const nm=v=>String(v).trim().replace(/[\s;]+/g,'_'),c=v=>trTinNum(v,3),seen=new Set(),rows=[];parts.forEach((p,k)=>{for(const v of p.pts){let n=nm(v.id);if(seen.has(n)){let s=parts.length>1?n+'_Z'+(k+1):n+'_2',j=2;while(seen.has(s))s=n+'_'+(++j);n=s;}seen.add(n);rows.push([n,c(v.y),c(v.x),trTinNum(v.d,4)].concat(v.code?[nm(v.code)]:[]).join(' '));}});return {n:rows.length,t:rows.join('\r\n')+'\r\n'};}
+function trDiffSTX(d,parts){
+ const fixed=(value,decimals)=>{
+  const n=Number(value);
+  if(!Number.isFinite(n))throw Error(gmPreviewText("Export obsahuje neplatnou souřadnici nebo výšku."));
+  const text=n.toFixed(decimals);
+  return Number(text)===0?(0).toFixed(decimals):text;
+ };
+ const nm=v=>String(v).trim().replace(/[\s;]+/g,'_'),seen=new Set(),rows=[];parts.forEach((p,k)=>{for(const v of p.pts){let n=nm(v.id);if(seen.has(n)){let s=parts.length>1?n+'_Z'+(k+1):n+'_2',j=2;while(seen.has(s))s=n+'_'+(++j);n=s;}seen.add(n);rows.push([n,fixed(v.y,3),fixed(v.x,3),fixed(v.d,4)].concat(v.code?[nm(v.code)]:[]).join(' '));}});return {n:rows.length,t:rows.join('\r\n')+'\r\n'};}
 async function trDiffSave(kind){const d=trDiffData();if(!d.ok){toast(d.why);return;}TR_DIFF.busy=true;trDiffExportUI();try{toast(gmT("export.delta.pending"));const parts=await trDiffBuild(d);if(!parts.some(p=>p.faces.length)&&kind!=='stx')throw Error(gmPreviewText("rozdílový model je prázdný."));if(kind==='xml')download(trDiffName(d,'xml'),trDiffXML(d,parts),false,'application/xml;charset=utf-8');else if(kind==='dxf')download(trDiffName(d,'dxf'),trDiffDXF(d,parts),false);else{const r=trDiffSTX(d,parts);if(!r.n)throw Error(d.mode==='reference'?gmPreviewText("žádný měřený bod neleží na společné ploše s ")+d.target.instrumental+'.':gmPreviewText("model neobsahuje měřené body."));download(trDiffName(d,'stx'),r.t,false);}toast(gmPreviewText("Uložen ROZDÍLOVÝ MODEL (")+trDiffFormula(d)+gmPreviewText(") – výška Z je ΔZ, nikoli nadmořská výška. ")+trDiffPrecisionInfo(parts).join(' '));}catch(e){toast(gmPreviewText("Export rozdílového modelu se nezdařil: ")+(e?.message||e));}finally{TR_DIFF.busy=false;trDiffExportUI();}}
 function trDiffExportUI(){const box=$('trDiffExport');if(!box)return;let has=false;try{has=!!TRMODEL.m?.sources?.length;}catch(e){}box.hidden=!has;if(!has)return;let d;try{d=trDiffData();}catch(e){d={why:gmPreviewText("Rozdílový model není připravený.")};}const target=d.target||trDiffTarget(),ref=trCompareOn(),ok=!!d.ok,f=ok?trDiffFormula(d):gmPreviewText("ΔZ = Měření − ")+target.name;$('trDiffCap').textContent=gmPreviewText("Rozdílový model Měření − ")+target.name+':';const base=gmPreviewText("Exportuje se ROZDÍLOVÝ MODEL ")+f+gmPreviewText(" – výška Z v souboru je ΔZ, nikoli nadmořská výška. ")+(ref?gmPreviewText("TIN tvoří přesné průniky měření a ")+target.genitive+gmPreviewText(" na společné ploše, bez extrapolace. "):gmPreviewText("TIN je měřený model s výškou Z − Z₀. "))+(trBatchOn()?gmPreviewText("Po zdrojích: každý vyhodnocovaný zdroj samostatně. "):''),why=ok?'':gmPreviewText("Nedostupné: ")+d.why;
  for(const [id,t] of [['trxdxml',gmPreviewText("LandXML: TIN povrch ΔZ")+(trBatchOn()?gmPreviewText(" pro každý zdroj"):'')+gmPreviewText(" (S-JTSK, N = −X, E = −Y, výška = ΔZ). ")],['trxddxf',gmPreviewText("DXF 3D: vrstvy ROZDIL_DZ_TIN / _NULOVA_CARA / _BODY / _POPIS (Z = ΔZ; plochy červeně násyp, modře výkop, nulová čára ΔZ = 0) a popis ve vrstvě ROZDIL_DZ_INFO. ")],['trxdstx',gmPreviewText("STX: měřené body s ΔZ ve sloupci výšky (název Y X ΔZ [kód]); ")+(ref?gmPreviewText("vynechají se body mimo společnou plochu. "):'')]]){const b=$(id);b.disabled=!ok;b.title=t+base+why;}}
@@ -14159,6 +14278,65 @@ function gmJobState(m,state){
   out.push([k,typeof v==='string'?v:JSON.stringify(v)]);}
  return out;
 }
+// A single file transaction covers both buckets. Settings are staged while it can still abort.
+async function gmJobCommit(module,prep,state){
+ let journal;
+ if(module==='home'){
+  journal=gmJobStage(module,state);
+  try{
+   gmJobWriteSettings(journal.changed);
+   localStorage.removeItem(GM_JOB_JOURNAL);
+  }catch(error){gmJobRollback(journal);throw error;}
+  return;
+ }
+ const snapshots=prep.files&&Object.entries(prep.files).map(([id,files])=>
+  [id,projectFileSnapshot(id,files,new Map(PROJECT_FILE_STATE[id].identities))]);
+ const db=await (snapshots?projectFileOpen():terrainDB());
+ await new Promise((resolve,reject)=>{
+  let tx,timer,failed;
+  const abort=error=>{failed=error;try{tx.abort();}catch(e){}};
+  const progress=()=>{
+   clearTimeout(timer);
+   timer=setTimeout(()=>abort(Error(gmPreviewText("Uložení souborů bylo přerušeno."))),PROJECT_FILE_IO_MS);
+  };
+  try{
+   const commitStore=GM_JOB_DATABASES[module][1];
+   tx=db.transaction(snapshots?['manifests','contents']:['groups'],'readwrite');
+   tx.oncomplete=()=>{clearTimeout(timer);resolve();};
+   tx.onabort=()=>{
+    clearTimeout(timer);
+    try{if(journal)gmJobRollback(journal);}catch(error){reject(error);return;}
+    reject(failed||tx.error||Error(gmPreviewText("Uložení souborů bylo přerušeno.")));
+   };
+   progress();
+   // Start staging only after the transaction obtains access to the store.
+   const store=tx.objectStore(commitStore), ready=store.get(GM_JOB_COMMIT);
+   ready.onsuccess=()=>{
+    progress();
+    try{
+     if(snapshots)for(const [id] of snapshots){
+      if(projectFileResetToken(id)!==PROJECT_FILE_STATE[id].resetToken)throw Error(gmPreviewText("Data byla resetována v jiné kartě. Obnovte stránku."));
+     }else for(const key of ['m','p']){
+      if(terrainResetToken(key)!==(prep.terrain[key].resetToken||null))throw Error(gmPreviewText("Data byla resetována v jiné kartě. Obnovte stránku."));
+     }
+     journal=gmJobStage(module,state);
+     gmJobWriteSettings(journal.changed);
+     if(snapshots)for(const [id,snapshot] of snapshots)projectFileQueueWrite(tx,id,snapshot,progress,abort);
+     else for(const key of ['m','p']){
+      const put=store.put({...prep.terrain[key],id:key});put.onsuccess=progress;
+     }
+     const mark=store.put({id:GM_JOB_COMMIT,token:journal.token});mark.onsuccess=progress;
+    }catch(error){abort(error);}
+   };
+  }catch(error){
+   if(tx)abort(error);
+   else reject(error);
+  }
+ });
+ // If removal fails, the commit record lets startup safely finish the same job.
+ try{if(gmJobPending()===journal.raw)localStorage.removeItem(GM_JOB_JOURNAL);}
+ catch(error){gmDiagnostic('project.load.journal',error);}
+}
 async function gmJobApply(){
  const job=GM_JOB;if(!job||GM_JOB_APPLYING)return;const p=job.project,m=p.module;
  if(!gmProjectAllowed(m)){gmProjectDenied(m);return;}
@@ -14168,15 +14346,18 @@ async function gmJobApply(){
  try{prep=gmJobPrepare(job);state=gmJobState(m,p.state);}
  catch(e){gmDiagnostic('project.load.prepare',e);toast(gmPreviewText("Zakázku se nepodařilo načíst: ⟦0⟧",[e?.message||String(e)]));return;}
  GM_JOB_APPLYING=true;gmJobRender();
+ const previousReset=globalThis.GM_FULL_RESET;
+ globalThis.GM_FULL_RESET=true;   // během načítání nepřepisovat nastavení při odchodu
  try{
-  if(prep.files){for(const id of Object.keys(prep.files))if(!await projectSaveFiles(id,prep.files[id]))throw Error(PROJECT_FILE_STATE[id].error||gmPreviewText("Soubory se nepodařilo uložit."));}
-  else for(const key of ['m','p']){TERRAIN[key].revision++;await terrainIO(key,prep.terrain[key],true);}
-  for(const [k,v] of state){if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}
-  localStorage.setItem(GM_KEY('geomat.app.module.v1'),m);
-  try{sessionStorage.setItem(GM_JOB_VIEW_K,JSON.stringify({module:m,view:p.view??null,name:job.name}));}catch(e){}
-  globalThis.GM_FULL_RESET=true;   // stejně jako generální reset: do obnovení stránky už nic neukládat
-  location.reload();
- }catch(e){GM_JOB_APPLYING=false;gmDiagnostic('project.load.apply',e);gmJobRender();toast(gmPreviewText("Zakázku se nepodařilo načíst: ⟦0⟧",[e?.message||String(e)]));}
+  await gmJobLocked(()=>gmJobCommit(m,prep,[...state,[GM_KEY('geomat.app.module.v1'),m]]));
+ }catch(e){
+  globalThis.GM_FULL_RESET=previousReset;
+  GM_JOB_APPLYING=false;gmDiagnostic('project.load.apply',e);gmJobRender();
+  toast(gmPreviewText("Zakázku se nepodařilo načíst: ⟦0⟧",[e?.message||String(e)]));return;
+ }
+ if(prep.files)for(const id of Object.keys(prep.files))try{projectFileCleanLegacy(id);}catch(e){gmDiagnostic('project.load.legacy',e);}
+ try{sessionStorage.setItem(GM_JOB_VIEW_K,JSON.stringify({module:m,view:p.view??null,name:job.name}));}catch(e){}
+ location.reload();
 }
 // Po obnovení stránky: počká na obnovu souborů modulu a použije uloženou podobu plánu
 async function gmJobResume(){
@@ -14310,10 +14491,10 @@ gmJobResume();
    <p class="gm-auth-hint" id="gmAuthHint">Číslo popisné našich kanceláří je heslem pro přihlášení</p>
    <p id="gmAuthError" role="status" aria-live="polite" hidden></p>
   </form>
-  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta" title="GeoMAT verze 1.465 · Autor: Jan Bartůněk"><span>v<span id="gmAuthVersion">1.463</span></span><span>Jan Bartůněk</span></span></div>
+  <noscript><div class="gm-js-required"><p lang="cs">Pro přihlášení a používání GeoMATu je potřeba zapnout JavaScript.</p><p lang="en">Enable JavaScript to sign in and use GeoMAT.</p></div></noscript><div class="gm-auth-footer"><div class="gm-language" role="group" aria-label="Jazyk rozhraní" title="Změnit jazyk (J)"><button type="button" id="gmLoginLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLoginLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div><span class="gm-auth-meta"><span>v<span id="gmAuthVersion"></span></span><span>Jan Bartůněk</span></span></div>
  </div>
 </div>
-<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><button type="button" id="gmSettingsOpen" class="gm-settings-btn" aria-label="Nastavení" title="Nastavení" aria-haspopup="dialog" aria-controls="gmSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><span class="gm-auth-meta" title="GeoMAT verze 1.465 · Autor: Jan Bartůněk"><span>v<span id="gmAuthAccountVersion">1.463</span></span><span>Jan Bartůněk</span></span></div></div><div id="gmSettings" role="dialog" aria-modal="true" aria-labelledby="gmSettingsTitle" hidden><div class="gm-auth-card gm-settings-card"><button type="button" id="gmSettingsClose" aria-label="Zavřít okno nastavení" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><h2 id="gmSettingsTitle" class="gm-settings-title">Nastavení</h2><div class="gm-settings-row"><span id="gmSettingsLangLabel">Jazyk rozhraní</span><div class="gm-language" role="group" aria-labelledby="gmSettingsLangLabel" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div></div><div class="gm-settings-row"><span id="gmSettingsPinLabel">Hlavní lišta</span><div class="gm-language" role="group" aria-labelledby="gmSettingsPinLabel" title="Ukotvená hlavní lišta zůstává při posouvání stránky nahoře."><button type="button" id="gmPinOff" data-gm-pin="0" aria-pressed="false">Posouvat</button><button type="button" id="gmPinOn" data-gm-pin="1" aria-pressed="true">Ukotvit</button></div></div><div class="gm-settings-row"><span id="gmSettingsThemeLabel">Režim zobrazení</span><div class="gm-language" role="group" aria-labelledby="gmSettingsThemeLabel" title="Noční režim ztmaví barvy aplikace. Volba se zapamatuje v prohlížeči."><button type="button" id="gmThemeLight" data-gm-theme="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg><span>Denní</span></button><button type="button" id="gmThemeDark" data-gm-theme="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Noční</span></button></div></div><div class="gm-settings-row"><span id="gmSettingsReportLabel">Verze protokolu</span><div class="gm-language" role="group" aria-labelledby="gmSettingsReportLabel" title="Vzhled Protokolu PDF podle šablony Geodetický protokol GK (Excel): Světlá má nadpis PROTOKOL a podnadpis na bílém podkladu, Tmavá má nadpis PROTOKOL v barvě loga s bílým textem a podnadpis modrý jako názvy bloků. Volba se zapamatuje v prohlížeči."><button type="button" id="gmReportLight" data-gm-report="svetla" aria-pressed="true">Světlá</button><button type="button" id="gmReportDark" data-gm-report="tmava" aria-pressed="false">Tmavá</button></div></div></div></div></div>
+<div id="gmAuthAccount" role="dialog" aria-modal="true" aria-labelledby="gmAuthAccountTitle" aria-describedby="gmAuthAccountRole" hidden><div class="gm-auth-card"><button type="button" id="gmAuthAccountClose" aria-label="Zavřít okno účtu" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><img class="gm-auth-logo" src="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2024%2024%22%3E%3Crect%20width=%2224%22%20height=%2224%22%20rx=%225%22%20fill=%22%23fff%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%232f855a%22%20stroke-width=%222.08%22%20stroke-linecap=%22round%22%3E%3Ccircle%20cx=%2212%22%20cy=%2212%22%20r=%225.2%22/%3E%3Cpath%20d=%22M12%204v4.8M12%2015.2V20M4%2012h4.8M15.2%2012H20%22/%3E%3C/g%3E%3C/svg%3E" alt="" title="GeoMat" width="96" height="96"><h2 id="gmAuthAccountTitle" class="gm-auth-title"><span style="color:#2f855a">Geo</span><span style="color:#000">MAT</span></h2><div class="gm-auth-role"><span id="gmAuthAccountCrown" class="gm-auth-crown" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 16 2.5 7.5 8 11 12 4 16 11 21.5 7.5 20 16Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="2.5" cy="7.5" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="21.5" cy="7.5" r="1.6"/><rect x="4" y="18" width="16" height="3" rx=".8"/></svg></span><span id="gmAuthAccountUserIcon" class="gm-auth-crown gm-auth-user-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="7.5" y="2" width="9" height="12" rx="1.5"/><circle cx="12" cy="7" r="2.2"/><path d="M10.5 11h3M9 14v2h6v-2M8 16h8M12 16 3 26M12 16v10M12 16l9 10M7 21h10"/></svg></span><span id="gmAuthAccountTesterIcon" class="gm-auth-crown gm-auth-user-icon gm-auth-tester-icon" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="1"/><path d="M5.5 8.5v2M8.5 8.5v3.5M11.5 8.5v2M14.5 8.5v3.5M17.5 8.5v2"/></g></svg></span><p id="gmAuthAccountRole"></p></div><button type="button" id="gmAuthLogout" title="Načtená data a nastavení zůstanou zachována.">Odhlásit</button><div class="gm-auth-footer"><button type="button" id="gmSettingsOpen" class="gm-settings-btn" aria-label="Nastavení" title="Nastavení" aria-haspopup="dialog" aria-controls="gmSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><span class="gm-auth-meta"><span>v<span id="gmAuthAccountVersion"></span></span><span>Jan Bartůněk</span></span></div></div><div id="gmSettings" role="dialog" aria-modal="true" aria-labelledby="gmSettingsTitle" hidden><div class="gm-auth-card gm-settings-card"><button type="button" id="gmSettingsClose" aria-label="Zavřít okno nastavení" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><h2 id="gmSettingsTitle" class="gm-settings-title">Nastavení</h2><div class="gm-settings-row"><span id="gmSettingsLangLabel">Jazyk rozhraní</span><div class="gm-language" role="group" aria-labelledby="gmSettingsLangLabel" title="Změnit jazyk (J)"><button type="button" id="gmLangCS" lang="cs" data-gm-language="cs" aria-label="Čeština" aria-pressed="true">CS</button><button type="button" id="gmLangEN" lang="en" data-gm-language="en" aria-label="English" aria-pressed="false">EN</button></div></div><div class="gm-settings-row"><span id="gmSettingsPinLabel">Hlavní lišta</span><div class="gm-language" role="group" aria-labelledby="gmSettingsPinLabel" title="Ukotvená hlavní lišta zůstává při posouvání stránky nahoře."><button type="button" id="gmPinOff" data-gm-pin="0" aria-pressed="false">Posouvat</button><button type="button" id="gmPinOn" data-gm-pin="1" aria-pressed="true">Ukotvit</button></div></div><div class="gm-settings-row"><span id="gmSettingsThemeLabel">Režim zobrazení</span><div class="gm-language" role="group" aria-labelledby="gmSettingsThemeLabel" title="Noční režim ztmaví barvy aplikace. Volba se zapamatuje v prohlížeči."><button type="button" id="gmThemeLight" data-gm-theme="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg><span>Denní</span></button><button type="button" id="gmThemeDark" data-gm-theme="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Noční</span></button></div></div><div class="gm-settings-row"><span id="gmSettingsReportLabel">Verze protokolu</span><div class="gm-language" role="group" aria-labelledby="gmSettingsReportLabel" title="Vzhled Protokolu PDF podle šablony Geodetický protokol GK (Excel): Světlá má nadpis PROTOKOL a podnadpis na bílém podkladu, Tmavá má nadpis PROTOKOL v barvě loga s bílým textem a podnadpis modrý jako názvy bloků. Volba se zapamatuje v prohlížeči."><button type="button" id="gmReportLight" data-gm-report="svetla" aria-pressed="true">Světlá</button><button type="button" id="gmReportDark" data-gm-report="tmava" aria-pressed="false">Tmavá</button></div></div></div></div></div>
 <div id="gmLogoView" role="dialog" aria-modal="true" aria-label="Logo GeoMAT" hidden><button type="button" id="gmLogoViewClose" aria-label="Zavřít logo" title="Zavřít (Escape)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><svg class="gm-logo-art" id="gmLogoArt" viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet" role="img" aria-label="GeoMAT"><g id="gmLogoArtBody"><g id="gmLogoArtMark" transform="translate(100 0) scale(5)"><rect id="gmLogoArtTile" width="24" height="24" rx="5" fill="#fff"/><g fill="none" stroke="#2f855a" stroke-width="2.08" stroke-linecap="round"><circle cx="12" cy="12" r="5.2"/><path d="M12 4v4.8M12 15.2V20M4 12h4.8M15.2 12H20"/></g></g><text id="gmLogoArtText" x="160" y="205" text-anchor="middle" font-family="Orbitron, Arial, Helvetica, sans-serif" font-size="56" font-weight="800" letter-spacing="1.1"><tspan fill="#2f855a">Geo</tspan><tspan fill="#000">MAT</tspan></text></g></svg></div>
 <div id="gmAuthNotice" role="status" hidden></div>
 
@@ -14416,14 +14597,12 @@ gmJobResume();
  "Vrátí celé nastavení modulu DMT (Měření, Reference, Body a výstup) na výchozí hodnoty a přepočítá. Načtené soubory a úpravy TIN zůstanou. Jednotlivé karty lze vrátit i samostatně tlačítkem ↺ v jejich záhlaví.": "Restores all DTM settings (Survey, Reference, Points and output) to their defaults and recalculates. Loaded files and TIN edits are kept. Each card can also be restored separately with ↺ in its header.",
  "Celé nastavení už je na výchozích hodnotách, není co vracet.": "All settings are already at their defaults.",
  "Zkratka Shift+R. Protokol (PDF): úvodní strana A4 s údaji zakázky, strana A4 Výpočet kubatur (tabulka ze sekce 5. Výsledky) a plán PDF 2D A3 (stejný jako tlačítko PDF 2D, včetně mapy ΔZ, vrstevnic a legendy podle voleb plánu). Údaje se doplní v okně před uložením a průběžně se ukládají v prohlížeči odděleně od ostatních modulů.": "Shortcut Shift+R. Report (PDF): A4 cover page with job details, A4 volume calculation page (the table from section 5, Results) and the A3 2D PDF plan (same as the 2D PDF button, including the ΔZ map, contours and legend according to the plan options). Details are entered in a dialog before saving and are stored in the browser separately from the other modules.",
- "Protokol tvoří úvodní strana A4 s těmito údaji, strana A4 Výpočet kubatur (tabulka ze sekce 5. Výsledky, plochy a objemy zaokrouhlené na celé m² a m³) a plán PDF 2D A3 (stejný jako tlačítko PDF 2D: zobrazené modely, mapa ΔZ, vrstevnice a legenda podle voleb plánu). Pole označená (povinné) je nutné vyplnit, pole označená (nepovinné) lze nechat prázdná. Údaje se ukládají v prohlížeči odděleně od protokolů ZSS pilot a Rovinnosti, takže se zavřením okna neztratí. Vyplněná Stavba nahradí v plánu protokolu druhý řádek nadpisu s názvy modelů.": "The report consists of an A4 cover page with these details, an A4 volume calculation page (the table from section 5, Results, with areas and volumes rounded to whole m² and m³) and the A3 2D PDF plan (same as the 2D PDF button: displayed models, ΔZ map, contours and legend according to the plan options). Fields marked (required) must be filled in; fields marked (optional) can be left empty. Details are stored in the browser separately from the pile ABS and flatness reports, so they are not lost when the dialog is closed. A filled-in Construction field replaces the second title line with the model names in the report plan.",
  "Zkratka Shift+R. Protokol (PDF): úvodní strana A4 s údaji zakázky, seznam souřadnic středů pilot A4 a plán PDF 2D A3. Údaje se doplní v okně před uložením a průběžně se ukládají v prohlížeči.": "Shortcut Shift+R. Report (PDF): A4 cover page with job details, A4 list of pile centre coordinates and the A3 2D PDF plan. Fill in the details in the window before saving; they are stored in the browser.",
  "(nabídka Data v sekci 4. Export, zkratka": "(Data menu in section 4. Export, shortcut",
  "): otevře okno s údaji zakázky (číslo protokolu, akce, katastrální území, objednatel, přístroj…) a uloží jeden soubor PDF: úvodní strana A4, seznam souřadnic středů pilot A4 (Střed ZSS, Y, X, Z, dp; bez pilot, jejichž bod PD už má jiná pilota) a plán PDF A3, kde druhý řádek nadpisu převezme vyplněnou akci. Vyplněné údaje se průběžně ukládají v prohlížeči. Úvodní strana a záhlaví a zápatí stran A4 odpovídají šabloně Geodetický protokol GK (Excel). Volba Verze protokolu v Nastavení: Světlá (výchozí) nebo Tmavá (nadpis PROTOKOL v barvě loga s bílým textem, podnadpis modrý jako názvy bloků).": "): opens a dialog with the job details (report number, project, cadastral area, client, instrument…) and saves one PDF file: an A4 cover page, an A4 list of pile centre coordinates (Pile centre, Y, X, Z, dp; without piles whose design point already belongs to another pile) and the A3 PDF plan, where the second line of the title uses the filled-in project. The details are saved continuously in the browser. The cover page and the A4 page headers and footers follow the GK survey report template (Excel). Report version option in Settings: Light (default) or Dark (REPORT heading in the logo colour with white text, subheading in blue like the block titles).",
  "): otevře okno s údaji zakázky (číslo protokolu, akce, katastrální území, objednatel, přístroj…) a uloží jeden soubor PDF: úvodní strana A4, seznam odchylek bodů od roviny A4 a plán PDF 2D A3. Seznam obsahuje všechny použité body (zaškrtnuté, bez automaticky vyřazených odlehlých) v původním pořadí bez ohledu na filtr tabulky; sloupce se řídí typem roviny (svislá přidává staničení s, obecná x′ a y′), v režimu latě přibude h a při více souborech měření číslo souboru. Odchylky nad mezní odchylkou jsou červeně. Plán je stejný jako z tlačítka PDF 2D a druhý řádek jeho nadpisu převezme vyplněnou akci. Údaje se průběžně ukládají v prohlížeči odděleně od protokolu ZSS pilot. Úvodní strana a záhlaví a zápatí stran A4 odpovídají šabloně Geodetický protokol GK (Excel). Volba Verze protokolu v Nastavení: Světlá (výchozí) nebo Tmavá (nadpis PROTOKOL v barvě loga s bílým textem, podnadpis modrý jako názvy bloků).": "): opens a dialog with the job details (report number, project, cadastral area, client, instrument…) and saves one PDF file: an A4 cover page, an A4 list of point deviations from the plane and the A3 2D PDF plan. The list contains all used points (checked, excluding automatically rejected outliers) in their original order, regardless of the table filter; the columns depend on the plane type (vertical adds chainage s, general adds x′ and y′), straightedge mode adds h and several survey files add the file number. Deviations over tolerance are shown in red. The plan is the same as from the PDF button and the second line of its title uses the filled-in project. The details are saved continuously in the browser, separately from the ABS piles report. The cover page and the A4 page headers and footers follow the GK survey report template (Excel). Report version option in Settings: Light (default) or Dark (REPORT heading in the logo colour with white text, subheading in blue like the block titles).",
  "Zavřít okno protokolu": "Close report window",
  "Zavřít (Esc)": "Close (Esc)",
- "Protokol tvoří úvodní strana A4 s těmito údaji, seznam souřadnic středů pilot A4 (Střed ZSS, Y, X, Z, dp) a plán PDF 2D A3. Tabulka a plán přebírají použité piloty a filtr pilot. Pole označená (povinné) je nutné vyplnit, pole označená (nepovinné) lze nechat prázdná. Vyplněné údaje se průběžně ukládají v prohlížeči, takže se zavřením okna (Esc, křížek, klik vedle) neztratí a zůstanou i pro další protokol. Vyplněná Stavba nahradí ve druhém řádku nadpisu názvy souborů také v plánu, PDF 2D/3D a DXF.": "The report consists of an A4 cover page with these details, an A4 list of pile centre coordinates (As-built centre, Y, X, Z, dp) and a 2D A3 PDF plan. The table and the plan use the included piles and the pile filter. Fields marked (required) must be filled in; fields marked (optional) can be left empty. Entered values are saved in the browser as you type, so they are not lost when the window is closed (Esc, close button, click outside) and remain available for the next report. A filled-in Construction field replaces the file names in the second header line of the plan, 2D/3D PDF and DXF as well. The report itself is always generated in Czech.",
  "Číslo protokolu": "Report number",
  "např. 27/2026": "e.g. 27/2026",
  "Předmět": "Subject",
@@ -14448,7 +14627,6 @@ gmJobResume();
  "Uložit protokol DOCX": "Save DOCX report",
  "Uloží editovatelnou úvodní část protokolu do Wordu.": "Saves the editable opening section of the report to Word.",
  "Zkratka Shift+R. Protokol (PDF): úvodní strana A4 s údaji zakázky, seznam odchylek bodů od roviny A4 a plán PDF 2D A3 (stejný jako tlačítko PDF 2D). Údaje se doplní v okně před uložením a průběžně se ukládají v prohlížeči odděleně od ZSS pilot.": "Shortcut Shift+R. Report (PDF): A4 cover page with job details, A4 list of point deviations from the plane and the A3 2D PDF plan (same as the PDF button). Fill in the details in the window before saving; they are stored in the browser separately from ABS piles.",
- "Protokol tvoří úvodní strana A4 s těmito údaji, seznam odchylek bodů od roviny A4 (všechny použité body bez ohledu na filtr tabulky; sloupce podle typu roviny, při latích i h) a plán PDF 2D A3 (stejný jako tlačítko PDF 2D).": "The report consists of an A4 cover page with these details, an A4 list of point deviations from the plane (all used points regardless of the table filter; columns depend on the plane type, with h for straightedge evaluation) and the A3 2D PDF plan (same as the 2D PDF button).",
  "Uloženo: Protokol PDF (⟦0⟧).": "Saved: PDF report (⟦0⟧).",
  "Moduly": "Modules",
  "Modul ZSS pilot: výpočet středů pilot ze zaměřených bodů a porovnání s projektem. Zkratka Shift+1.": "ABS piles (as-built survey of pile locations). Calculates pile centres from surveyed points and compares them with the design. Shortcut Shift+1.",
@@ -18034,7 +18212,6 @@ gmJobResume();
  "Změřená odchylka ⟦0⟧ je 0 mm: směr posunu středu není určen, opravu nelze zadat.": "The measured deviation of ⟦0⟧ is 0 mm: the direction of the centre shift is not defined, a correction cannot be entered.",
  "změřeno ⟦0⟧ mm": "measured ⟦0⟧ mm",
  "Žádná odchylka není ručně opravená.": "No deviation is corrected manually.",
- "<br><span class=\"m\">Ručně opravená odchylka (změřeno ⟦0⟧ ⟦1⟧)</span>": "<br><span class=\"m\">Manually corrected deviation (measured ⟦0⟧ ⟦1⟧)</span>",
  "Odchylky lze opravovat jen ve 2D plánu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home.": "Deviations can be corrected only in the 2D plan. Return with the Plan button or the Home key.",
  "V režimu latě ukazují popisky odchylku od latě h. Odchylky od roviny lze opravit po vypnutí latě.": "In straightedge mode the labels show the deviation from the straightedge h. Deviations from the plane can be corrected once the straightedge is turned off.",
  "Oprava odchylek je dostupná, až budou v plánu zobrazené body s odchylkami od roviny.": "Deviation correction is available once the plan shows points with deviations from the plane.",
@@ -18169,7 +18346,6 @@ gmJobResume();
  "Zakázka obsahuje příliš mnoho souborů.": "The job contains too many files.",
  "Počkejte na dokončení načítání a ukládání souborů, pak zakázku načtěte znovu.": "Wait until the files have finished loading and saving, then load the job again.",
  "Zakázku se nepodařilo načíst: ⟦0⟧": "The job could not be loaded: ⟦0⟧",
- "Soubory se nepodařilo uložit.": "The files could not be saved.",
  "Zakázka načtena: ⟦0⟧.": "Job loaded: ⟦0⟧.",
  "Investor": "Investor",
  "Bodové pole": "Control points",
@@ -18193,8 +18369,12 @@ gmJobResume();
  "nevyplněno (nepovinné)": "not filled in (optional)",
  "nevyplněno (povinné)": "not filled in (required)",
  "PDF obsahuje úvodní stranu, tabulku výsledků a plán. DOCX obsahuje editovatelnou úvodní stranu.": "The PDF includes the cover page, results table, and plan. The DOCX contains the editable cover page.",
+ "Dokončete obnovu uložené zakázky opětovným otevřením GeoMATu.": "Reopen GeoMAT to finish restoring the saved job.",
+ "Obnovu zakázky se nepodařilo dokončit. Otevřete GeoMAT znovu.": "Could not finish restoring the job. Reopen GeoMAT.",
+ "Přílohy": "Attachments",
+ "Jedna příloha na řádek": "One attachment per line",
  "Uloží výsledkovou přílohu protokolu jako editovatelný DOCX.": "Save the protocol results appendix as an editable DOCX.",
- "GeoMAT verze 1.465 · Autor: Jan Bartůněk": "GeoMAT version 1.465 · Author: Jan Bartůněk"
+ "GeoMAT verze ⟦0⟧ · Autor: Jan Bartůněk": "GeoMAT version ⟦0⟧ · Author: Jan Bartůněk"
 }</script>
 <script data-gm-language-runtime>
 function gmPreviewText(message,params=[]){
@@ -18473,7 +18653,11 @@ function gmPreviewText(message,params=[]){
 (function(){
  'use strict';
  const A=window.GeoMATAccess,$=id=>document.getElementById(id),gate=$('gmAuthGate'),app=$('gmApp'),form=$('gmAuthForm'),error=$('gmAuthError'),password=$('gmAuthPassword'),submit=$('gmAuthSubmit');
- const version=Array.from(document.querySelectorAll('script[data-gm-core]')).map(s=>s.textContent.match(/APP_VERSION="([^"]+)"/)).find(Boolean);$('gmAuthVersion').textContent=$('gmAuthAccountVersion').textContent=version?version[1]:'—';
+ for(const id of ['gmAuthVersion','gmAuthAccountVersion']){
+  const label=$(id);
+  label.textContent=APP_VERSION;
+  window.GeoMATLanguage.bind(label.closest('.gm-auth-meta'),'title',"GeoMAT verze ⟦0⟧ · Autor: Jan Bartůněk",[APP_VERSION]);
+ }
  let config=null,started=false,locked=true,memory=null,storedKind=null,busy=false,accountBackground=null,unlocking=false;const UNLOCK_MS=2000;let unlockOverflow=null,unlockGateOverflow=null;
  const account=$('gmAuthAccount'),logoView=$('gmLogoView'),accountLogo=account.querySelector('.gm-auth-logo'),accountTitle=$('gmAuthAccountTitle');let logoOpener=null;
  function logoAdmin(){return !locked&&!!config&&A.ticketUser(config,memory)?.role==='admin';}
@@ -18521,18 +18705,32 @@ function gmPreviewText(message,params=[]){
  function startCore(){
   if(started)return;for(const source of document.querySelectorAll('script[data-gm-core]')){const script=document.createElement('script');script.textContent=source.textContent;document.body.appendChild(script);}started=true;
  }
- function open(user,keep){locked=false;showUser(user);gate.hidden=!keep;app.hidden=false;password.value='';if(keep)status(error.hidden?'':"Heslo ověřeno.");else message('');startCore();window.dispatchEvent(new Event('resize'));focusStart(user);}
+ let recoveringJob=false;
+ function open(user,keep){
+  if(recoveringJob)return;
+  if(!started&&gmJobPending()!==null){
+   recoveringJob=true;submit.disabled=true;
+   Promise.resolve(gmJobLocked(gmJobRecoverPending)).then(()=>{
+    recoveringJob=false;submit.disabled=false;open(user,false);
+   },error=>{
+    recoveringJob=false;submit.disabled=false;
+    message("Obnovu zakázky se nepodařilo dokončit. Otevřete GeoMAT znovu.");
+    console.warn('GeoMAT job recovery',error);
+   });
+   return;
+  }
+  locked=false;showUser(user);gate.hidden=!keep;app.hidden=false;password.value='';if(keep)status(error.hidden?'':"Heslo ověřeno.");else message('');startCore();window.dispatchEvent(new Event('resize'));focusStart(user);}
  // 1.377: po přihlášení / F5 fokus na aktivní modul; na úvodní stránce GeoMAT nikam (dřív zůstal na tlačítku účtu)
  function focusStart(user){const t=$('mods').querySelector('button.mod.act');if(t){t.focus({preventScroll:true});return;}if($('gmHomeBtn')?.classList.contains('act')){if(document.activeElement&&document.activeElement!==document.body)document.activeElement.blur();return;}(user.role==='admin'?$('gmAuthAdmin'):$('gmAuthUser')).focus({preventScroll:true});}
  function check(){
-  if(!config)return;const saved=A.read(config);if(saved){memory=saved.ticket;storedKind=saved.kind;if(locked)open(saved.user);else showUser(saved.user);return;}
+  if(!config||recoveringJob)return;const saved=A.read(config);if(saved){memory=saved.ticket;storedKind=saved.kind;if(locked)open(saved.user);else showUser(saved.user);return;}
   if(memory&&storedKind==='memory'){const user=A.ticketUser(config,memory);if(user){if(locked)open(user);else showUser(user);return;}}
   if(!locked){memory=null;storedKind=null;lock("Přihlášení skončilo. Zadejte platné heslo.");}
  }
  function unlockEnd(){const was=unlocking;unlocking=false;gate.getAnimations({subtree:true}).forEach(a=>a.cancel());if(unlockGateOverflow!==null){gate.style.overflow=unlockGateOverflow;unlockGateOverflow=null;}if(was){app.inert=false;submit.disabled=false;form.setAttribute('aria-busy','false');}if(unlockOverflow!==null){document.documentElement.style.overflow=unlockOverflow;unlockOverflow=null;}}
  function playUnlock(user){
   const card=gate.querySelector('.gm-auth-card'),logo=gate.querySelector('.gm-auth-logo');
-  if(!card||!logo||!gate.animate||!window.matchMedia||matchMedia('(prefers-reduced-motion: reduce)').matches){open(user);return;}
+  if(gmJobPending()!==null||!card||!logo||!gate.animate||!window.matchMedia||matchMedia('(prefers-reduced-motion: reduce)').matches){open(user);return;}
   unlocking=true;submit.disabled=true;
   // The app becomes visible under the fixed gate; keep its scrollbar from narrowing the viewport and shifting the card.
   unlockOverflow=document.documentElement.style.overflow;document.documentElement.style.overflow='hidden';
@@ -18557,7 +18755,7 @@ function gmPreviewText(message,params=[]){
   try{const user=await A.verify(password.value,config);if(!user){status('');message("Nesprávné nebo odebrané heslo.");password.select();rejectShake();return;}
    memory=A.issue(config,user);const remember=$('gmAuthRemember')?$('gmAuthRemember').checked:true,stored=A.save(config,memory,remember);storedKind=stored?(remember?'local':'session'):'memory';playUnlock(user);
    if(!stored){$('gmAuthNotice').textContent=gmPreviewText("Prohlížeč neumožnil zapamatování přihlášení. Při příštím otevření zadejte heslo znovu.");$('gmAuthNotice').hidden=false;}
-  }catch(e){status('');message(e.message||"Heslo se nepodařilo ověřit.");}finally{busy=false;submit.disabled=unlocking;}
+  }catch(e){status('');message(e.message||"Heslo se nepodařilo ověřit.");}finally{busy=false;submit.disabled=unlocking||recoveringJob;}
  });
  for(const id of ['gmAuthAdmin','gmAuthUser'])$(id).addEventListener('click',openAccount);
  accountLogo.addEventListener('click',e=>{if(!logoAdmin())return;e.preventDefault();logoOpen('logo',accountLogo);});accountTitle.addEventListener('click',e=>{if(!logoAdmin())return;e.preventDefault();logoOpen('full',accountTitle);});
