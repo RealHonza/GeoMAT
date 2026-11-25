@@ -50,7 +50,7 @@ Postup:
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GeoMAT</title>
-<script>const APP_VERSION="1.477", APP_DATE="25. 11. 2026";
+<script>const APP_VERSION="1.500", APP_DATE="25. 11. 2026";
 const ZPRT_VER_K="geomat.report.version.v1";
 function zprtDark(){
   // Starší varianty se v Nastavení zobrazovaly jako Světlá.
@@ -685,7 +685,7 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 @media(max-width:400px){#gmAuthGate{padding:16px}:is(#gmAuthGate,#gmAuthAccount) .gm-auth-card{padding:25px 18px 19px}:is(#gmAuthGate,#gmAuthAccount) .gm-auth-logo{width:80px;height:80px}:is(#gmAuthGate h1,#gmAuthAccount .gm-auth-title){font-size:40px}#gmAuthPassword{width:120px}}
 
 #rvmncontrols .rvseg label{min-width:0;min-height:26px;padding:3px 10px;font-size:12px}#rvmncontrols select{font-size:12px;min-height:28px}#rvmncontrols{margin-bottom:6px}
-#zprt{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+#zprt{--zprt-field-size:13.5px;--zprt-field-border:1px solid var(--bd);--zprt-field-radius:3px;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 #zsssprt,#rvprt,#trxprt{border-width:2px}
 #zprt[hidden]{display:none}
 #zprt .rmb{flex-wrap:wrap}
@@ -719,8 +719,8 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-col{display:flex;flex-direction:column;min-width:0}
 #zprt .zprt-col>.zprt-sec-ta{flex:1;display:flex;flex-direction:column}
 #zprt .zprt-col>.zprt-sec-ta>.zprt-grid{flex:1;grid-template-rows:1fr}
-#zprt .zprt-col>.zprt-sec-ta .zprt-f,#zprt .zprt-col>.zprt-sec-ta .zprt-in{height:100%}
-#zprt .zprt-col>.zprt-sec-ta textarea{height:100%;min-height:80px;resize:none}
+#zprt .zprt-col>.zprt-sec-ta .zprt-in{display:flex;flex:1 0 auto}
+#zprt .zprt-col>.zprt-sec-ta textarea{min-height:80px}
 #zprt .zprt-sec>.zprt-grid{gap:6px 12px}
 #zprt .zprt-sec .zprt-f{gap:2px}
 #zprt .zprt-sec input[type=text]{padding:4px 8px}
@@ -728,7 +728,7 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-sec>h3{margin:-1px 0 6px}
 #zprt .zprt-note{margin:4px 0 8px}
 #zprt .rmb{margin-top:4px}
-@media (max-width:1000px){#zprt .zprt-cols{display:flex;flex-direction:column}#zprt .zprt-col{display:contents}#zprt .zprt-col>.zprt-sec-ta{flex:none}#zprt .zprt-col>.zprt-sec-ta textarea{height:auto;resize:vertical}
+@media (max-width:1000px){#zprt .zprt-cols{display:flex;flex-direction:column}#zprt .zprt-col{display:contents}#zprt .zprt-col>.zprt-sec-ta{flex:none}
   #zprt .zprt-col:first-child>.zprt-sec:nth-child(3){order:1}#zprt .zprt-col:last-child>.zprt-sec:nth-child(2){order:2}}   /* jeden sloupec: pořadí sekcí jako v protokolu (Popis za Měřickými údaji, Podpisy na konci) */
 /* 1.430: podbarvení polí podle stavu – vyplněno (barva modulu), nevyplněno nepovinné (bílé), nevyplněno povinné (oranžové) */
 #zprt .zprt-in>input,#zprt .zprt-in>textarea{transition:background-color .15s,border-color .15s}
@@ -741,12 +741,13 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 #zprt .zprt-leg i{display:inline-block;width:22px;height:14px;border:1px solid var(--bd);border-radius:3px;background:var(--card)}
 @font-face{font-family:"GeoMAT Mask Marks";src:url(data:font/woff;base64,d09GRgABAAAAAAKwAAoAAAAAA7gAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABZAAAAC0AAABgSDBGwWNtYXAAAAGcAAAAKgAAADQADAMgZ2x5ZgAAAdAAAAAYAAAAGC7t0yRoZWFkAAAA9AAAADYAAAA2L2NkbmhoZWEAAAEsAAAAHwAAACQFegGraG10eAAAAZQAAAAGAAAABgJxAABsb2NhAAAByAAAAAYAAAAGAAwAAG1heHAAAAFMAAAAFgAAACAABAAGbmFtZQAAAegAAACvAAABoW7pBkFwb3N0AAACmAAAABgAAAAu4uhUzQABAAAAAQAApOTd8l8PPPUAAwPoAAAAAOcrkhwAAAAA5yuSHAB9/40Bd//JAAAAAwACAAAAAAAAeJxjYGRgYG75b8HAwPiFoZahlrGcASiCAhgBa0IEKQB4nGNgZGBgYGJgYQDRIBYaAAABEgALAAB4nGNgZvzCOIGBlYGFgTBQQObYAwEDA9NZprPMLf8tGBiYWxhOYKoHADP1B3oAAAAB9AAAAH0AAHicY2BgYGJgYGAGYhEgyQimWRgUgDQLEAL5TGf//4eQf03A8gwAXj8HKwAAAAAAAAAMAAAAAQB9/40Bd//JAAMAABczNSN9+vpzPAB4nKWQPQrCQBBGX36IaCFYqd1iv0K8QaqAkCbkAluEFAkEsqS18QSeyTPZO0lWFAUtnGL27dtvGFhgwQmPoTxWYx/KZya3iQO2bByHwrHjiDVHefXCuZgdxrHPkrPjgAMXx6Hw1XHEnltatllSqMzYWlpX27ys+sZ0kx/0aLXTOv4YUN8nSClpyUgoUHIaLLWjTsiSS6KipxnNa/6Rfmb1W1rLV/zeoP7ZcQeXyEtvAHicY2BiwA+A8oxM7Dn55b6JRdkADH0C7A==) format("woff");unicode-range:U+02CD}
 #zprt #zp_zakazka{font-family:"GeoMAT Mask Marks",system-ui,"Segoe UI",sans-serif}
-#zprt .zprt-in{position:relative;display:block}
+#zprt .zprt-in{position:relative;display:block;--picker-end:29px}
+#zprt .zprt-in:has(>.zprt-clr[hidden]),#zprt .zprt-task-picker{--picker-end:1px}
 #zprt .zprt-job-label{display:block;font-weight:600;color:var(--fg)}
 #zprt .zprt-job-line{--job-height:27px;display:flex;align-items:stretch;gap:6px}
 #zprt .zprt-job-line>.zprt-in{flex:1;min-width:0}
 #zprt .zprt-job-line input{display:block;height:var(--job-height)}
-#zprt #zprtTaskKind{width:100%;min-width:0;height:27px;padding:3px 8px;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:3px;font:inherit;font-size:13.5px}
+#zprt #zprtTaskKind{appearance:none;display:block;width:100%;min-width:0;height:27px;padding:3px 28px 3px 8px;background:var(--card);color:var(--fg);border:var(--zprt-field-border);border-radius:var(--zprt-field-radius);font:inherit;font-size:var(--zprt-field-size)}
 #zprt #zprtTaskKind:disabled{appearance:none;background:var(--bg);color:var(--fg);-webkit-text-fill-color:var(--fg);opacity:1}
 #zprt #zprtTaskKind:focus-visible{outline:2px solid var(--ac);outline-offset:0}
 /* 1.459: tlačítko Protokol (úvodní stránka i moduly) má obrys v barvě modulu jako dřív Protokol PDF. 1.457: Geodetický protokol na úvodní stránce má vzhled exportní lišty (.xzone.zexp): záhlaví s ikonou ve čtverci a tlačítko s obrysem jako Protokol PDF */
@@ -766,16 +767,34 @@ pre{background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:
 @media (prefers-color-scheme:dark){#zprt #zprtJobISNote:not(:empty){color:#cbb8ff}}
 #zprt .zprt-in>input,#zprt .zprt-in>textarea{padding-right:32px}
 #zprt .zprt-in>textarea{display:block}
-#zprt .zprt-in>input[list]::-webkit-calendar-picker-indicator{margin-right:16px}   /* šipka nabídky vlevo od křížku */
 #zprt .zprt-in:has(>.zprt-clr[hidden])>input{padding-right:8px}
-#zprt .zprt-in:has(>.zprt-clr[hidden])>input[list]::-webkit-calendar-picker-indicator{margin-right:0}   /* prázdné pole bez křížku: šipka u okraje jako dřív */
 /* 1.429: křížek vyplní vnitřní výšku pole a přiléhá k pravému okraji (šipka nabídky Chromia je vlevo od něj) */
 #zprt .zprt-clr{position:absolute;top:1px;bottom:1px;right:1px;width:28px;height:auto;min-width:0;min-height:0;margin:0;padding:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:0 2px 2px 0;background:transparent;color:var(--mut);box-shadow:none;cursor:pointer;line-height:0}
 #zprt .zprt-in-ta>.zprt-clr{bottom:auto;height:29px;border-radius:0 2px 0 0}
 #zprt .zprt-clr[hidden]{display:none}
 #zprt .zprt-clr svg{width:13px;height:13px;flex:none}
+#zprt .zprt-list-chips:not([hidden]){margin-top:4px}
+#zprt .zprt-list-chips .fp{--zc:var(--ac)}
+#zprt .zprt-list-chips .fp>span{max-width:none;white-space:normal;overflow-wrap:anywhere}
+#zprt .zprt-list>select[hidden],#zprtMenu[hidden],#zprt .zprt-menu-toggle[hidden]{display:none}
+#zprt .zprt-in:has(>.zprt-menu-toggle:not([hidden]))>input{padding-inline-end:calc(var(--picker-end) + 29px)}
+#zprt .zprt-menu-toggle{position:absolute;inset-block:1px;inset-inline-end:var(--picker-end);width:28px;min-width:0;min-height:0;margin:0;padding:0;border:0;border-radius:2px;background:transparent;color:var(--mut);box-shadow:none;cursor:pointer}
+#zprt .zprt-menu-toggle:is(:hover,:focus-visible){background:color-mix(in srgb,var(--ac) 12%,transparent)}
+#zprt .zprt-task-picker>.zprt-menu-toggle{inset-inline-start:1px;width:auto}
+#zprt .zprt-menu-toggle::after{content:"";position:absolute;inset-inline-end:11px;top:50%;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+/* 1.498: rozbalovací seznam protokolu ve stylu nativní nabídky prohlížeče – zaoblené rohy 8 px, stín, vzdušnější řádky a polotučné písmo (dřív ostré rohy bez stínu a řádky 2 px) */
+#zprtMenu{position:fixed;z-index:1;box-sizing:border-box;padding:4px 0;overflow:auto;overscroll-behavior:contain;border:1px solid color-mix(in srgb,var(--bd) 75%,transparent);border-radius:8px;background:var(--card);color:var(--fg);box-shadow:0 8px 24px rgba(0,0,0,.16),0 1px 3px rgba(0,0,0,.08);font-family:inherit;font-size:var(--zprt-field-size);font-weight:600;line-height:1.35}
+@media (prefers-color-scheme:dark){#zprtMenu{box-shadow:0 8px 24px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.3)}}
+#zprtMenu>[role=option]{padding:6px 12px;overflow-wrap:anywhere;cursor:pointer}
+#zprtMenu>[data-instrument-kind]{background:color-mix(in srgb,var(--instrument-tint) 15%,var(--card))}
+#zprtMenu>[data-instrument-kind="total-station"]{--instrument-tint:#43a66d}
+#zprtMenu>[data-instrument-kind="gnss"]{--instrument-tint:#478ce5}
+#zprtMenu>[data-instrument-kind="scanner"]{--instrument-tint:#e5b925}
+#zprtMenu>[data-instrument-kind="level"]{--instrument-tint:#e56363}
+#zprtMenu>[role=option]:is(:hover,.active){background:color-mix(in srgb,var(--ac) 13%,var(--card))}
+#zprtMenu>[data-instrument-kind]:is(:hover,.active){background:color-mix(in srgb,var(--instrument-tint) 27%,var(--card))}
 #zprt .zprt-clr:hover{color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent)}
-#zprt input[type=text],#zprt textarea{width:100%;padding:5px 8px;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:3px;font:inherit;font-size:13.5px}
+#zprt input[type=text],#zprt textarea{width:100%;padding:5px 8px;background:var(--card);color:var(--fg);border:var(--zprt-field-border);border-radius:var(--zprt-field-radius);font:inherit;font-size:var(--zprt-field-size)}
 #zprt textarea{resize:vertical;min-height:54px}
 #zprt input:focus-visible,#zprt textarea:focus-visible{outline:2px solid var(--ac);outline-offset:0}
 #zprt input[aria-invalid="true"]{border-color:var(--red);outline-color:var(--red)}
@@ -1320,6 +1339,31 @@ summary .gm-info[hidden]{display:none}
  :is(#gtop,#tptop) .plan-toolbar-head>.plan-title,#rgtop .plan-toolbar-head>.plan-title{grid-column:1;grid-row:1;align-self:center;margin-right:8px}
 }
 
+/* Na úzkém displeji zůstává kresba i měřítko vlevo, ovládání pohledu má vlastní pás vpravo. */
+#zsstw td.pz .tr-st{display:inline-block;max-inline-size:clamp(9rem,16vw,14rem);white-space:normal;overflow-wrap:anywhere;vertical-align:middle}
+#zsstw td.pz .tr-st::before{margin-inline-end:5px}
+@media (max-width:560px){
+ :is(#gm,#rgm,#tpm){--compact-plan-height:min(400px,87dvh)}
+ :is(#gm,#rgm,#tpm).split{min-height:var(--compact-plan-height)}
+ body.split:not(.mrov):not(.mterrain):not(.mhome){padding-bottom:max(calc(var(--sp,50)*1vh),min(400px,87dvh))}
+ body.mrov.rsplit{padding-bottom:max(calc(var(--rsp,50)*1vh),min(400px,87dvh))}
+ body.mterrain.trsplit{padding-bottom:max(calc(var(--tpsp,50)*1vh),min(400px,87dvh))}
+ :is(#gtop,#rgtop,#tptop){max-height:min(38dvh,35%);flex-shrink:0;overflow:auto!important;overscroll-behavior:contain}
+ :is(#gtop,#rgtop,#tptop) .plan-toolbar-head{flex-wrap:wrap}
+ :is(#gtop,#rgtop,#tptop) .plan-title{flex:0 1 auto}
+ :is(#gstage,#rgstage,#tpstage){--plan-nav-width:144px;--plan-nav-space:calc(var(--plan-nav-width) + 8px);min-width:0;padding-inline-end:var(--plan-nav-space)}
+ :is(#gsvg,#rgsvg,#tpCanvas){min-width:0}
+ #tpCanvas{width:calc(100% - var(--plan-nav-space))}
+ :is(#g3canvas,#g3overlay,#rg3canvas,#rg3overlay,#tp3canvas){width:calc(100% - var(--plan-nav-space) - 2px)}
+ :is(#gMeasureOverlay,#rgMeasureOverlay,#rgTinOverlay,#tpTinOverlay){width:calc(100% - var(--plan-nav-space))}
+ #tpstage .tr-tester-mark{inset-inline-end:var(--plan-nav-space)}
+ :is(#gcubeui,#rgcubeui,#tpcubeui){right:0;top:38px!important;max-height:calc(100% - 38px)!important;overscroll-behavior:contain}
+ :is(#g3front,#rg3front,#rg3front.gen,#tp3front){right:calc(var(--plan-nav-width) / 2);top:4px;transform:translateX(50%);max-width:var(--plan-nav-width);white-space:nowrap;font-size:11px}
+}
+@media (max-width:560px) and (pointer:coarse){
+ :is(#gstage,#rgstage,#tpstage){--plan-nav-width:172px}
+}
+
 /* 1.369: jednotné rozložení sekce Nastavení (ZSS pilot, Rovinnost, DMT)
    – řádek = popisek vlevo, ovládací prvek vpravo; nápověda pod ním přes celou šířku
    – pole s jednotkou mají jednotnou šířku, všechny prvky výšku 28 px
@@ -1571,7 +1615,8 @@ body.mhome :is(#gm,#rgm,#tpm){display:none!important}
 #mod-home .gg-intro{margin:2px 0 14px;font-size:14.5px;line-height:1.6;color:color-mix(in srgb,var(--fg) 90%,var(--bg))}
 #mod-home .gg-list{column-gap:18px;row-gap:18px;margin-top:8px}
 #mod-home .gg-list>.gg-scene{gap:22px;padding:16px 20px 16px 16px;border:1px solid var(--bd);border-radius:10px;background:var(--card);box-shadow:var(--hs);transition:border-color .15s,box-shadow .15s}
-#mod-home .gg-list>.gg-scene:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--bd));box-shadow:var(--hsh)}
+/* 1.479: zvýraznění karty řídí třída .gg-live (najetí myší nebo tapnutí do karty), rámeček opticky 2 px přes vnitřní linku bez posunu obsahu; dřív :hover s rámečkem 1 px, který na dotykových zařízeních zůstával viset */
+#mod-home .gg-list>.gg-scene.gg-live{border-color:color-mix(in srgb,var(--ac) 45%,var(--bd));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 45%,var(--bd)),var(--hsh)}
 #mod-home .gg-list>.gg-scene>svg{border-radius:8px;background:none}   /* 1.463: animace bez podbarvení, jen barva karty */
 #mod-home .gg-scene>svg>.gg-frame[x="4"]{fill:none}   /* 1.463: celoplošný obdélník v SVG bez výplně – žádný světlý rámeček */
 #mod-home .gg-scene h3{margin:0 0 6px;font-size:15px;font-weight:650;line-height:1.25;letter-spacing:-.005em;text-wrap:balance}
@@ -2043,8 +2088,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <p class="zprt-leg" aria-hidden="true"><span><i class="st-fill"></i>vyplněno</span><span><i class="st-opt"></i>nevyplněno (nepovinné)</span><span><i class="st-req"></i>nevyplněno (povinné)</span></p>
 <div class="zprt-cols"><!-- 1.433: dva sloupce sekcí, okno se vejde na výšku monitoru bez posouvání -->
 <div class="zprt-col">
-<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_zakazka">Číslo zakázky<i class="zprt-rq">(nepovinné)</i></label><div class="zprt-job-line"><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" spellcheck="false" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><button type="button" id="zprtJobIS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9"/></svg><span>IS</span></button></div></div><label id="zprtTaskRow" class="zprt-f" for="zprtTaskKind"><span id="zprtTaskLabel">Typ úlohy</span><select id="zprtTaskKind"><option value="custom">Vlastní úloha</option><option value="gdsps">G-DSPS</option><option value="topo">Polohopis a výškopis</option><option value="zss">ZSS pilot</option><option value="flatness">Rovinnost</option><option value="terrain" hidden disabled>DMT</option></select></label></div><div id="zprtJobISNote" role="status"></div></section>
-<section class="zprt-sec"><h3>Identifikace</h3><div class="zprt-grid"><label class="zprt-f"><span>Číslo protokolu<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_cislo" required autocomplete="off" maxlength="160" placeholder="např. 27/2026"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavba<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_akce" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavební objekt<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_usek" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Předmět<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_nazev" required autocomplete="off" maxlength="160" title="Předmět na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název."><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Investor<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_inv" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Objednatel<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_obj" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Zhotovitel měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zhot" required list="zp_zhot_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
+<section class="zprt-sec"><h3>Zakázka</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_zakazka">Číslo zakázky<i class="zprt-rq">(nepovinné)</i></label><div class="zprt-job-line"><span class="zprt-in"><input type="text" id="zp_zakazka" autocomplete="off" spellcheck="false" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><button type="button" id="zprtJobIS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3C9.5 5.6 8.2 8.6 8.2 12s1.3 6.4 3.8 9"/></svg><span>IS</span></button></div></div><label id="zprtTaskRow" class="zprt-f" for="zprtTaskKind"><span id="zprtTaskLabel">Typ úlohy</span><span class="zprt-in zprt-task-picker"><select id="zprtTaskKind"><option value="custom">Vlastní úloha</option><option value="gdsps">G-DSPS</option><option value="topo">Polohopis a výškopis</option><option value="zss">ZSS pilot</option><option value="flatness">Rovinnost</option><option value="terrain" hidden disabled>DMT</option></select></span></label></div><div id="zprtJobISNote" role="status"></div></section>
+<section class="zprt-sec"><h3>Identifikace</h3><div class="zprt-grid"><label class="zprt-f"><span>Číslo protokolu<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_cislo" required autocomplete="off" maxlength="160" placeholder="např. 27/2026"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavba<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_akce" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Stavební objekt<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_usek" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Předmět<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_nazev" required autocomplete="off" maxlength="160" title="Předmět na úvodní straně. Předvyplněno, lze přepsat; tlačítko obnovy vrátí výchozí název."><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Investor<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_inv" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Objednatel<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_obj" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Zhotovitel měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zhot" required list="zp_zhot_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 </label><label class="zprt-f"><span>Katastrální území<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_ku" required autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Datum měření<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zamereno" required list="zp_zamereno_options" autocomplete="off" title="Nabídka vychází z data poslední změny naposledy načteného souboru měření." maxlength="160" placeholder="datum měření"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_zamereno_options">
 </datalist>
@@ -2052,7 +2097,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <datalist id="zp_datum_options">
 </datalist>
 </label></div></section>
-<section class="zprt-sec zprt-sec-ta"><h3>Popis a vyhodnocení<i class="zprt-rq">(nepovinné)</i></h3><div class="zprt-grid"><label class="zprt-f zprt-w"><span>Popis a vyhodnocení<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in zprt-in-ta"><textarea id="zp_pozn" rows="4" maxlength="1200"></textarea><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
+<section class="zprt-sec zprt-sec-ta"><h3>Popis a vyhodnocení<i class="zprt-rq">(povinné)</i></h3><div class="zprt-grid"><label class="zprt-f zprt-w"><span>Popis a vyhodnocení<i class="zprt-rq">(povinné)</i></span><span class="zprt-in zprt-in-ta"><textarea id="zp_pozn" required rows="4" maxlength="1200"></textarea><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
 <section class="zprt-sec zprt-attachments"><h3>Přílohy<i class="zprt-rq">(nepovinné)</i></h3>
 <div class="zprt-grid"><label class="zprt-f zprt-w"><span>Jedna příloha na řádek</span><span class="zprt-in zprt-in-ta"><textarea id="zp_prilohy" rows="3" maxlength="1200"></textarea><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
 </div><div class="zprt-col">
@@ -2067,48 +2112,65 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
   <option value="místní"></option>
   <option value="-"></option>
 </datalist>
-</label><label class="zprt-f"><span>Přístroj / výr. č.<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_pristroj" required list="zp_pristroj_options" autocomplete="off" maxlength="160" placeholder="např. Trimble S7, GNSS Trimble R12i"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
-<datalist id="zp_pristroj_options">
-  <option value="Leica TS13"></option>
-  <option value="Leica TS16"></option>
-  <option value="Leica TS20"></option>
-  <option value="Leica GS18"></option>
-  <option value="Trimble R12"></option>
-</datalist>
-</label><label class="zprt-f"><span>Použitý software<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_sw" required list="zp_sw_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
-</label><label class="zprt-f"><span>Podklady<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_podk" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Metoda měření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_metoda" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Přesnost polohy [m]<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_sxy" required list="zp_sxy_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
+</label><div class="zprt-f"><label class="zprt-job-label" for="zp_pristroj">Přístroj / sériové č.<i class="zprt-rq">(povinné)</i></label>
+<span class="zprt-in zprt-list"><input type="text" id="zp_pristroj" required autocomplete="off" maxlength="160" placeholder="např. Leica GS18 T / 4904170">
+<select id="zp_pristroj_pick" aria-label="Vybrat přístroj" title="Vybrat přístroj">
+  <option value="" hidden></option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica Nova MS50 R2000 / 368677">Leica MS50 (4)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 P 3″ R500 / 3204138">Leica TS16 (13)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS13 3″ R500 / 3212560">Leica TS13 (15)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 I 2″ R500 / 3014290">Leica TS16I (17)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS13 3″ R500 / 3262756">Leica TS13 (18)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS60 I 0.5&quot; R1000 / 888533">Leica TS60 (19)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS13 3″ R500 / 3268635">Leica TS13 (20)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 P 3&quot; R500 / 3873450">Leica TS16 (21)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 P 3&quot; R500 / 3875296">Leica TS16 (22)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 P 3&quot; R500 / 4913620">Leica TS16 (23)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS16 P 3&quot; R500 / 4915254">Leica TS16 (24)</option>
+  <option data-instrument-kind="total-station" data-gm-i18n-skip value="Leica TS20 I 2&quot; R800 / 3795457">Leica TS20 (25)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Leica GS18 T / 3608649">Leica GS18 (1)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Leica GS18 T / 3620925">Leica GS18 (2)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Leica GS18 T / 4901203">Leica GS18 (3)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Leica GS18 T / 4904170">Leica GS18 (4)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Leica GS18 T / 5480812">Leica GS18 (5)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Trimble R12i (1) / 6124F00822">Trimble R12i (1)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Trimble R12i (2) / 6150F00589">Trimble R12i (2)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Trimble R12i (3) / 6305F00327">Trimble R12i (3)</option>
+  <option data-instrument-kind="gnss" data-gm-i18n-skip value="Trimble R12i (4) / 6309F01480">Trimble R12i (4)</option>
+  <option data-instrument-kind="scanner" data-gm-i18n-skip value="Trimble X9 / 89902486">Trimble X9</option>
+  <option data-instrument-kind="scanner" data-gm-i18n-skip value="Emesent Hovermap ST-X / ST5735">Emesent Hovermap ST-X</option>
+  <option data-instrument-kind="level" data-gm-i18n-skip value="Leica LS15 / 703730">Leica LS15</option>
+</select><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><div id="zp_pristroj_chips" class="fchips zprt-list-chips" hidden></div></div><div class="zprt-f"><label class="zprt-job-label" for="zp_sw">Použitý software<i class="zprt-rq">(povinné)</i></label><span class="zprt-in zprt-list"><input type="text" id="zp_sw" required autocomplete="off" maxlength="160"><select id="zp_sw_pick" aria-label="Vybrat software" title="Vybrat software"><option value="" hidden></option></select><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><div id="zp_sw_chips" class="fchips zprt-list-chips" hidden></div></div><label class="zprt-f"><span>Podklady<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_podk" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Metoda měření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_metoda" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Přesnost polohy [m]<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_sxy" required list="zp_sxy_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_sxy_options">
 </datalist>
 </label><label class="zprt-f"><span>Přesnost výšky [m]<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_sz" required list="zp_sz_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 <datalist id="zp_sz_options">
 </datalist>
 </label><label class="zprt-f zprt-w"><span>Požadavky<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_pozad" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label></div></section>
-<section class="zprt-sec"><h3>Podpisy a ověření</h3><div class="zprt-grid"><label class="zprt-f"><span>Měřil<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_meril" required list="zp_person_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Zpracoval<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zprac" required list="zp_person_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Ověřil AZI<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_azi" list="zp_azi_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Číslo ověření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_overc" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Datum ověření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_overd" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><span class="zprt-gap" aria-hidden="true"></span><label class="zprt-f zprt-w"><span>Prohlášení<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_prohl" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
+<section class="zprt-sec"><h3>Podpisy a ověření</h3><div class="zprt-grid"><div class="zprt-f"><label class="zprt-job-label" for="zp_meril">Měřil<i class="zprt-rq">(povinné)</i></label><span class="zprt-in zprt-list"><input type="text" id="zp_meril" required autocomplete="off" maxlength="160"><select id="zp_meril_pick" aria-label="Vybrat měřiče" title="Vybrat měřiče"><option value="" hidden></option></select><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span><div id="zp_meril_chips" class="fchips zprt-list-chips" hidden></div></div><label class="zprt-f"><span>Zpracoval<i class="zprt-rq">(povinné)</i></span><span class="zprt-in"><input type="text" id="zp_zprac" required list="zp_person_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Ověřil AZI<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_azi" list="zp_azi_options" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Číslo ověření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_overc" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><label class="zprt-f"><span>Datum ověření<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_overd" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span></label><span class="zprt-gap" aria-hidden="true"></span><label class="zprt-f zprt-w"><span>Prohlášení<i class="zprt-rq">(nepovinné)</i></span><span class="zprt-in"><input type="text" id="zp_prohl" autocomplete="off" maxlength="160"><button type="button" class="zprt-clr" tabindex="-1" aria-label="Vymazat pole" title="Vymazat pole" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></span>
 </label></div></section>
 </div></div>
 <datalist id="zp_zhot_options">
   <option value="Geodetická kancelář Nedoma &amp; Řezník, s.r.o."></option>
 </datalist>
-<datalist id="zp_sw_options">
-</datalist>
 <datalist id="zp_azi_options">
   <option value="Ing. P. Jašek, Ph.D."></option>
-  <option value="Ing. M. Nedoma"></option>
   <option value="Ing. T. Kulík"></option>
-  <option value="Ing. Z. Tábor"></option>
+  <option value="Ing. M. Nedoma"></option>
   <option value="Ing. Z. Řezník"></option>
+  <option value="Ing. Z. Tábor"></option>
 </datalist>
 <datalist id="zp_person_options">
+  <option value="Ing. D. Ambrož"></option>
   <option value="Ing. J. Bartůněk"></option>
-  <option value="Ing. M. Nedoma"></option>
   <option value="Ing. P. Jašek, Ph.D."></option>
+  <option value="Ing. A. Kotyk"></option>
   <option value="Ing. T. Kulík"></option>
   <option value="Ing. J. Mikeš"></option>
-  <option value="Ing. A. Kotyk"></option>
-  <option value="Ing. D. Ambrož"></option>
+  <option value="Ing. M. Nedoma"></option>
   <option value="Ing. D. Solovjev"></option>
-  <option value="P. Štěpán"></option>
   <option value="I. Marek"></option>
+  <option value="P. Štěpán"></option>
 </datalist>
 <div class="rmb"><button type="button" id="zprtReset" class="wi io" aria-label="Vymazat všechna pole protokolu" title="Vymazat všechna pole protokolu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button><button type="button" id="zprtCancel">Zrušit</button><button type="button" id="zprtWord" title="Uloží editovatelnou úvodní část protokolu do Wordu.">Uložit protokol DOCX</button><button type="submit" id="zprtGo" class="p">Uložit protokol PDF</button></div>
 </form>
@@ -5099,9 +5161,11 @@ const xe=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&
 const f1=v=>(Math.round(v*100)/100);
 // Only the live SVG header adapts to the return button; exports retain full text.
 function planNavWidth(){return window.matchMedia&&window.matchMedia("(pointer:coarse)").matches?172:144;}
+function planSeparateNav(){return !!window.matchMedia?.("(max-width:560px)").matches;}
 function planScreenScene(sc,prefix){
   const button=$(prefix+"3front"),general=prefix==="rg"&&RV.plane==="o";if((!button||button.hidden)&&!general)return sc;
-  const nav=planNavWidth(),width=Math.min(nav,button.offsetWidth||110),right=general&&button.hidden?sc.W-82:sc.W-22-(nav+width)/2-8;
+  const separateNav=planSeparateNav();
+  const nav=planNavWidth(),width=Math.min(nav,button.offsetWidth||110),right=separateNav?sc.W-12:general&&button.hidden?sc.W-82:sc.W-22-(nav+width)/2-8;
   return {...sc,frame:sc.frame.map(i=>{
     if(i.t!=="text"||i.a!=="start"||i.y>=sc.pl.y||i.x<sc.pl.x-1)return i;
     const end=i.y>12&&i.y-i.size<42?right:sc.W-12,available=Math.max(0,end-i.x),text=String(i.s);
@@ -5279,6 +5343,7 @@ const FOLD={"ł":"l","Ł":"L","đ":"d","Đ":"D","ø":"o","ß":"ss","ő":"o","Ő"
 function pdfTxt(s){ return Array.from(String(s)).map(ch=>{ const c=ch.charCodeAt(0);   // znak mimo kódování se nahradí základním písmenem bez diakritiky, jinak „?“
   if((c>=32&&c<127)||PDF_EXTRA[ch]!==undefined||(c>=0xA0&&c<=0xFF)) return ch;
   if(FOLD[ch]) return FOLD[ch];
+  if(ch==="″") return '"';
   if(ch==="←") return "<-"; if(ch==="→") return "->"; if(ch==="↑") return gmPreviewText("nahoru"); if(ch==="↓") return gmPreviewText("dolů");   // šipky v popisu os (standardní písmo PDF je nemá)
   const b=ch.normalize("NFD")[0]; return (b&&b.charCodeAt(0)>=32&&b.charCodeAt(0)<127)?b:"?"; }).join(""); }
 function pdfEsc(t){ return Array.from(t).map(ch=>{ const c=ch.charCodeAt(0);
@@ -5751,11 +5816,15 @@ let zprtMode="zss", zprtTask="custom", zprtDateDefault="", zprtDateEdited=false;
 const ZPRT_TASK_LABEL_ONLY=["zss","flatness"];
 const ZPRT_TASKS=["custom","gdsps","topo",...ZPRT_TASK_LABEL_ONLY], ZPRT_TASK_FIELDS=["nazev","metoda","pozn"];
 function zprtTaskMessage(task,key){
-  return task==="custom"||ZPRT_TASK_LABEL_ONLY.includes(task)?(key==="nazev"?"report.general.title":null):`report.task.${task}.${key}`;
+  if(task==="custom")return null;
+  return ZPRT_TASK_LABEL_ONLY.includes(task)?(key==="nazev"?"report.general.title":null):`report.task.${task}.${key}`;
 }
 function zprtTaskMatches(value,task,key){
   const id=zprtTaskMessage(task,key);
   return id?Object.values(GM_STABLE_MESSAGES[id]).includes(value):value==="";
+}
+function zprtLegacyCustomSubject(data){
+  return data.customSubject!==true&&Object.values(GM_STABLE_MESSAGES["report.general.title"]).includes(data.nazev);
 }
 function zprtTaskText(task,key){
   const id=zprtTaskMessage(task,key);
@@ -5775,7 +5844,11 @@ $("zprtTaskKind").onchange=()=>{
     zprtSave();
     return;
   }
-  const fields=ZPRT_TASK_FIELDS.map(key=>({key,field:$("zp_"+key),value:zprtTaskText(next,key)}));
+  const fields=ZPRT_TASK_FIELDS.map(key=>{
+    const field=$("zp_"+key);
+    const keepSubject=next==="custom"&&key==="nazev"&&!zprtTaskMatches(field.value,zprtTask,key);
+    return {key,field,value:keepSubject?field.value:zprtTaskText(next,key)};
+  });
   const overwrite=fields.some(({key,field,value})=>
     field.value.trim()&&field.value!==value&&!zprtTaskMatches(field.value,zprtTask,key));
   if(overwrite&&!window.confirm(gmT("report.task.replace"))){select.value=zprtTask;return;}
@@ -5811,7 +5884,7 @@ const ZPRT_PROHL=["Náležitostmi a přesností odpovídá právním předpisům
 const ZPRT_COMPANY="Geodetická kancelář Nedoma & Řezník, s.r.o.";
 /* 1.431: Zhotovitel měření má výchozí hodnotu (ZPRT_COMPANY) i v roletové nabídce zp_zhot_options */
 function zprtDef(k){ const en=globalThis.GeoMATLanguage?.get?.()==="en";
-  return k==="prilohy"?zprtAttachmentText():k==="nazev"?zprtTitle():k==="zhot"?ZPRT_COMPANY:k==="sw"?"GeoMAT "+APP_VERSION:k==="prohl"?ZPRT_PROHL[en?1:0]:undefined; }
+  return k==="prilohy"?zprtAttachmentText():k==="nazev"?(zprtMode==="general"?zprtTaskText(zprtTask,k):zprtTitle()):k==="zhot"?ZPRT_COMPANY:k==="sw"?"GeoMAT "+APP_VERSION:k==="prohl"?ZPRT_PROHL[en?1:0]:undefined; }
 function zprtNorm(k,v){   // uložená hodnota → hodnota pole (výchozí texty sledují jazyk a verzi programu)
   if(k==="prilohy") return zprtAttachmentText(v);
   if(k==="nazev") return zprtTitle(v);
@@ -5854,8 +5927,15 @@ function zprtJobFocus(){
     zprtJobField.setSelectionRange(caret,caret);
   }
 }
+const zprtLists=Object.fromEntries(["pristroj","sw","meril"].map(key=>[key,{
+  input:$("zp_"+key), pick:$("zp_"+key+"_pick"), chips:$("zp_"+key+"_chips"), items:[]
+}]));
 function zprtFieldValue(key){
-  const value=$("zp_"+key).value;
+  const value=$("zp_"+key).value, list=zprtLists[key];
+  if(list){
+    const draft=(key==="pristroj"?zprtInstrument(value):value).trim();
+    return [...new Set([...list.items,draft].filter(Boolean))].join("\n");
+  }
   return key==="zakazka"&&zprtJobMasked()&&value.includes(ZPRT_JOB_MARK)?"":value;
 }
 function zprtJobInput(){
@@ -5945,8 +6025,13 @@ function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().ke
   taskSelect.value=fixedTask||zprtTask;
   ZPRT_F.forEach(([k,d])=>{
     const field=$("zp_"+k);
+    if(zprtLists[k]){
+      zprtListLoad(k,o[k]);
+      field.removeAttribute("aria-invalid");
+      return;
+    }
     if(zprtMode==="general"&&ZPRT_TASK_FIELDS.includes(k)){
-      const value=o[k];
+      const value=k==="nazev"&&zprtTask==="custom"&&zprtLegacyCustomSubject(o)?"":o[k];
       field.value=typeof value!=="string"||zprtTaskMatches(value,zprtTask,k)?zprtTaskText(zprtTask,k):value;
       field.removeAttribute("aria-invalid");
       return;
@@ -5958,18 +6043,21 @@ function zprtLoad(){ let o={}; try{ o=JSON.parse(localStorage.getItem(zprtM().ke
   zprtDateDefault=gmDateText(today);
   zprtDateEdited=zprtMode==="general"&&o.datumEdited===true;
   zprtSdOptions();
-  $("zp_sw_options").replaceChildren(Object.assign(document.createElement("option"),{value:zprtDef("sw")}));   // 1.432: nabídka Použitý software = GeoMAT a aktuální verze (APP_VERSION)
   zprtDateOption("datum",today);
   zprtDateOption("zamereno",new Date(zprtM().files().at(-1)?.lastModified));
   if(typeof o.datum!=="string") $("zp_datum").value=zprtDateDefault;
   zprtJobInit();
 }
-function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k).trim(); }); return o; }
-function zprtResetSync(){ gmResetIdle($("zprtReset"),zprtTask==="custom"&&ZPRT_F.every(([k])=>{ const v=zprtFieldValue(k); if(k==="datum"&&zprtMode==="general")return !zprtDateEdited&&v===zprtDateDefault; const dv=zprtDef(k); return dv!==undefined?v===dv:v===""; }),"Všechna pole protokolu už jsou prázdná, není co mazat."); }
-function zprtSave(){ const o=zprtMode==="general"?{task:zprtTask,datumEdited:zprtDateEdited}:{}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k); }); writeStorage(zprtM().key,JSON.stringify(o)); zprtResetSync(); }
+/* 1.481: Přístroj / sériové číslo – zápis „název / číslo“: zkratka sériového čísla (s.č., s. č., v.č., výr. č., SN, S/N) se smaže a čárka nebo mezera před ní se nahradí „ / “ */
+function zprtInstrument(v){ if(typeof v!=="string") return v;
+  return v.replace(/\s*[,;]?\s*(?<![\p{L}\p{N}])(?:s\.\s*č\.?|v\.\s*č\.?|výr\.\s*č\.?|výr\.\s*čís(?:lo|\.)|sériové\s+č(?:\.|íslo)|s\/n|sn)(?![\p{L}\p{N}])\s*[:.]?\s*(?=\S)/giu," / ").replace(/^\s*\/\s*/,"").replace(/\s*\/\s*/g," / ").replace(/\s{2,}/g," "); }
+$("zp_pristroj").addEventListener("change",e=>{ const f=e.target, n=zprtInstrument(f.value); if(n!==f.value){ f.value=n; f.dispatchEvent(new Event("input",{bubbles:true})); } });
+function zprtValues(){ const o={}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k).trim(); }); for(const key of Object.keys(zprtLists))o[key]=o[key].split("\n").join("; "); return o; }
+function zprtResetSync(){ gmResetIdle($("zprtReset"),zprtTask==="custom"&&ZPRT_F.every(([k])=>{ const v=zprtFieldValue(k); if(k==="datum"&&zprtMode==="general")return !zprtDateEdited&&v===zprtDateDefault; if(zprtLists[k])return v===""; const dv=zprtDef(k); return dv!==undefined?v===dv:v===""; }),"Všechna pole protokolu už jsou prázdná, není co mazat."); }
+function zprtSave(){ const o=zprtMode==="general"?{task:zprtTask,datumEdited:zprtDateEdited,customSubject:zprtTask==="custom"}:{}; ZPRT_F.forEach(([k])=>{ o[k]=zprtFieldValue(k); }); writeStorage(zprtM().key,JSON.stringify(o)); zprtResetSync(); }
 let zprtOpener=null;
 function zprtOpen(mode){ zprtMode=Object.hasOwn(ZPRT_MODES,mode)?mode:"zss"; if(!zprtM().can()) return; zprtOpener=document.activeElement; zprtTaskLocalize(); zprtNoteTx(); zprtLoad(); zprtResetSync(); zprtClrSync(); $("zprt").hidden=false; zprtJobFocus(); }   // 1.430: fokus na první pole (Číslo zakázky)
-function zprtClose(){ if($("zprtDraft").open)zprtDraftClose(); $("zprt").hidden=true; if(zprtOpener&&zprtOpener.focus) zprtOpener.focus({preventScroll:true}); }
+function zprtClose(){ zprtMenuClose(); if($("zprtDraft").open)zprtDraftClose(); $("zprt").hidden=true; if(zprtOpener&&zprtOpener.focus) zprtOpener.focus({preventScroll:true}); }
 /* kreslení: souřadnice y shora (jako ve scénách plánu), převod na PDF uvnitř */
 function zprtCanvas(W,H){
   const N=v=>v.toFixed(2), Y=v=>(H-v).toFixed(2), out=[], rgb=h=>[1,3,5].map(i=>(parseInt(h.substr(i,2),16)/255).toFixed(3)).join(" ");
@@ -6081,7 +6169,7 @@ function zprtCoverBlocks(v,att,cell,row){
     heading(zprtL("MĚŘICKÉ ÚDAJE","SURVEY DATA")),
     field(zprtL("Bodové pole","Control points"),v.bpole),
     pair(21.95,zprtL("Souřadnicový systém","Coordinate system"),v.sys,zprtL("Výškový systém","Height system"),v.vys),
-    pair(24.95,zprtL("Přístroj / výr. č.","Instrument / serial No."),v.pristroj,zprtL("Použitý software","Software used"),v.sw),
+    pair(24.95,zprtL("Přístroj / sériové č.","Instrument / serial No."),v.pristroj,zprtL("Použitý software","Software used"),v.sw),
     field(zprtL("Podklady","Source data"),v.podk),
     field(zprtL("Metoda měření","Survey method"),v.metoda),
     pair(21.95,zprtL("Přesnost polohy","Horizontal accuracy"),sd(v.sxy),zprtL("Přesnost výšky","Vertical accuracy"),sd(v.sz)),
@@ -6521,7 +6609,8 @@ $("zprtReset").onclick=()=>{
   $("zprtTaskKind").value=zprtM().task||zprtTask;
   ZPRT_F.forEach(([key])=>{
     const field=$("zp_"+key);
-    field.value=key==="datum"&&zprtMode==="general"?zprtDateDefault:zprtDef(key)??"";
+    if(zprtLists[key])zprtListLoad(key,"");
+    else field.value=key==="datum"&&zprtMode==="general"?zprtDateDefault:zprtDef(key)??"";
     field.removeAttribute("aria-invalid");
   });
   zprtJobInit();
@@ -6535,7 +6624,236 @@ $("zprt").addEventListener("keydown",e=>{
   if(e.key==="Escape"){ e.preventDefault(); e.stopPropagation(); zprtClose(); return; }
   if(e.key==="Tab"){ const f=[...$("zprt").querySelectorAll("input,textarea,select,button")].filter(x=>!x.disabled&&x.offsetParent!==null); if(!f.length) return;
     const i=f.indexOf(document.activeElement); if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&i===f.length-1){ e.preventDefault(); f[0].focus(); } } });
-function zprtClrSync(){ for(const b of $("zprt").querySelectorAll(".zprt-clr")){ const f=b.parentElement.querySelector("input,textarea"); const value=f?zprtFieldValue(f.id.slice(3)):""; b.hidden=!value;
+function zprtListLoad(key,value){
+  const list=zprtLists[key], saved=typeof value==="string"?value:zprtDef(key)??"";
+  list.items=[...new Set(saved.split(/\r?\n/).map(value=>
+    (key==="pristroj"?zprtInstrument(value):zprtNorm(key,value)).trim()).filter(Boolean))];
+  list.input.value="";
+  list.pick.value="";
+  zprtListRender(list);
+}
+function zprtListRender(list){
+  list.chips.replaceChildren(...list.items.map((value,index)=>{
+    const chip=document.createElement("span"), label=document.createElement("span"), remove=document.createElement("button");
+    chip.className="fp";
+    label.textContent=value;
+    remove.type="button";
+    remove.textContent="×";
+    const title=gmPreviewText("Odebrat položku ⟦0⟧",[value]);
+    remove.title=title;
+    remove.setAttribute("aria-label",title);
+    remove.onclick=()=>{
+      list.items.splice(index,1);
+      zprtListRender(list);
+      zprtClrSync();
+      zprtSave();
+      list.input.focus();
+    };
+    chip.append(label,remove);
+    return chip;
+  }));
+  list.chips.hidden=!list.items.length;
+}
+function zprtListOptions(list,values){
+  for(const value of values){
+    const option=document.createElement("option");
+    option.value=option.textContent=value;
+    option.setAttribute("data-gm-i18n-skip","");
+    list.pick.append(option);
+  }
+}
+/* 1.499: seznamy lidí řazené podle abecedy příjmení – nejdřív lidé s titulem, potom bez titulu */
+const zprtTitleRe=/(^|[\s,])(Ing|Mgr|Bc|MUDr|JUDr|RNDr|PhDr|Doc|Prof|Ph\.\s?D|CSc|DrSc|Dr)\.(?=\s|,|$)/gi;
+function zprtPersonKey(name){
+  const titled=new RegExp(zprtTitleRe.source,"i").test(name);
+  const words=name.replace(zprtTitleRe," ").replace(/,/g," ").trim().split(/\s+/);
+  return {titled,surname:words[words.length-1]||"",rest:words.slice(0,-1).join(" ")};
+}
+function zprtPersonSort(values){
+  const cmp=(a,b)=>a.localeCompare(b,"cs",{sensitivity:"base"});
+  return values.slice().sort((a,b)=>{const x=zprtPersonKey(a),y=zprtPersonKey(b);return (y.titled-x.titled)||cmp(x.surname,y.surname)||cmp(x.rest,y.rest)||cmp(a,b);});
+}
+for(const id of ["zp_person_options","zp_azi_options"]){
+  const list=$(id);
+  if(!list)continue;
+  const byValue=new Map(Array.from(list.options,option=>[option.value,option]));
+  for(const value of zprtPersonSort([...byValue.keys()]))list.append(byValue.get(value));
+}
+zprtListOptions(zprtLists.sw,[zprtDef("sw"),"AutoCAD","Kokeš"]);
+zprtListOptions(zprtLists.meril,Array.from($("zp_person_options").options,option=>option.value));
+for(const [key,list] of Object.entries(zprtLists)){
+  const add=value=>{
+    const normalized=(key==="pristroj"?zprtInstrument(value):value).trim();
+    if(normalized&&!list.items.includes(normalized))list.items.push(normalized);
+    if(normalized)list.input.removeAttribute("aria-invalid");
+    zprtListRender(list);
+    zprtClrSync();
+    zprtSave();
+  };
+  list.pick.addEventListener("change",()=>{
+    const value=list.pick.value;
+    list.pick.value="";
+    if(value)add(value);
+  });
+  list.input.addEventListener("keydown",e=>{
+    if(e.key!=="Enter"||e.isComposing)return;
+    e.preventDefault();
+    const value=list.input.value;
+    list.input.value="";
+    if(value.trim())add(value);
+  });
+}
+// Sdílený seznam pro editovatelná pole, výběr do pilulek a typ úlohy.
+const zprtModal=$("zprt"), zprtMenu=document.createElement("div");
+zprtMenu.id="zprtMenu";
+zprtMenu.hidden=true;
+zprtMenu.setAttribute("role","listbox");
+zprtMenu.setAttribute("data-gm-i18n-skip","");
+zprtModal.append(zprtMenu);
+const zprtMenus=new Map(), zprtMenuEntries=[];
+let zprtMenuState=null;
+function zprtMenuClose(){
+  if(!zprtMenuState)return;
+  const {toggle,focus}=zprtMenuState;
+  toggle.setAttribute("aria-expanded","false");
+  focus.removeAttribute("aria-activedescendant");
+  if(focus!==toggle)focus.setAttribute("aria-expanded","false");
+  zprtMenu.hidden=true;
+  zprtMenuState=null;
+}
+function zprtMenuSync(){
+  for(const {field,source,toggle,editable} of zprtMenuEntries){
+    toggle.hidden=source.disabled||!Array.from(source.options).some(option=>option.value&&!option.disabled);
+    if(toggle.hidden&&zprtMenuState?.toggle===toggle)zprtMenuClose();
+    const label=source.getAttribute("aria-label")||
+      (editable?field.labels?.[0]?.querySelector(":scope > span")?.textContent:$("zprtTaskLabel").textContent);
+    if(label)toggle.setAttribute("aria-label",label);
+    if(source===field)toggle.setAttribute("aria-description",field.selectedOptions[0]?.textContent||"");
+  }
+}
+function zprtMenuOpen(entry,focus,query=""){
+  const {field,source,toggle}=entry;
+  const fold=value=>value.toLocaleLowerCase().normalize("NFD").replace(/\p{M}/gu,"");
+  const search=fold(query.trim());
+  const options=Array.from(source.options).filter(option=>
+    option.value&&!option.disabled&&!option.hidden&&
+    (!search||fold(option.value+" "+option.label).includes(search)));
+  zprtMenuClose();
+  if(!options.length||toggle.hidden)return;
+  zprtMenuState={...entry,focus,options,index:-1};
+  zprtMenu.setAttribute("aria-label",toggle.getAttribute("aria-label")||"");
+  zprtMenu.replaceChildren(...options.map((option,index)=>{
+    const row=document.createElement("div");
+    row.id="zprtMenuOption"+index;
+    row.setAttribute("role","option");
+    row.setAttribute("aria-selected",String(option.value===field.value));
+    row.dataset.index=index;
+    if(option.dataset.instrumentKind)row.dataset.instrumentKind=option.dataset.instrumentKind;
+    row.textContent=option.label||option.value;
+    return row;
+  }));
+  zprtMenu.hidden=false;
+  toggle.setAttribute("aria-expanded","true");
+  if(focus!==toggle)focus.setAttribute("aria-expanded","true");
+  zprtMenuPosition();
+  zprtMenu.scrollTop=0;
+}
+function zprtMenuSelect(index){
+  const state=zprtMenuState, option=state?.options[index];
+  if(!option)return;
+  const {field,source,editable,focus}=state;
+  zprtMenuClose();
+  focus.focus({preventScroll:true});
+  if(editable){
+    field.value=option.value;
+    field.dispatchEvent(new Event("input",{bubbles:true}));
+    field.dispatchEvent(new Event("change",{bubbles:true}));
+  }else{
+    source.value=option.value;
+    source.dispatchEvent(new Event("change",{bubbles:true}));
+  }
+}
+for(const field of zprtModal.querySelectorAll("input[list],.zprt-list>input,#zprtTaskKind")){
+  const editable=field.hasAttribute("list"), wrap=field.parentElement;
+  const source=editable?field.list:wrap.querySelector("select");
+  const toggle=document.createElement("button");
+  toggle.type="button";
+  toggle.className="zprt-menu-toggle";
+  toggle.setAttribute("aria-haspopup","listbox");
+  toggle.setAttribute("aria-controls",zprtMenu.id);
+  toggle.setAttribute("aria-expanded","false");
+  wrap.append(toggle);
+  const entry={field,source,toggle,editable};
+  zprtMenuEntries.push(entry);
+  zprtMenus.set(toggle,entry);
+  if(editable){
+    zprtMenus.set(field,entry);
+    field.removeAttribute("list");
+    field.setAttribute("role","combobox");
+    field.setAttribute("aria-autocomplete","list");
+    field.setAttribute("aria-controls",zprtMenu.id);
+    field.setAttribute("aria-expanded","false");
+    field.addEventListener("input",e=>{
+      if(e.isTrusted&&document.activeElement===field)zprtMenuOpen(entry,field,field.value);
+    });
+  }else{
+    toggle.setAttribute("role","combobox");
+    source.tabIndex=-1;
+    source.setAttribute("aria-hidden","true");
+    if(source!==field)source.hidden=true;
+  }
+  toggle.addEventListener("click",()=>{
+    if(zprtMenuState?.toggle===toggle)zprtMenuClose();
+    else zprtMenuOpen(entry,toggle);
+  });
+}
+zprtModal.addEventListener("keydown",e=>{
+  const entry=zprtMenus.get(e.target);
+  if(!entry||e.isComposing||entry.toggle.hidden)return;
+  if(e.key==="Tab"){zprtMenuClose();return;}
+  if(e.key==="Escape"&&zprtMenuState){
+    e.preventDefault();e.stopImmediatePropagation();zprtMenuClose();return;
+  }
+  if(e.key==="Enter"&&zprtMenuState?.toggle===entry.toggle&&zprtMenuState.index>=0){
+    e.preventDefault();e.stopImmediatePropagation();zprtMenuSelect(zprtMenuState.index);return;
+  }
+  if(e.key!=="ArrowDown"&&e.key!=="ArrowUp")return;
+  e.preventDefault();
+  if(zprtMenuState?.toggle!==entry.toggle)zprtMenuOpen(entry,e.target);
+  const state=zprtMenuState;
+  if(!state)return;
+  const last=state.options.length-1;
+  const next=e.key==="ArrowDown"?Math.min(last,state.index+1):state.index<0?last:Math.max(0,state.index-1);
+  zprtMenu.children[state.index]?.classList.remove("active");
+  state.index=next;
+  const row=zprtMenu.children[next];
+  row.classList.add("active");
+  state.focus.setAttribute("aria-activedescendant",row.id);
+  row.scrollIntoView({block:"nearest"});
+},true);
+zprtMenu.addEventListener("mousedown",e=>e.preventDefault());
+zprtMenu.addEventListener("click",e=>{
+  const row=e.target.closest("[data-index]");
+  if(row)zprtMenuSelect(Number(row.dataset.index));
+});
+zprtModal.addEventListener("pointerdown",e=>{
+  if(zprtMenuState&&!zprtMenu.contains(e.target)&&!zprtMenuState.field.parentElement.contains(e.target))zprtMenuClose();
+});
+zprtModal.addEventListener("focusin",e=>{
+  if(zprtMenuState&&!zprtMenuState.field.parentElement.contains(e.target))zprtMenuClose();
+});
+zprtModal.addEventListener("scroll",e=>{if(e.target!==zprtMenu)zprtMenuClose();},true);
+function zprtMenuPosition(){
+  if(!zprtMenuState)return;
+  const {field}=zprtMenuState;
+  /* 1.500: seznam protokolu bez pevného stropu výšky – posuvník jen když se celý nevejde nad ani pod pole */
+  gmPointMenuPosition(zprtMenu,field,{minWidth:0,room:0,cap:Infinity});
+  gmPointMenuPosition(zprtMenu,field,{minWidth:0,room:zprtMenu.scrollHeight+4,cap:Infinity});
+}
+window.addEventListener("resize",zprtMenuPosition);
+function zprtClrSync(){
+  zprtMenuSync();
+  for(const b of $("zprt").querySelectorAll(".zprt-clr")){ const f=b.parentElement.querySelector("input,textarea"); const value=f?zprtFieldValue(f.id.slice(3)):""; b.hidden=!(f&&zprtLists[f.id.slice(3)]?f.value:value);
     if(f){ const st=value.trim()?"st-fill":f.required?"st-req":"st-opt"; f.classList.remove("st-fill","st-opt","st-req"); f.classList.add(st); } }
   $("zprtForm").classList.toggle("zprt-ready",ZPRT_F.every(([key])=>!zprtFieldMissing(key,zprtFieldValue(key).trim())));
 }   // 1.427: křížek jen u vyplněného pole; 1.430: podbarvení podle stavu (vyplněno / nevyplněno nepovinné / nevyplněno povinné)
@@ -6546,7 +6864,7 @@ $("zprt").addEventListener("click",e=>{ const b=e.target.closest?.(".zprt-clr");
   f.dispatchEvent(new Event("input",{bubbles:true})); });
 $("zprt").addEventListener("mousedown",e=>{ if(e.target.closest?.(".zprt-clr")) e.preventDefault(); });   // fokus zůstane v poli
 $("zprtForm").addEventListener("input",e=>{
-  if(e.target===$("zprtTaskKind"))return;
+  if(e.target===$("zprtTaskKind")||Object.values(zprtLists).some(list=>e.target===list.pick))return;
   if(e.target===zprtJobField)zprtJobISNote.textContent="";
   if(zprtMode==="general"&&e.target.id==="zp_datum"){
     const date=e.target.value.trim();
@@ -6581,6 +6899,7 @@ function zprtValidate(values){
     zprtDraftLocalize();
     zprtJobISText();
     zprtTaskLocalize();
+    Object.values(zprtLists).forEach(zprtListRender);
     if(!$("zprt").hidden){ zprtNoteTx(); zprtSdOptions(); }
     ["nazev","prohl","prilohy"].forEach(k=>{
       if(zprtMode==="general"&&k==="nazev")return;
@@ -8376,7 +8695,7 @@ function rg3LegendData(W,H){
   }
   RG3.legend={source:RV.rows,view:RV.view,key,tsig,data};return data;
 }
-function rg3Plot(W,H){const hs=rgHs(W,H),top=Math.max(105,Math.ceil(88*hs)),d=rg3LegendData(W,H),c=RG3.layout,hd=$("rghd").checked,lg=$("rglogo").checked,nav=planNavWidth();if(c&&c.W===W&&c.H===H&&c.data===d&&c.hd===hd&&c.lg===lg&&c.nav===nav)return c.plot;const bottom=d?Math.ceil((d.horizontalRows?d.horizontalRows.length:d.compactRows?d.compactRows.length:d.maps.length+d.lines.length+d.notes.length)*d.lh+(hd?12*hs:0)+20):30,lb=lg?LOGO_BAND:0,plot={x:34,y:top,w:Math.max(12,W-nav-64),h:Math.max(12,H-top-bottom-lb)};RG3.layout={W,H,data:d,hd,lg,nav,plot};return plot;}
+function rg3Plot(W,H){const hs=rgHs(W,H),top=Math.max(105,Math.ceil(88*hs)),d=rg3LegendData(W,H),c=RG3.layout,hd=$("rghd").checked,lg=$("rglogo").checked,nav=planSeparateNav()?0:planNavWidth();if(c&&c.W===W&&c.H===H&&c.data===d&&c.hd===hd&&c.lg===lg&&c.nav===nav)return c.plot;const bottom=d?Math.ceil((d.horizontalRows?d.horizontalRows.length:d.compactRows?d.compactRows.length:d.maps.length+d.lines.length+d.notes.length)*d.lh+(hd?12*hs:0)+20):30,lb=lg?LOGO_BAND:0,plot={x:34,y:top,w:Math.max(12,W-nav-64),h:Math.max(12,H-top-bottom-lb)};RG3.layout={W,H,data:d,hd,lg,nav,plot};return plot;}
 function rg3Fit(W,H,m){
  const corners=m.fitCorners.concat($("rg3plane").checked||$("rggr").checked?m.corners:[]);
     const {cx,cy,scale,depth}=gmCameraFit(corners,p=>rg3Rotate(p,m),rg3Plot(W,H),.5,1.2,1.3);
@@ -8702,6 +9021,12 @@ function rg2LegendData(W,H,fs,width,top,dxf=false,pdf=false){
  if(RV.plane==='o'&&height()>available){
   const entries=rgLegMapEntries(dxf),cut=entries.findIndex(e=>e.kind==='volumes');
   if(cut>=0){d.maps=rgLegMapRows(d.ls,width,entries.slice(0,cut).map(e=>e.w==='box'?{...e,t:e.t.split(':')[0]}:e));d.notes=rgLegendWrap((rvLM()?'h':'d')+' ['+RV.set.u+']'+gmPreviewText("; mezní odchylka ⟦0⟧. Legenda zkrácena; kubatury v souhrnu.",[rvTolTxtE()]),width,d.ls*.95);d.compact=true;}
+ }
+ if(!dxf&&!pdf&&planSeparateNav()&&height()>available){
+  const rows=Math.max(0,Math.floor(available/d.lh)-1);
+  d.lines=d.lines.slice(0,rows);
+  d.maps=d.maps.slice(0,rows-d.lines.length);
+  d.notes=[gmPreviewText("Zkrácená legenda")];
  }
  return d;
 }
@@ -10102,6 +10427,31 @@ function gmHomeSync(){ document.querySelectorAll("#gmHome .gg-go").forEach(go=>{
   if(scene) scene.hidden=tab.hidden; const off=tab.getAttribute("aria-disabled")==="true";
   if(!go.dataset.title0) go.dataset.title0=globalThis.GeoMATLanguage?.original(go,"title")??go.title;   // 1.380: český originál i po startu v EN
   go.classList.toggle("mod-off",off); if(off){ go.setAttribute("aria-disabled","true"); go.title=tab.title; } else { go.removeAttribute("aria-disabled"); gmSetText(go,"title",go.dataset.title0); } }); }
+/* 1.479: úvodní stránka – animace karet projde po zobrazení jen jednou a zastaví se na plném snímku (těsně před závěrečným zmizením).
+   Smyčka běží, jen když je karta aktivní: myš nad kartou, nebo na dotykovém zařízení tapnutí do plochy karty (tapnutí mimo kartu ji ukončí).
+   Po deaktivaci se rozběhnutý cyklus dokončí a animace se opět zastaví na plném snímku. */
+const GG_ARMED=new WeakSet();
+function ggScenes(){ return [...document.querySelectorAll("#mod-home .gg-list>.gg-scene")]; }
+function ggAnims(sc){ const svg=sc.querySelector("svg"); return svg&&svg.getAnimations?svg.getAnimations({subtree:true}):[]; }
+function ggStop(sc,an){ if(sc.dataset.ggStop) return +sc.dataset.ggStop; let st=0;
+  an.forEach(a=>{ const kf=a.effect.getKeyframes(); for(let i=0;i+1<kf.length;i++){ const o=kf[i].opacity,n=kf[i+1].opacity; if(o!==undefined&&n!==undefined&&+o>=1&&+n<1&&kf[i].computedOffset<1) st=Math.max(st,kf[i].computedOffset); } });
+  st=st>0?st:1; sc.dataset.ggStop=String(st); return st; }
+function ggArm(sc){ const an=ggAnims(sc); if(!an.length) return; const st=ggStop(sc,an), live=sc.classList.contains("gg-live");
+  an.forEach(a=>{ if(GG_ARMED.has(a)) return; GG_ARMED.add(a); a.effect.updateTiming({iterations:live?Infinity:st,fill:"forwards"}); }); }
+function gmHomeAnimArm(){ ggScenes().forEach(sc=>{ sc.classList.remove("gg-live"); ggArm(sc); }); }
+function ggLive(sc,on){ if(!sc||sc.classList.contains("gg-live")===on) return; sc.classList.toggle("gg-live",on); ggArm(sc);
+  const an=ggAnims(sc); if(!an.length) return; const st=ggStop(sc,an), D=+an[0].effect.getTiming().duration||1;
+  if(on){ const done=an.some(a=>a.playState==="finished"); an.forEach(a=>{ a.effect.updateTiming({iterations:Infinity}); if(done) a.currentTime=0; a.play(); }); return; }
+  const ct=+an[0].currentTime||0, k=Math.floor(ct/D), f=ct/D-k, it=(f<=st?k:k+1)+st;
+  an.forEach(a=>{ a.effect.updateTiming({iterations:it}); }); }
+(function(){
+  const home=document.getElementById("mod-home"); if(!home) return;
+  home.addEventListener("pointerover",e=>{ if(e.pointerType!=="mouse") return; const sc=e.target.closest(".gg-list>.gg-scene"); if(sc) ggLive(sc,true); });
+  home.addEventListener("pointerout",e=>{ if(e.pointerType!=="mouse") return; const sc=e.target.closest(".gg-list>.gg-scene"); if(sc&&!(e.relatedTarget&&sc.contains(e.relatedTarget))) ggLive(sc,false); });
+  document.addEventListener("pointerdown",e=>{ if(e.pointerType==="mouse") return; const sc=e.target.closest&&e.target.closest("#mod-home .gg-list>.gg-scene"); ggScenes().forEach(x=>{ if(x!==sc) ggLive(x,false); }); if(sc) ggLive(sc,true); },true);
+  // Animace vytvořená později (např. karta zobrazená až za běhu) se při prvním opakování přepne do stejného režimu.
+  home.addEventListener("animationiteration",e=>{ const sc=e.target.closest&&e.target.closest(".gg-list>.gg-scene"); if(sc) ggArm(sc); });
+})();
 /* ---------- přepínání modulů (ZSS pilot / Rovinnost) ---------- */
 (function(){
   const MK=GM_KEY("geomat.app.module.v1"), TT={home:"GeoMAT",zss:"ZSS pilot",rov:"Rovinnost",terrain:"DMT"};
@@ -10111,8 +10461,10 @@ function gmHomeSync(){ document.querySelectorAll("#gmHome .gg-go").forEach(go=>{
     if(!TT[m]||(m==="terrain"&&!terrainAdmin())) m="zss";
     nav.querySelectorAll("button.mod").forEach(b=>{ const on=b.dataset.mod===m; b.classList.toggle("act",on); if(on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
     const hb=document.getElementById("gmHomeBtn"); if(hb){ hb.classList.toggle("act",m==="home"); if(m==="home") hb.setAttribute("aria-current","page"); else hb.removeAttribute("aria-current"); }
+    if(m!=="home") ggScenes().forEach(sc=>sc.classList.remove("gg-live"));
     if(m==="home") gmHomeSync();   // 1.374: tlačítka Otevřít modul podle dostupnosti modulů v horní liště
     ["home","zss","rov","terrain"].forEach(k=>{ const el=document.getElementById("mod-"+k); if(el) el.hidden=(k!==m); });
+    if(m==="home") gmHomeAnimArm();   // 1.479: animace karet jednou, smyčka jen u aktivní karty
     [["home","gmHomeHeadTools"],["zss","zssHeadTools"],["rov","rvHeadTools"],["terrain","trHeadTools"]].forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.hidden=(k!==m); });   // Info a Reset aktivního modulu jsou v horní liště
     document.body.classList.toggle("mrov",m==="rov");
     document.body.classList.toggle("mterrain",m==="terrain");
@@ -10195,7 +10547,7 @@ function pg3LegendSymbols(m){
   return LG;
 }
 function pg3Layout(W,H){
- const m=PG3.model,fs=Math.min(1.25,Math.max(.75,Math.min(W,H)/600))*pct('gt')/100,nav=planNavWidth(),key=[globalThis.GeoMATLanguage?.get?.(),W,H,fs,nav,$('gg').checked,$('gh').checked,$('glogo').checked].join('|'),old=PG3.layout;if(old&&old.model===m&&old.key===key)return old;
+ const m=PG3.model,fs=Math.min(1.25,Math.max(.75,Math.min(W,H)/600))*pct('gt')/100,nav=planSeparateNav()?0:planNavWidth(),key=[globalThis.GeoMATLanguage?.get?.(),W,H,fs,nav,$('gg').checked,$('gh').checked,$('glogo').checked].join('|'),old=PG3.layout;if(old&&old.model===m&&old.key===key)return old;
  let ls=planLegendSize(W,H),texts=[],LG=[];if($('gg').checked&&m){LG=pg3LegendSymbols(m);texts=[gmPreviewText("Vyhodnocené středy: ⟦0⟧ · měřené body: ⟦1⟧ · body PD se Z: ⟦2⟧", [gPiles().length, m.pts.filter(p=>p.kind==='measured').length, m.pts.filter(p=>p.kind==='pd').length]),($('gc').checked||$('gr').checked?gmPreviewText("Kružnice: vodorovné průřezy ve výšce středu; spojnice PD → skutečný střed."):gmPreviewText("Spojnice PD → skutečný střed.")),...(m.missing?[gmPreviewText("PD bez výšky: ⟦0⟧; pomocná rovina Z = ⟦1⟧ m (pouze projekce).", [m.missing, m.datum.toFixed(3)])]:[])];}
  let rows=texts.flatMap(t=>rgWrapText(t,Math.max(80,W-60),ls*.56));if(rows.length*ls*1.35>Math.max(65,H*.28)){texts=m&&$('gg').checked?[gmPreviewText("Středy ⟦0⟧ · PD se Z ⟦1⟧ · skutečné výšky.", [gPiles().length, m.pts.filter(p=>p.kind==='pd').length]),...(m.missing?[gmPreviewText("PD bez Z: ⟦0⟧; pouze projekce Z = ⟦1⟧ m.", [m.missing, m.datum.toFixed(3)])]:[])]:[];rows=texts.flatMap(t=>rgWrapText(t,Math.max(80,W-60),ls*.56));}
  const lsc=ls/9,mw=22*lsc,colW=LG.length?Math.max(...LG.map(g=>mw+rgLegendTextWidth(g.s,ls)))+16*lsc:1,cols=Math.max(1,Math.floor(Math.max(80,W-nav-64)/colW)),srows=Math.ceil(LG.length/cols),rowH=15*lsc;
@@ -11208,7 +11560,7 @@ function trVolumeReferenceChoose(key,ref,focusManual=true){if(!terrainAdmin()||T
 function trVolumePointChoice(source,index){const p=source.points[index],ref={kind:'point',...trPtRef(source.id,index,p)};return {key:'point:'+JSON.stringify([source.id,index,String(p.id)]),text:String(p.id),ref,label:source.label+' · Z = '+terrainFormat(p.z)+' m'};}
 function trVolumePickChoices(key,text='',typing=false){const cache=trVolumeRefCache(key),fixed=[{key:'manual',text:gmPreviewText("ručně"),ref:{kind:'manual'}},...['min','max','avg','med'].map(kind=>({key:kind,text:gmPreviewText(RV_ST[kind])+gmPreviewText(" (výšky zdroje)"),ref:{kind},value:cache.status==='ready'?terrainFormat(cache.stats[kind])+' m':cache.status==='pending'?'…':'—'}))],out=rvPointFilter(fixed,text,typing),query=typing?rvPointFold(text.trim()):'';let more=false,count=0;outer:for(const s of cache.sources)for(let j=0;j<(s.indices?s.indices.length:s.points.length);j++){const index=s.indices?s.indices[j]:j,p=s.points[index];if(query&&!rvPointFold(p.id).includes(query))continue;if(count>=100){more=true;break outer;}out.push(trVolumePointChoice(s,index));count++;}return {choices:out,more};}
 function trVolumePickClose(){if(!TR_VOLUME_PICK)return;clearTimeout(TR_VOLUME_PICK.timer);TR_VOLUME_PICK.input.setAttribute('aria-expanded','false');TR_VOLUME_PICK.input.removeAttribute('aria-activedescendant');$('trVolumeMenu').hidden=true;TR_VOLUME_PICK=null;}
-function gmPointMenuPosition(box,input){const r=input.getBoundingClientRect(),width=Math.min(Math.max(r.width,220),Math.max(120,innerWidth-16)),below=innerHeight-r.bottom-8,above=r.top-8,up=below<150&&above>below;box.style.width=width+'px';box.style.maxHeight=Math.max(48,Math.min(240,up?above:below))+'px';box.style.left=Math.max(8,Math.min(innerWidth-width-8,r.left))+'px';box.style.top=Math.max(8,up?r.top-box.offsetHeight-2:r.bottom+2)+'px';}
+function gmPointMenuPosition(box,input,{minWidth=220,room=150,cap=240}={}){const r=input.getBoundingClientRect(),width=Math.min(Math.max(r.width,minWidth),Math.max(120,innerWidth-16)),below=innerHeight-r.bottom-8,above=r.top-8,up=below<room&&above>below;box.style.width=width+'px';box.style.maxHeight=Math.max(48,Math.min(cap,up?above:below))+'px';box.style.left=Math.max(8,Math.min(innerWidth-width-8,r.left))+'px';box.style.top=Math.max(8,up?r.top-box.offsetHeight-2:r.bottom+2)+'px';}
 function trVolumePickDraw(){const state=TR_VOLUME_PICK;if(!state)return;const data=trVolumePickChoices(state.key,state.input.value,state.typing);state.choices=data.choices;state.active=Math.min(state.active,state.choices.length-1);const box=$('trVolumeMenu'),selected=TERRAIN[state.key].model.volumeRef;box.style.setProperty('--pro',tpColor(state.key));box.innerHTML=state.choices.map((q,i)=>'<div id="trVolumeOpt'+i+'" role="option" class="rvpdopt'+(state.active===i?' active':'')+'" data-tr-volume-choice="'+i+'" aria-selected="'+(JSON.stringify(q.ref)===JSON.stringify(selected))+'"'+(q.label?' title="'+esc(q.label)+'"':'')+'>'+esc(q.text)+(q.value?'<span class="rvpdval">'+esc(q.value)+'</span>':'')+'</div>').join('')+(data.more?gmPreviewText("<div class=\"rvpdempty\">Zobrazeno prvních 100 bodů. Další vyhledejte podle názvu.</div>"):'')+(!state.choices.length?gmPreviewText("<div class=\"rvpdempty\">Žádný odpovídající bod</div>"):'');box.hidden=false;state.input.setAttribute('aria-expanded','true');if(state.active>=0){const id='trVolumeOpt'+state.active;state.input.setAttribute('aria-activedescendant',id);box.querySelector('#'+id)?.scrollIntoView({block:'nearest'});}else state.input.removeAttribute('aria-activedescendant');gmPointMenuPosition(box,state.input);}
 function trVolumePickOpen(key,typing=false){if(!terrainAdmin()||TERRAIN.busy)return;if(TR_VOLUME_PICK?.key!==key)trVolumePickClose();const input=$('tr'+key+'LevelPick');clearTimeout(TR_VOLUME_PICK?.timer);TR_VOLUME_PICK={key,input,typing,choices:[],active:-1,timer:null};const cache=trVolumeRefCache(key);if(cache.n)trVolumeStatsEnsure(key,cache);trVolumePickDraw();$('trVolumeMenu').scrollTop=0;}
 function trVolumePickCommit(key,focusManual=true){const input=$('tr'+key+'LevelPick');if(input.dataset.trTyped!=='1')return;const text=input.value.trim(),fixed=[{kind:'manual',text:gmPreviewText("ručně")},...['min','max','avg','med'].map(kind=>({kind,text:gmPreviewText(RV_ST[kind])+gmPreviewText(" (výšky zdroje)")}))],choice=fixed.find(q=>rvPointFold(q.text)===rvPointFold(text));if(!text||choice){trVolumeReferenceChoose(key,{kind:choice?.kind||'manual'},focusManual);return;}let found=null,ambiguous=false;const query=rvPointFold(text);outer:for(const s of trVolumeRefCache(key).sources)for(let j=0;j<(s.indices?s.indices.length:s.points.length);j++){const i=s.indices?s.indices[j]:j;if(rvPointFold(s.points[i].id)!==query)continue;if(found){ambiguous=true;break outer;}found=trVolumePointChoice(s,i);}if(found&&!ambiguous){trVolumeReferenceChoose(key,found.ref);return;}input.value=trVolumeRefText(key);input.dataset.trTyped='0';trVolumePickClose();toast(ambiguous?gmPreviewText("Název bodu je ve více zdrojích. Vyberte konkrétní řádek nabídky; soubor je uveden v tooltipu."):gmPreviewText("Bod nebyl ve vybraném zdroji nalezen. Zadejte celý název nebo vyberte z nabídky."));}
@@ -13266,7 +13618,7 @@ function tpPdfMapScale(zmap,x,y){
  });
 }
 function tpFrame(m,v,W,H,spatial,opt){const pl=tpPlot(W,H),items=[],frame=[],line=(a,b,c='#d4d8df',sw=.7)=>({t:'line',x1:a.x,y1:a.y,x2:b.x,y2:b.y,c,sw}),text=(x,y,s,size=12,c='#263040')=>({t:'text',x,y,s,size,c,a:'start'}),font=TPLAN.font/100,tax=opt?9:PLAN_AXIS_PX*font;   // 3.10: popisky os na obrazovce 10 px × Písmo, PDF beze změny
- const layout=tpLayout(W,H,m.groups);frame.push(text(pl.x,layout.titleY,gmPreviewText("Digitální model terénu · ")+(spatial?'3D':gmPreviewText("2D půdorys")),14*layout.hs,GC.txt));const names=m.groups.map(g=>(g.key==='m'?gmPreviewText("Měření"):'Reference')+': '+g.label),header=opt?.head2||names.join(' · '),maxChars=Math.max(16,Math.floor((W-planNavWidth()-pl.x-30)/(6*layout.hs)));if(!layout.tiny)frame.push(text(pl.x,layout.fileY,header.length>maxChars?header.slice(0,maxChars-1)+'…':header,11*layout.hs,GC.txt));if(!layout.compact)frame.push(text(pl.x,layout.noteY,(tpDeltaMapOn()?gmPreviewText("Plocha ΔZ = měření − ")+(trCompareOn()?trRefLabel()+gmPreviewText(" [m] · pouze společná plocha"):'Z₀ [m]'):tpZmapData(m)?gmPreviewText("Mapa Z = výšky [m] · ")+tpZmapLabel():gmPreviewText("Souřadnice a výšky v metrech · skutečné měřítko všech os")),10*layout.hs,GC.gray));frame.push({t:'rect',x:pl.x,y:pl.y,w:pl.w,h:pl.h,c:'#cbd0d8',sw:.7});
+ const layout=tpLayout(W,H,m.groups);frame.push(text(pl.x,layout.titleY,gmPreviewText("Digitální model terénu · ")+(spatial?'3D':gmPreviewText("2D půdorys")),14*layout.hs,GC.txt));const names=m.groups.map(g=>(g.key==='m'?gmPreviewText("Měření"):'Reference')+': '+g.label),header=opt?.head2||names.join(' · '),maxChars=Math.max(16,Math.floor((W-(!opt&&planSeparateNav()?0:planNavWidth())-pl.x-30)/(6*layout.hs)));if(!layout.tiny)frame.push(text(pl.x,layout.fileY,header.length>maxChars?header.slice(0,maxChars-1)+'…':header,11*layout.hs,GC.txt));if(!layout.compact)frame.push(text(pl.x,layout.noteY,(tpDeltaMapOn()?gmPreviewText("Plocha ΔZ = měření − ")+(trCompareOn()?trRefLabel()+gmPreviewText(" [m] · pouze společná plocha"):'Z₀ [m]'):tpZmapData(m)?gmPreviewText("Mapa Z = výšky [m] · ")+tpZmapLabel():gmPreviewText("Souřadnice a výšky v metrech · skutečné měřítko všech os")),10*layout.hs,GC.gray));frame.push({t:'rect',x:pl.x,y:pl.y,w:pl.w,h:pl.h,c:'#cbd0d8',sw:.7});
  const project=tpProjector(m,v,W,H,spatial,pl);if(!spatial){const headerBottom=layout.status.text?layout.statusY:layout.tiny?layout.titleY:layout.compact?layout.fileY:layout.noteY;if(pl.y-33>=headerBottom)frame.push({...text(pl.x,pl.y-24,AXIS_PLAN,tax,'#7b8493'),a:'start'});}   // popis os jako v ostatních modulech
  const tpGridLines=spatial?[]:tpGrid(m,v,W,H,false),tpGridStep=tpNice(85/v.scale),tpYEvery=axisLabelEvery(tpGridStep,v.scale,tpGridLines.filter(g=>g.dir==='Y').map(g=>g.label),tax);if(!spatial)for(const grid of tpGridLines){const a=project(grid.a),b=project(grid.b);items.push(line(a,b));if(grid.dir==='Y'){if(Math.round(grid.a[0]/tpGridStep)%tpYEvery!==0)continue;const half=grid.label.length*2.5,headerBottom=layout.status.text?layout.statusY:layout.tiny?layout.titleY:layout.compact?layout.fileY:layout.noteY;if(pl.y-17>=headerBottom+6&&a.x>=pl.x+half&&a.x<=pl.x+pl.w-half)frame.push({...text(a.x,pl.y-8,grid.label,tax,'#7b8493'),a:'middle'});}else if(a.y>=pl.y+12&&a.y<=pl.y+pl.h-6&&tpAxisTextWidth(grid.label,tax)<=pl.x-14)frame.push({...text(pl.x-6,a.y+tax*.38,grid.label,tax,'#7b8493'),a:'end'});}
  if(!spatial&&trDeltaWanted()){const delta=trDeltaItems(project,pl);for(const item of delta)items.push(item);}
@@ -14155,6 +14507,7 @@ function gmProjectHomeEmpty(o){
  const task=ZPRT_TASKS.includes(o.task)?o.task:'custom';if(task!=='custom')return false;
  return ZPRT_F.every(([k,d])=>{const v=o[k];if(typeof v!=='string'||!v.trim())return true;
   if(k==='datum')return o.datumEdited!==true;
+  if(k==='nazev'&&zprtLegacyCustomSubject(o))return true;
   if(ZPRT_TASK_FIELDS.includes(k))return zprtTaskMatches(v,task,k);
   if(k==='sw')return /^GeoMAT \d+\.\d+$/.test(v.trim());if(k==='prohl')return ZPRT_PROHL.includes(v.trim());if(k==='zhot')return v===ZPRT_COMPANY;
   return v.trim()===d;});
@@ -14686,8 +15039,12 @@ gmJobResume();
  "datum měření": "survey date",
  "Měřil": "Surveyed by",
  "Zpracoval": "Processed by",
- "Přístroj / výr. č.": "Instrument / serial No.",
- "např. Trimble S7, GNSS Trimble R12i": "e.g. Trimble S7, GNSS Trimble R12i",
+ "Přístroj / sériové č.": "Instrument / serial No.",
+ "např. Leica GS18 T / 4904170": "e.g. Leica GS18 T / 4904170",
+ "Vybrat přístroj": "Choose an instrument",
+ "Odebrat položku ⟦0⟧": "Remove item ⟦0⟧",
+ "Vybrat software": "Choose software",
+ "Vybrat měřiče": "Choose a surveyor",
  "Stavební objekt": "Building object",
  "Výškový systém": "Height system",
  "Přesnost polohy [m]": "Horizontal accuracy [m]",
