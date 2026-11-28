@@ -50,7 +50,7 @@ Postup:
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GeoMAT</title>
-<script>const APP_VERSION="1.554", APP_DATE="28. 11. 2026";
+<script>const APP_VERSION="1.561", APP_DATE="28. 11. 2026";
 const ZPRT_VER_K="geomat.report.version.v1";
 function zprtDark(){
   // Starší varianty se v Nastavení zobrazovaly jako Světlá.
@@ -1058,7 +1058,7 @@ body.mterrain #zsstw{max-height:none}
 .tin-ptform input{width:9.5em}
 .tin-ptform #tpTinPtZ{width:7em}
 .tin-ptform #gAddZ,.tin-ptform #kgAddZ{width:7em}
-#kgEditForm[hidden],#kgEditCoords[hidden],#kgEditNumber[hidden]{display:none}
+#kgEditForm[hidden],#kgEditNumber[hidden]{display:none}
 .tin-ptform #rvAddZ{width:7em}
 .tin-ptform button[hidden]{display:none}
 #rgAddOverlay[hidden]{display:none}#kgAddOverlay[hidden]{display:none}
@@ -1665,61 +1665,78 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
 #mod-home .gg-sign{font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums}
 @media (max-width:560px){#mod-home .gg-list>.gg-scene{gap:12px;padding:12px}#mod-home .gg-intro{font-size:14px;line-height:1.55}}
 @media (prefers-reduced-motion:reduce){#mod-home .gg-list>.gg-scene,#mod-home .gg-go{transition:none}}
-/* 1.535: ZSS SK – hladiny DXF jako seznam s žárovkami */
-#zsskparams .zlay-grp{position:relative}
-#zsskLayers{display:flex;flex-direction:column;gap:8px;min-width:0}
-#zsskLayers [hidden]{display:none!important}
-#zsskLayers .zlay-top{position:absolute;top:10px;right:12px;pointer-events:none}
-#zsskLayers .zlay-count{font-size:12px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
-#zsskLayers .zlb{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:var(--mut);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-#zsskLayers .zlb.on{stroke:var(--ac);--zlbf:color-mix(in srgb,var(--ac) 70%,transparent);--zlbr:1}
-#zsskLayers .zlay-tools{display:grid;grid-template-columns:1fr 1fr auto;gap:6px}
-#zsskLayers .zlay-bulk{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:4px 10px;border:1px solid var(--bd);color:var(--fg);background:var(--card);font-weight:600;min-width:0;white-space:nowrap}
-#zsskLayers .zlay-bulk span{overflow:hidden;text-overflow:ellipsis}
-#zsskLayers .zlay-bulk:hover:not(:disabled){border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--card))}
-#zsskLayers .zlay-bulk:disabled{opacity:.5;cursor:default}
-#zsskLayers .zlay-bulk .zlb{stroke:currentColor}
-#zsskLayers .zlay-bulk .zlb.on{stroke:var(--ac)}
-#zsskLayers .zlay-inv{min-width:36px;min-height:32px;border-color:var(--bd);color:var(--fg)}
-#zsskLayers .zlay-search{position:relative;display:flex;align-items:center;margin:0}
-#zsskLayers .zlay-search .ic{position:absolute;left:9px;width:16px;height:16px;stroke:var(--mut);fill:none;stroke-width:1.8;pointer-events:none}
-#zsskLayerSearch{width:100%;min-width:0;height:32px!important;padding:4px 10px 4px 32px;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:var(--r-field,3px)}
-#zsskLayerSearch:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 2px color-mix(in srgb,var(--ac) 22%,transparent)}
-#zsskLayers .zlay-list{max-height:320px;overflow:auto;border:1px solid var(--bd);border-radius:var(--r-field,3px);background:var(--card);overscroll-behavior:contain;scrollbar-width:thin}
-#zsskLayers .zlay-file{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:10px;padding:6px 10px;background:color-mix(in srgb,var(--ac) 9%,var(--card));border-bottom:1px solid var(--bd)}
-#zsskLayers .zlay-file:not(:first-child){border-top:1px solid var(--bd)}
-#zsskLayers .zlay-fbtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0;border:1px solid var(--bd);background:var(--card);border-radius:var(--r-btn,3px)}
-#zsskLayers .zlay-fbtn:hover{border-color:var(--ac)}
-#zsskLayers .zlay-fname{flex:1 1 auto;min-width:0;font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#zsskLayers .zlay-fcnt,#zsskLayers .zlay-n{flex:0 0 auto;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
-#zsskLayers .zlay-row{display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:5px 10px 5px 18px;border:0;border-bottom:1px solid color-mix(in srgb,var(--bd) 70%,transparent);border-radius:0;background:none;color:var(--mut);font-weight:400;text-align:left}
-#zsskLayers .zlay-row:last-child{border-bottom:0}
-#zsskLayers .zlay-row:hover{background:color-mix(in srgb,var(--ac) 6%,var(--card))}
-#zsskLayers .zlay-row:focus-visible,#zsskLayers .zlay-fbtn:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
-#zsskLayers .zlay-sw{width:11px;height:11px;flex:0 0 auto;border-radius:2px;background:color-mix(in srgb,var(--sw) 70%,var(--card));border:1px solid color-mix(in srgb,var(--sw) 60%,var(--fg) 15%);opacity:.55}
-#zsskLayers .zlay-name{flex:1 1 auto;min-width:0;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:13px;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#zsskLayers .zlay-row.on{color:var(--fg)}
-#zsskLayers .zlay-row.on .zlay-name{font-weight:600}
-#zsskLayers .zlay-row.on .zlay-sw{opacity:1}
-#zsskLayers .zlay-row.on .zlay-n{color:var(--fg)}
-#zsskLayers .zlay-empty{padding:12px;color:var(--mut);font-size:13px;text-align:center}
-#zsskLayers .zlay-new{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding-top:2px}
-#zsskLayers .zlay-new>span:first-child{font-size:13px;color:var(--fg)}
-#zsskLayers .zlay-new .rvseg{--zc:var(--ac);--zfg:var(--acfg)}
-#zsskLayers .zlay-new .rvseg label{min-width:88px;font-weight:600}
-#zsskLayerHint.zlay-warn{color:var(--red);font-weight:500}
-#zsskLayers .zlay-plan{margin:0;padding-top:8px;border-top:1px solid var(--bd)}
-#zsskparams .zlay-grp{container-type:inline-size}
+/* 1.535: hladiny DXF jako seznam s žárovkami; 1.556 společné pro všechny moduly (karta .zlay) */
+.zlay-grp{position:relative}
+.zlay{display:flex;flex-direction:column;gap:8px;min-width:0}
+.zlay [hidden]{display:none!important}
+.zlay .zlay-top{position:absolute;top:10px;right:12px;pointer-events:none}
+.zlay .zlay-count{font-size:12px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
+.zlay .zlb{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:var(--mut);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.zlay .zlb.on{stroke:var(--ac);--zlbf:color-mix(in srgb,var(--ac) 70%,transparent);--zlbr:1}
+.zlay .zlay-tools{display:grid;grid-template-columns:1fr 1fr auto auto;gap:6px}
+.zlay .zlay-tools:has(>.zlay-pick[hidden]){grid-template-columns:1fr 1fr auto}
+.zlay .zlay-tools>[hidden]{display:none}
+.zlay .zlay-pick[aria-pressed="true"]{background:var(--ac);color:var(--acfg);border-color:var(--ac)}
+.zlay .zlay-pick-hint{margin:-4px 0 0}
+.zlay .zlay-row.zlay-hot{background:color-mix(in srgb,var(--ac) 14%,var(--card));box-shadow:inset 3px 0 0 var(--ac)}
+.zlay-picking,.zlay-picking *{cursor:crosshair!important}
+.zlay-picking.zlay-hot,.zlay-picking.zlay-hot *{cursor:pointer!important}
+.zlay .zlay-bulk{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:4px 10px;border:1px solid var(--bd);color:var(--fg);background:var(--card);font-weight:600;min-width:0;white-space:nowrap}
+.zlay .zlay-bulk span{overflow:hidden;text-overflow:ellipsis}
+.zlay .zlay-bulk:hover:not(:disabled){border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--card))}
+.zlay .zlay-bulk:disabled{opacity:.5;cursor:default}
+.zlay .zlay-bulk .zlb{stroke:currentColor}
+.zlay .zlay-bulk .zlb.on{stroke:var(--ac)}
+.zlay .zlay-inv{min-width:36px;min-height:32px;border-color:var(--bd);color:var(--fg)}
+.zlay .zlay-search{position:relative;display:flex;align-items:center;margin:0}
+.zlay .zlay-search .ic{position:absolute;left:9px;width:16px;height:16px;stroke:var(--mut);fill:none;stroke-width:1.8;pointer-events:none}
+.zlay .zlay-search input{width:100%;min-width:0;height:32px!important;padding:4px 10px 4px 32px;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:var(--r-field,3px)}
+.zlay .zlay-search input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 2px color-mix(in srgb,var(--ac) 22%,transparent)}
+.zlay .zlay-list{max-height:320px;overflow:auto;border:1px solid var(--bd);border-radius:var(--r-field,3px);background:var(--card);overscroll-behavior:contain;scrollbar-width:thin}
+.zlay .zlay-file{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:10px;padding:6px 10px;background:color-mix(in srgb,var(--ac) 9%,var(--card));border-bottom:1px solid var(--bd)}
+.zlay .zlay-file:not(:first-child){border-top:1px solid var(--bd)}
+.zlay .zlay-fbtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0;border:1px solid var(--bd);background:var(--card);border-radius:var(--r-btn,3px)}
+.zlay .zlay-fbtn:hover{border-color:var(--ac)}
+.zlay .zlay-fname{flex:1 1 auto;min-width:0;font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zlay .zlay-fcnt,.zlay .zlay-n{flex:0 0 auto;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+.zlay .zlay-row{display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:5px 10px 5px 18px;border:0;border-bottom:1px solid color-mix(in srgb,var(--bd) 70%,transparent);border-radius:0;background:none;color:var(--mut);font-weight:400;text-align:left}
+.zlay .zlay-row:last-child{border-bottom:0}
+.zlay .zlay-row:hover{background:color-mix(in srgb,var(--ac) 6%,var(--card))}
+.zlay .zlay-row:focus-visible,.zlay .zlay-fbtn:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.zlay .zlay-sw{width:11px;height:11px;flex:0 0 auto;border-radius:2px;background:color-mix(in srgb,var(--sw) 70%,var(--card));border:1px solid color-mix(in srgb,var(--sw) 60%,var(--fg) 15%);opacity:.55}
+.zlay .zlay-name{flex:1 1 auto;min-width:0;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:13px;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zlay .zlay-row.on{color:var(--fg)}
+.zlay .zlay-row.on .zlay-name{font-weight:600}
+.zlay .zlay-row.on .zlay-sw{opacity:1}
+.zlay .zlay-row.on .zlay-n{color:var(--fg)}
+.zlay .zlay-empty{padding:12px;color:var(--mut);font-size:13px;text-align:center}
+.zlay .zlay-new{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding-top:2px}
+.zlay .zlay-new>span:first-child{font-size:13px;color:var(--fg)}
+.zlay .zlay-new .rvseg{--zc:var(--ac);--zfg:var(--acfg)}
+.zlay .zlay-new .rvseg label{min-width:88px;font-weight:600}
+.zlay .zlay-warn{color:var(--red);font-weight:500}
+.zlay .zlay-plan{margin:0;padding-top:8px;border-top:1px solid var(--bd)}
+.zlay-grp{container-type:inline-size}
 @container (max-width:300px){
-#zsskLayers .zlay-tools{grid-template-columns:1fr 1fr 1fr}
-#zsskLayers .zlay-bulk{padding:4px}
-#zsskLayers .zlay-bulk span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#zsskLayers .zlay-row{gap:7px;padding:5px 8px}
-#zsskLayers .zlay-file{gap:7px;padding:6px 8px}
-#zsskLayers .zlay-fbtn{width:28px}
-#zsskLayers .zlay-n{display:none}
-#zsskLayers .zlay-name{font-size:12px;letter-spacing:0}
+.zlay .zlay-tools{grid-template-columns:1fr 1fr auto auto}
+.zlay .zlay-bulk{padding:4px}
+.zlay .zlay-bulk span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.zlay .zlay-row{gap:7px;padding:5px 8px}
+.zlay .zlay-file{gap:7px;padding:6px 8px}
+.zlay .zlay-fbtn{width:28px}
+.zlay .zlay-n{display:none}
+.zlay .zlay-name{font-size:12px;letter-spacing:0}
 }
+/* 1.556: Hladiny DXF jako vyskakovací panel u tlačítka v horní liště plánu (převzato z #tpSourcesPanel) */
+.zlay-pop{position:fixed;z-index:65;box-sizing:border-box;max-width:calc(100vw - 16px);overflow:auto;padding:10px 12px 12px;border:1px solid var(--bd);border-radius:3px;background:var(--card);color:var(--fg);box-shadow:0 4px 16px #0003;container-type:inline-size;font-size:13px}
+.zlay-pop[hidden]{display:none!important}
+.zlay-pop-head{display:flex;align-items:center;min-height:28px;margin-bottom:6px;padding-right:120px}
+.zlay-pop .zlay .zlay-tools{grid-template-columns:repeat(4,minmax(0,1fr))}
+.zlay-pop .zlay .zlay-tools>button{width:100%;min-width:0;align-items:center;justify-content:center}
+.zlay-pop .zlay-top{top:16px;right:46px}
+.zlay-pop .zlay-list{max-height:min(320px,45vh)}
+.zlay-pop .zlay{align-items:stretch;padding:0;margin:0}
+.plan-toolbar-head button[id$="lay"][aria-expanded="true"]{color:var(--ac);--zlbf:color-mix(in srgb,var(--ac) 70%,transparent);--zlbr:1}
 </style>
 <script>
 // 1.362: denní/noční režim. Tmavé barvy jsou v blocích @media (prefers-color-scheme:dark); ruční volba
@@ -1794,15 +1811,17 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
       <div class="fld fsep"><label title="CSV s desetinnou čárkou. Zapnuto: čísla v uloženém CSV mají desetinnou čárku (vhodné pro český Excel). Vypnuto: desetinná tečka."><input type="checkbox" id="zsskcomma" checked> CSV s des. čárkou</label><small class="hp">CSV i kopírování do schránky; vypnuto = desetinná tečka</small></div>
     </div>
   </details>
-  <details class="pg grp zlay-grp" open><summary>Hladiny DXF</summary>
+  <details class="pg grp zlay-grp" open data-gm-layers-src><summary>Hladiny DXF</summary>
     <div class="pf zlay" id="zsskLayers">
-      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="zsskBulbIcon" viewBox="0 0 24 24"><path style="opacity:var(--zlbr,.55)" d="M12 1.6v1.6M4.4 4.6l1.1 1.1M19.6 4.6l-1.1 1.1M2.2 11.6h1.6M20.2 11.6h1.6"/><path style="fill:var(--zlbf,none);fill-opacity:.9" d="M12 5.4a5.6 5.6 0 0 0-3.3 10.1c.5.4.8.9.8 1.5v.4h5v-.4c0-.6.3-1.1.8-1.5A5.6 5.6 0 0 0 12 5.4z"/><path d="M9.6 20h4.8M10.6 22.2h2.8"/></symbol></svg>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="zsskBulbIcon" viewBox="0 0 24 24"><path style="fill:var(--zlbf,none);fill-opacity:.9" d="M12 2.5a6.5 6.5 0 0 0-3.9 11.7c.6.5 1 1.1 1 1.8v.8h5.8v-.8c0-.7.4-1.3 1-1.8A6.5 6.5 0 0 0 12 2.5z"/><path d="M9.6 19.2h4.8M10.6 21.6h2.8"/></symbol></svg>
       <div class="zlay-top"><span id="zsskLayerCount" class="zlay-count" aria-live="polite"></span></div>
       <div class="zlay-tools" id="zsskLayerTools">
-        <button type="button" id="zsskLayerOn" class="zlay-bulk" title="Rozsvítí všechny hladiny; při hledání jen nalezené. Rozsvícené hladiny se použijí pro výpočet odchylek."><svg class="ic zlb on" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg><span>Rozsvítit vše</span></button>
-        <button type="button" id="zsskLayerOff" class="zlay-bulk" title="Zhasne všechny hladiny; při hledání jen nalezené. Zhasnuté hladiny se ve výpočtu nepoužijí."><svg class="ic zlb" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg><span>Zhasnout vše</span></button>
+        <button type="button" id="zsskLayerOn" class="zlay-bulk" title="Rozsvítí všechny hladiny; při hledání jen nalezené. Rozsvícené hladiny se použijí pro výpočet odchylek."><svg class="ic zlb on" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg><span>Vše</span></button>
+        <button type="button" id="zsskLayerOff" class="zlay-bulk" title="Zhasne všechny hladiny; při hledání jen nalezené. Zhasnuté hladiny se ve výpočtu nepoužijí."><svg class="ic zlb" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg><span>Nic</span></button>
+        <button type="button" id="zsskLayerPick" class="wi io zlay-inv zlay-pick" aria-pressed="false" aria-label="Vybrat hladinu v plánu" title="Výběr hladiny v plánu: kliknutím na čáru nebo text výkresu DXF jeho hladinu zhasnete, zhasnutou rozsvítíte. Posun a přiblížení plánu fungují dál, Escape výběr ukončí."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5l5.6 16 2.3-6.6 6.6-2.3z"/><path d="M13.2 13.2l5.3 5.3"/></svg></button>
         <button type="button" id="zsskLayerInvert" class="wi io zlay-inv" aria-label="Prohodit rozsvícené a zhasnuté hladiny" title="Prohodí rozsvícené a zhasnuté hladiny; při hledání jen nalezené."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15M15 4l4 4-4 4"/><path d="M20 16H5M9 12l-4 4 4 4"/></svg></button>
       </div>
+      <small class="hp zlay-pick-hint" id="zsskLayerPickHint" aria-live="polite" hidden></small>
       <label class="zlay-search" id="zsskLayerSearchWrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="zsskLayerSearch" placeholder="Hledat hladinu" autocomplete="off" spellcheck="false" aria-label="Hledat hladinu" aria-controls="zsskLayerList" title="Hledá v názvech hladin i výkresů bez ohledu na diakritiku a velikost písmen. Esc smaže hledání."></label>
       <div class="zlay-list" id="zsskLayerList" role="group" aria-label="Hladiny DXF"></div>
       <div class="zlay-new"><span id="zsskLayerModeLabel" title="Určuje, zda se hladiny z nově načteného výkresu DXF rovnou použijí pro výpočet (Rozsvícené), nebo je rozsvítíte ručně (Zhasnuté). Stav dosavadních hladin se nezmění.">Nové hladiny po načtení DXF</span>
@@ -1812,7 +1831,7 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
         </span>
       </div>
       <small class="hp" id="zsskLayerHint" aria-live="polite"></small>
-      <div class="fld zlay-plan"><label title="Zapnuto: zhasnuté hladiny se skryjí i v podkladu DXF v plánu, rozsvícené zůstanou. Vypnuto (výchozí): plán ukazuje celý podklad DXF bez ohledu na stav hladin; výpočet odchylek používá vždy jen rozsvícené hladiny."><input type="checkbox" id="zsskLayerPlan"> Projevit i v plánu</label><small class="hp" id="zsskLayerPlanHint">Zhasnuté hladiny se skryjí i v podkladu plánu.</small></div>
+      <div class="fld zlay-plan"><label title="Zapnuto (výchozí, stejně jako v ostatních modulech): zhasnuté hladiny se skryjí i v podkladu DXF v plánu, rozsvícené zůstanou. Vypnuto: plán ukazuje celý podklad DXF bez ohledu na stav hladin; výpočet odchylek používá vždy jen rozsvícené hladiny."><input type="checkbox" id="zsskLayerPlan" checked> Projevit i v plánu</label><small class="hp" id="zsskLayerPlanHint">Zhasnuté hladiny se skryjí i v podkladu plánu.</small></div>
     </div>
   </details>
   <div class="fld"><button type="button" id="zsskfoldb" class="wi io" aria-label="Zabalit všechna nastavení" aria-controls="zsskparams" aria-expanded="true" title="Zabalit všechna nastavení"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button type="button" id="zsskpdef" aria-label="Výchozí hodnoty" class="wi io" title="Vrátí nastavení (mezní odchylka 20 mm, okolí vrcholu 3,5 × mezní odchylka, jen body s kódem ZSS, CSV s des. čárkou) na výchozí hodnoty a přepočítá výsledky i plán. Smaže vlastní kódy i rozsah názvů. Načtené soubory, filtr, řazení a volby plánu zůstanou."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button></div>
@@ -1855,7 +1874,7 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
     <div class="plan-opt-group" id="kgdrawing" data-plan-drawing="kg" data-grid="kggr" data-legend="kgll" data-header="kghd" data-logo="kglogo"></div>
     </span></span>
     </div></div></div>
-  <div id="kgstage"><svg id="kgMeasureOverlay" class="measure-overlay" aria-hidden="true"></svg><div id="kgsvg" tabindex="0" role="region" aria-label="Plán – F: celý výkres"></div>
+  <div id="kgstage"><svg id="kgMeasureOverlay" class="measure-overlay" aria-hidden="true"></svg><canvas id="kgAddOverlay" class="measure-overlay" aria-hidden="true" hidden></canvas><div id="kgsvg" tabindex="0" role="region" aria-label="Plán – F: celý výkres"></div>
     <button type="button" id="kg3front" hidden>Půdorys</button>
     <div id="kgcubeui" hidden>
       <div id="kgcubecontrol" data-plan-cube="kg" data-plan-fit="kg3fit"></div>
@@ -1863,13 +1882,24 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
   <button type="button" class="measure-close" id="kgEditClose" aria-label="Zavřít (Escape)" title="Zavřít (Escape)">×</button>
   <div class="tin-head"><strong id="kgEditTitle"></strong></div>
   <form class="tin-ptform" id="kgEditForm" hidden>
-    <span id="kgEditCoords"><label>Y <input type="text" inputmode="decimal" id="kgAddY" autocomplete="off"></label> <label>X <input type="text" inputmode="decimal" id="kgAddX" autocomplete="off"></label> <label>Z <input type="text" inputmode="decimal" id="kgAddZ" autocomplete="off" placeholder="nepovinné" title="Výška je nepovinná. Bod bez Z má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí."></label></span>
     <label id="kgEditNumber"><span id="kgEditPoint"></span> <input type="text" inputmode="numeric" id="kgFixVal" aria-label="Nová odchylka v mm" autocomplete="off"> mm</label>
     <button type="submit" class="wi">Použít</button>
   </form>
   <div class="tin-foot"><p class="hp" id="kgEditStatus" role="status" aria-live="polite"></p>
     <span class="tin-acts"><button type="button" class="wi" id="kgEditUndo" title="Vrátit poslední krok (Ctrl+Z)">Zpět</button><button type="button" class="wi" id="kgEditRedo" title="Znovu provést krok (Ctrl+Y)">Znovu</button><button type="button" class="wi" id="kgEditReset"></button></span>
   </div>
+</div><div id="kgAddPanel" class="measure-panel tin-panel" hidden role="region" aria-label="Přidat bod">
+ <button type="button" class="measure-close" id="kgAddClose" aria-label="Zavřít přidávání bodů (Escape)" title="Zavřít (Escape)">×</button>
+ <div class="tin-head"><strong>Přidat bod</strong><span class="tin-count" id="kgAddCount"></span></div>
+ <div class="tin-ctx"><div class="tin-pane">
+  <span class="tin-ptform" id="kgAddForm"><label>Y <input type="text" inputmode="decimal" id="kgAddY" autocomplete="off" spellcheck="false"></label><label>X <input type="text" inputmode="decimal" id="kgAddX" autocomplete="off" spellcheck="false"></label><label>Z <input type="text" inputmode="decimal" id="kgAddZ" autocomplete="off" spellcheck="false" placeholder="nepovinné" title="Výška je nepovinná. Bod bez Z má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí."></label><button type="button" class="wi" id="kgAddSet">Přidat bod</button><button type="button" class="wi" id="kgAddNew" hidden title="Zruší výběr a připraví zadání dalšího bodu">Nový bod</button></span>
+  <span class="hp" id="kgAddHint">Klik do plánu přidá bod v místě kliknutí, nebo zadejte Y, X a volitelně Z a stiskněte Enter. Bod se přidá jen tehdy, když leží v okolí prvku DXF (Okolí vrcholu × mezní odchylka); potom se vyhodnotí a zařadí do tabulky stejně jako bod z načteného souboru měření. Názvy N1, N2…</span>
+  <div class="tin-lines tin-ptlist" id="kgAddList" aria-label="Přidané body"></div>
+ </div></div>
+ <div class="tin-foot">
+  <p id="kgAddStatus" class="hp" role="status" aria-live="polite"></p>
+  <span class="tin-acts"><button type="button" class="wi" id="kgAddUndo" title="Vrátit poslední krok (Ctrl+Z)">Zpět</button><button type="button" class="wi" id="kgAddRedo" title="Znovu provést krok (Ctrl+Y)">Znovu</button><button type="button" class="wi" id="kgAddReset" title="Odebere všechny ručně přidané body">Odebrat přidané body</button></span>
+ </div>
 </div>
   <div id="kgtip" hidden></div>
 </div>
@@ -1978,7 +2008,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <h3>Povinné hrany TIN</h3><p>V plánu otevřete Upravit TIN, vyberte model a nástroj Povinné hrany (B). Zadat podle bodů otevře editor v půdorysu: spojte existující body klikáním nebo podle názvu, případně zvolte Uzavřená. Výšky zůstávají skutečné; další půdorysně ležící vstupní body se do ruční hrany zapojí. Escape zruší nepotvrzené zadání, Ctrl+Z / Ctrl+Y vrátí nebo obnoví vrchol. Linie lze upravovat, vypínat a odebírat. Zaškrtávátko u názvu načteného DXF zapíná či vypíná celý soubor, kliknutí na jeho název upraví vrstvy a jednotky. Pokud nejsou načtené běžné bodové vstupy, lze vytvořit bodový TIN přímo z vrcholů aktivních DXF hran; musí mít alespoň tři nekolineární půdorysné body. V tomto režimu upravujte linie v DXF nebo v nastavení souboru. Výpočet používá předepsané úseky jako skutečné hrany TIN; křížení bez společného vrcholu je chyba. DMT nepodporuje dvě různé výšky ve stejném Y/X.</p><p>Načíst DXF přijímá LINE, LWPOLYLINE a POLYLINE z vybraných vrstev. Import používá stejné jednotky m / mm / ft a souřadnicové konvence jako ostatní soubory. Výšky se vždy převezmou z DXF, také nulové; odvozování výšek 2D kresby z měření je až další část. Obloukové úseky polyčar se nahradí úsečkami s nastavenou přesností v metrech (výchozí 0,001 m). Samostatné ARC/SPLINE nejsou součástí tohoto importu. Vykreslovací šířka či tloušťka čar neurčuje tvar povrchu. Křížení musí mít společný vrchol. Pokud 3D úsečka DXF prochází bodem s jinou výškou, program oznámí konflikt; data nepřepíše. Nulová výška sama o sobě neznamená chybějící údaj. Velmi vzdálené souřadnice vyvolají upozornění na možnou nesourodost.</p><p>Povinné hrany se aplikují na bodový model; hotové TIN z LandXML nebo 3DFACE se automaticky nepřestavují. Po triangulaci se použije Max. hrana / Min. úhel, zkontroluje zbylá síť a následně se uplatní vymezení hranicemi a otvory. Zmizí-li povrch podél účinné povinné hrany kvůli limitům, výpočet upozorní na konflikt. Zaškrtávátko Povinné hrany v plánu pouze skrývá fialové linie. Stejná geometrie se použije v 2D/3D, PDF a DXF; DXF má samostatné vrstvy MERENI_POVINNE_HRANY a PROJEKT_POVINNE_HRANY. Původní DXF a nastavení se ukládají do IndexedDB, stejné jméno nahradí předchozí soubor a stane se nejnovějším. Platí společný limit 20 souborů a 128 MiB na sekci; nejvýše 4096 vrcholů a úseků hran. Obnovovací tlačítko sekce hrany vypne, definice a soubory ponechá; úplný reset je odstraní.</p>
 <h3>Zabalení záhlaví</h3><p>Šipka v záhlaví plánu vpravo nahoře (hned za tlačítkem výchozích voleb plánu) zabalí záhlaví: skryje nástroje, písmo a šipky, zaškrtávací volby a podrobnosti plochy, takže plán dostane víc místa. Nadpis, tlačítka PDF a DXF i ostatní tlačítka zůstanou. Dalším klikem se záhlaví rozbalí; stav se pamatuje v prohlížeči a Reset modulu ho vrátí na rozbalené.</p><h3>Štítky bilance v plánu</h3><p>Volba Bilance ve skupině Výkres (výchozí zapnuto) zobrazí ve 2D plánu u každého zdroje štítek s jeho názvem a bilancí ze sekce 5. Výsledky v celých m³, stejně jako dosud jen v PDF 2D a v plánu protokolu; kladná bilance (násyp) je červeně, záporná (výkop) modře. Štítek se umístí do volného místa a se zdrojem ho spojí odkazová čára. Plán v protokolu i PDF 2D používají tutéž volbu, proto se po jejím vypnutí štítky nevypíší ani v protokolu. Při úpravách TIN, hranic a povinných hran se štítky skryjí.</p><h3>Ruční úpravy TIN v plánu</h3><p>Upravit TIN otevře půdorys vybraného povrchu před ořezem hranicemi a otvory. V záhlaví panelu přepněte upravovaný model Měření / Reference; v režimu Po zdrojích vyberte konkrétní měřený povrch. Počitadla ukazují smazané trojúhelníky, nové hrany, otočené hrany, upravené body, povinné hrany a ořezové polygony. Nástroje lze přepínat i klávesami D, A, O, E, B a H. Zapnuté popisky bodů (Názvy, Kódy bodů, Výšky) se u upravovaného modelu barevně odliší: číslo bodu černě, kód modře a výška rudě; ostatní modely si ponechají svou barvu. Se zapnutým Obvodem měření se pro orientaci zobrazí i obvody ostatních viditelných měření, nejen upravovaného.</p><p>Smazat (D) vyřadí plochy ze sítě: Hranu smaže oba přilehlé trojúhelníky (u okraje jeden), Trojúhelník jedinou plochu a Oknem všechny trojúhelníky s těžištěm v taženém obdélníku; jsou-li už všechny smazané, obnoví je. V režimu Oknem posouvá pohled Shift + tažení. Opakovaný klik výběr vrátí, Obnovit všechny smazané vrátí všechna smazání modelu.</p><p>Přidat hranu (A) spojí existující body sítě klikáním nebo podle názvů oddělených čárkou. Enter nebo opakovaný klik na poslední bod linii ukončí, Escape ji zruší. Po použití úprav se linie uloží jako povinná hrana a síť se přetrianguluje; funguje jen pro TIN z bodových vstupů.</p><p>Otočit hranu (O) nahradí společnou hranu dvou trojúhelníků druhou úhlopříčkou jejich čtyřúhelníku. Při najetí se oranžově ukáže nová hrana, šedě hrana, kterou otočit nelze. Otočit lze jen vnitřní hranu, jejíž čtyřúhelník je konvexní, takže vzniknou dva platné nepřekrývající se trojúhelníky. Neotáčí se povinné hrany, hrany u smazaných či odfiltrovaných trojúhelníků ani hrany, po jejichž otočení by nový trojúhelník neprošel filtrem max. hrany nebo min. úhlu. Otočení se ukládají podle souřadnic vrcholů; pokud po pozdější změně vstupů některé už nejde provést, panel je spočítá a při dalším použití úprav odstraní.</p><p>Povinné hrany (B) a Hranice a otvory (H) obsahují načtení DXF, zadání podle bodů, seznam linií a polygony vymezení. Ořez hranicemi a otvory se provádí až po ručních úpravách sítě. Tyto nástroje jsou dostupné, až když nejsou rozpracované úpravy sítě. V režimu Po zdrojích je vymezení společné pro všechny modely měření.</p><p>Zpět a Znovu (Ctrl+Z / Ctrl+Y) procházejí všechny kroky, Zahodit vrátí model do uloženého stavu a Použít úpravy změny uloží a přepočítá výsledky. Escape zavře panel; při neuložených změnách se nejdřív zeptá.</p>
 <p>Body (E) mají tři režimy. Upravit výšku: klik na bod ukáže název, kód a původní Z; zadejte nové Z a potvrďte Enter, vedle pole se ukáže ΔZ. Síť se nemění, mění se jen výšky, a tím i kubatury; otočené a smazané hrany zůstávají platné. Vyřadit: klik bod vyřadí, síť se kolem něj po použití úprav přepočítá a bod zůstane v plánu přeškrtnutý; další klik ho vrátí. Přidat bod: klik do plánu přidá bod s výškou dopočtenou z TIN, kterou lze přepsat; přesné souřadnice zadejte do polí Y, X a Z (prázdné Z = výška z TIN) a stiskněte Enter. Nové body dostanou názvy N1, N2… Vyřadit a přidat bod lze jen u sítě z bodových vstupů; body použité v povinných hranách nebo v rovině Z0 kubatur nelze vyřadit. Seznam pod nástroji ukazuje všechny úpravy bodů, křížek vrátí jednotlivou úpravu, klik na název bod vybere. Úpravy se ukládají s ostatními úpravami TIN, původní soubory se nemění. Upravené body mají v plánu oranžovou značku (kosočtverec = změněná výška, trojúhelník = přidaný bod, přeškrtnutý kroužek = vyřazený), v DXF jsou ve vrstvě …_BODY_UPRAVY. Export STX bodů DMT obsahuje upravené výšky a přidané body, vyřazené body vynechá.</p><h3>Hranice a otvory</h3><p>V plánu otevřete Upravit TIN, vyberte povrch a rozbalte Hranice a otvory. Vnější hranice omezí plochu TIN; Přidat otvor vyloučí vnitřní oblast. Bez vnější hranice zůstává obvod původního TIN. V 2D plánu zadávejte vrcholy po obvodu klikáním, případně ručně Y a X v metrech. Chytání se vztahuje jen na zobrazené body. Poslední vrchol se spojí s prvním po stisku Použít vymezení. Escape nebo křížek zruší nepotvrzené změny, Ctrl+Z vrátí poslední vrchol, Ctrl+Y nebo Ctrl+Shift+Z jej obnoví. Přidat lze jednu vnější hranici a 32 otvorů, dohromady nejvýše 512 vrcholů. Obrysy se nesmějí křížit ani dotýkat; otvory musí být navzájem oddělené a při zadaném obvodu uvnitř něho.</p><p>Použít vymezení zapíná samotný ořez; zaškrtávátko Hranice a otvory v plánu pouze zobrazí obrysy. Vypnutí obrysů nezmění plochu. Nejprve se použije max. hrana a min. úhel na původní trojúhelníky a ověří zdrojová síť. Potom se její plocha přesně ořízne, včetně konkávních obrysů a otvorů uvnitř trojúhelníku. Výšky nových výpočetních vrcholů OŘEZ_… jsou lineárně interpolované z původního TIN; nejde o nové měřené body. Nové hrany po ořezu se znovu nefiltrují min. úhlem, aby nezmizel úzký díl u hranice. Zdroje ani původní soubory se nemění. Vymezení zůstává v souřadnicích JTSK i při změně zdroje modelu; po výměně souborů zkontrolujte jeho polohu. Změna zdrojové geometrie zruší nepotvrzené zadávání. Načtené hotové TIN zachovávají své stávající otvory a spojení; zadané vymezení je dále omezí. Automatické přebírání kreslicích křivek z DXF se neprovádí.</p><p>Stejný oříznutý TIN používají plochy, 2D/3D plán, PDF a DXF. DXF ukládá obrysy do vrstev MERENI_HRANICE / MERENI_OTVORY a PROJEKT_HRANICE / PROJEKT_OTVORY, podle volby zobrazení obrysů. Ořez i kontrola běží postupně bez blokování importů; do jejich dokončení nejsou povrchové výsledky ověřené. Nastavení se ukládá místně a po F5 obnoví; vypnutí Použít vymezení vrátí celý zdrojový TIN.</p>
-<h3>Body a výstup</h3><p>Třetí box v Nastavení platí společně pro Měření i Referenci a filtruje jen bodové soubory STX, TXT a CSV; DXF a LandXML se použijí celé. Volba Všechny body (výchozí zapnuto) bere všechny body. Po vypnutí se použijí jen body s kódem shodným s některým vlastním kódem nebo s názvem začínajícím tímto kódem (až 20 kódů A–Z / 0–9, 1 až 8 znaků); bez kódu se z bodových souborů nepoužije žádný bod, a to ani v Referenci. Rozsah názvů Od–Do platí současně s kódy a používá stejné přirozené řazení jako ostatní moduly. Filtr se použije před tvorbou TIN, takže ovlivní kubatury, porovnání s Referencí, rovinu MNČ, plán i exporty; počty použitých a vyřazených bodů jsou uvedeny po souborech. Načtené soubory zůstávají celé. CSV s des. čárkou (výchozí zapnuto) řídí desetinný oddělovač v CSV kubatur a v tabulce kopírované do schránky; STX a LandXML používají vždy tečku. Nastavení se pamatuje v prohlížeči; ikona obnovení v boxu i reset modulu vrátí výchozí hodnoty.</p><h3>Porovnání měření s jednou Referencí</h3><p>U Měření v Nastavení → Kubatury zvolte Počítat vůči Referenci. Výchozí volba se řídí Referencí: po načtení prvního souboru Reference se Počítat vůči přepne na Referenci, po odebrání všech souborů Reference zpět na Vodorovnou rovinu. Ruční přepnutí se zachová i při načtení dalšího souboru Reference; Obnovit výchozí nastavení Měření zvolí Referenci, je-li načtená. V modré sekci vyberte jeden ověřený referenční model; může to být hotový TIN nebo jeden TIN vytvořený z vybraných bodových vstupů. Porovnání funguje Dohromady i Po zdrojích. Volba <b>Referenci (MNČ)</b> nahradí výšky vybraného modelu Reference rovinou vyrovnanou metodou nejmenších čtverců ze svislých odchylek všech jeho vrcholů (Z = Z₀ + a·(Y − Y₀) + b·(X − X₀), těžiště Y₀, X₀). Rovina má stejný půdorys, trojúhelníky, vymezení i otvory jako Reference, takže kubatury, mapa ΔZ, svislý posun i vyrovnání bilance fungují stejně. Nastavení ukáže spád, směr spádu (jižník od +X JTSK), RMS, největší odchylky a upozorní, když RMS přesáhne 0,05 m. Volitelně lze iterativně vyloučit odlehlé vrcholy nad 3 × RMS. Plán zobrazuje místo Reference vyrovnanou rovinu; CSV a DXF uvádějí parametry roviny. Každý samostatný měřený zdroj se porovnává se stejnou Referencí. Referenční výška Z₀ ani její statistiky se v tomto režimu nepoužijí; zůstávají uchované pro návrat k vodorovné rovině.</p><p>Výpočet přesně protíná trojúhelníky obou lineárních TIN, i při odlišných vrcholech a triangulaci. Ve společné ploše integruje ΔZ = Z měření − Z Reference. Nad a pod jsou kladné svislé objemy; bilance = nad − pod. Neprovádí se extrapolace mimo síť ani přes její otvory. Výsledky respektují filtry, povinné hrany, hranice a otvory obou modelů. Oba vstupy musí mít dokončenou kontrolu sítě. Chybná Reference zablokuje celé porovnání, chybný měřený zdroj pouze svůj řádek. Při nulovém překryvu je výslovně Bez společné plochy, nikoli potvrzení shody obou terénů.</p><p>Sekce 5 uvádí společnou plochu, měření mimo Referenci, část Reference bez měření, objem nad a pod a bilanci. Při částečném pokrytí se počítá pouze skutečný průnik. Po zdrojích se řádky automaticky nesčítají kvůli možným překryvům. CSV v sekci 4 obsahuje všechny řádky, stav, min/max ΔZ a identifikaci Reference. PDF plánu shrnuje právě zobrazený zdroj. DXF plánu zachovává původní geometrii a výšky; souhrn porovnání je v komentářích. Barevnou mapu popisuje část Mapa rozdílů ΔZ, export rozdílového modelu část Export rozdílového modelu ΔZ. Zaškrtávátka zobrazení Měření/Reference ovlivňují kresbu, nikoli výpočet. Změna zdrojů nebo filtrů automaticky zneplatní starý výsledek; nový se zobrazí po dokončení výpočtu. Výpočet používá prostorový index a přerušitelné kroky; při překročení limitu 60 milionů průchodů, 8 milionů kandidátních párů nebo 5 milionů průnikových dílů nevrátí částečné objemy. Zmenšete vymezení nebo výběr. Volba se pamatuje po F5.</p><h3>Měření dohromady nebo po zdrojích</h3><p>Pouze u Měření lze přepnout Dohromady / Po zdrojích. Dohromady zachovává společný TIN vybraných bodových souborů a výběr jedné hotové sítě. Po zdrojích zaškrtněte jednotlivé bodové nebo TIN povrchy: každý má samostatnou triangulaci, filtraci, kontrolu a ořez. Hotové sítě si zachovají své trojúhelníky. Zdroj je soubor a jeho vybraný povrch, takže více povrchů LandXML/DXF dává samostatné řádky. Výsledky v sekci 5 uvádějí Z₀, plochu, nad, pod, bilanci a stav. Chybný zdroj nebrání výsledkům jiných zdrojů; jeho čísla se nevydávají za platná. Zdroje se mohou překrývat, proto se řádky automaticky nesčítají. Společný výběr má limit 250 000 bodů a 500 000 trojúhelníků, také po ořezu.</p><p>Viditelnost jednotlivých sítí se vybírá v nabídce Měření přímo v plánu, nezávisle na zdrojích zařazených do výpočtu. Kliknutí na název zdroje v tabulce zapne a přiblíží zdroj, ostatní neskryje; zaškrtávátko v prvním sloupci # zdroj v plánu zobrazí nebo skryje. Vyrovnání bilance v Kubaturách navrhne výšku vodorovné roviny Z₀ nebo svislý posun celé Reference, při kterém je bilance (násyp − výkop) nulová; u lineárního TIN platí přesně posun = bilance / plocha. Návrh se zobrazuje i používá s přesností na 4 desetinná místa (0,1 mm); zbytek bilance, který vznikne tímto zaokrouhlením, je uveden v textu. Při výpočtu vůči Referenci lze posunutou Referenci uložit v nabídce Data v sekci 4. Export jako LandXML, DXF 3D nebo STX (viz Export posunuté Reference). Tlačítko Vrátit obnoví stav před použitím návrhu. PDF/DXF plánu obsahují viditelné zdroje a případně zobrazenou Referenci. Položka CSV v nabídce Data v sekci 4. Export uloží všechny vybrané zdroje včetně stavu nevyhodnocených řádků. Volba Společná určuje jedno Z₀ ze všech vybraných zdrojů. Podle každého zdroje použije min/max/průměr/medián zvlášť; ruční výška nebo výška jednoho vybraného bodu je vždy společná. V Nastavení je vidět Z₀ právě zobrazeného zdroje. Definice ručních povinných hran musí patřit jednomu zdroji. Globální hrany DXF zatím nemají přiřazení mezi více zdroji: v režimu po zdrojích vyberte jediný zdroj nebo jejich použití vypněte. Režim, výběr zdrojů a roviny se pamatují po F5. Reference tuto novou volbu nemá.</p><h3>Export rozdílového modelu ΔZ</h3><p>Skupina Rozdílový model v nabídce Data v sekci 4. Export ukládá LandXML, DXF 3D a STX, ve kterých je výška Z nahrazena rozdílem ΔZ. Vůči Referenci platí ΔZ = měření − (Reference + posun) a TIN tvoří přesné průniky obou sítí jen na společné ploše, bez extrapolace. Vůči vodorovné rovině platí ΔZ = měření − Z₀ a TIN je měřený model. Kladné ΔZ znamená násyp, záporné výkop. Export nezávisí na zapnutí mapy ΔZ, viditelnosti zdrojů ani vyhlazení; obsahuje všechny vyhodnocované zdroje a vychází z lineárního TIN stejně jako kubatury. Název souboru začíná GeoMAT_DMT_ROZDIL_dZ_ a uvádí, vůči čemu je rozdíl počítán (Reference s posunem, nebo Z₀). LandXML obsahuje jeden povrch pro každý zdroj; popis povrchu, projektu i úvodní komentář výslovně uvádí, že nejde o nadmořské výšky. DXF R12 má vrstvy ROZDIL_DZ_TIN, _NULOVA_CARA (hranice násypu a výkopu, ΔZ = 0), _BODY a _POPIS (v režimu Po zdrojích s pořadovým číslem zdroje), plochy jsou obarvené červeně pro násyp a modře pro výkop a vrstva ROZDIL_DZ_INFO nad výkresem nese vzorec, zdroje a bilanci. STX obsahuje měřené body ve tvaru název Y X ΔZ [kód]; vůči Referenci se vynechají body mimo společnou plochu, duplicitní názvy z více zdrojů dostanou příponu _Z a číslo zdroje.</p><h3>Posun Reference v plánu</h3><p>Při porovnání s Referencí se její body, TIN, hranice a povinné hrany zobrazují ve výšce Z + posun. Hlavička a legenda uvádějí posun, tooltip bodu ukazuje původní i zobrazenou výšku. Měření vzdáleností v plánu používá zobrazené souřadnice. PDF i DXF plánu přebírají tuto polohu; DXF 2D zůstává půdorysem v Z = 0. Načtené soubory, zdrojové body a definice hran se neposouvají a posun se do výpočtů ani exportu posunuté Reference nezapočítá dvakrát. Při přepnutí na výpočet vůči vodorovné rovině se Reference zobrazuje v původních výškách; uložená hodnota posunu se uchová.</p><h3>Export posunuté Reference</h3><p>Při výpočtu kubatur vůči Referenci se v nabídce Data v sekci 4. Export zobrazí samostatná skupina <b>Posunutá Reference</b> s položkami LandXML, DXF 3D a STX. Je aktivní, když je Reference ověřená a svislý posun Reference je nenulový (zadaný ručně nebo tlačítkem vyrovnání bilance). Ukládá se <b>pouze vybraná Reference</b> s výškami Z + posun; modely měření ani jejich body se do těchto souborů nezapisují. Posun je vždy v názvu souboru (GeoMAT_DMT_REFERENCE_POSUNUTA_+0,1234m…).</p><p>Výběr <b>Rozsah</b> ve skupině určuje, co se uloží: <b>Celá Reference</b> (výchozí) zapíše celý referenční TIN, <b>Jen společná plocha s měřením</b> zapíše pouze přesný průnik Reference s měřeným TIN, tedy právě tu plochu, na které se počítá bilance; bez extrapolace. Hrany průniku jsou dopočtené body na hranách obou sítí s výškou Reference + posun; v STX se zapisují jen původní body Reference ležící na společné ploše. V režimu Po zdrojích je průnik pro každý zdroj samostatný (samostatný povrch v LandXML, vrstvy REFERENCE_POSUNUTA_01_… v DXF), v STX se stejný bod zapíše jednou. Název souboru má pro tento rozsah příponu _spolecna_plocha. Volba se pamatuje.</p><ul><li><b>LandXML</b>: TIN povrch pojmenovaný „Reference posunutá o … m“; pro celou Referenci se stejnými trojúhelníky jako Reference v GeoMAT (včetně ořezu hranicí), popis a komentář souboru uvádějí zdroj, posun a bilanci vůči měření. Souřadnice S-JTSK jako N = −X, E = −Y; soubor lze znovu načíst do GeoMAT.</li><li><b>DXF 3D</b>: vrstvy REFERENCE_POSUNUTA_TIN (3DFACE), _BODY a _POPIS; nad výkresem je ve vrstvě REFERENCE_POSUNUTA_INFO textový popis posunu. CAD X = −Y, Y = −X, Z = výška + posun.</li><li><b>STX</b>: původní body Reference (název Y X Z [kód]) se zvýšenou výškou; pomocné body ořezu a povinných hran se nezapisují. Formát nemá záhlaví, posun je uveden v názvu souboru.</li></ul><h3>Bilance na vlastní ploše</h3><p>V Nastavení → Kubatury lze zapnout volbu Bilance na vlastní ploše a tlačítkem Zadat plochu nakreslit v půdorysu plánu uzavřený polygon (kliknutím nebo zadáním souřadnic Y, X; jedna vnější hranice bez otvorů). Návrh vyrovnání bilance na nulu se pak počítá jen uvnitř polygonu: vůči Referenci na průniku polygonu se společnou plochou měření a Reference, vůči rovině Z₀ na průniku polygonu s modelem měření. Díly sítě se polygonem přesně ořezávají a ΔZ se uvnitř integruje lineárně. Kubatury v tabulkách, mapa ΔZ ani modely se nemění; mění se pouze navržený posun Reference nebo Z₀. Polygon se v plánu zobrazuje fialovou čerchovanou čarou spolu s volbou Hranice a otvory a se stejnou volbou se přenáší do PDF 2D a do DXF plánu jako vrstva PLOCHA_BILANCE (v DXF 2D v Z = 0, v DXF 3D položený na síť měření, mimo model měření se úsek vynechá). Rozdílový model DXF 3D obsahuje vrstvu ROZDIL_DZ_PLOCHA_BILANCE položenou na plochu ΔZ. Obě DXF nesou v komentáři plochu polygonu a bilanci uvnitř. Tlačítko STX u plochy bilance uloží vrcholy polygonu (PB1, PB2, … Y X Z PLOCHA_BILANCE) s výškou z modelu měření; vrchol mimo model má Z = 0. Pro režim Po zdrojích s vlastními rovinami se plocha bilance nepoužije.</p><h3>Kubatury k vodorovné rovině</h3><p>V Nastavení Měření zadejte referenční výšku Z₀ v metrech. Reference kubatury k vodorovné rovině nepočítá; slouží jako podklad pro porovnání. Kubaturu jiného povrchu k rovině získáte jeho načtením jako zdroje Měření. Výchozí pole je prázdné, kubatury se tedy nepočítají k náhodně zvolené výšce. Enter nebo opuštění pole potvrdí zadanou hodnotu; během psaní se výpočet nespouští. Povolena je i nula, záporná výška a desetinná tečka či čárka, v rozsahu výšek GeoMATu ±9999,999 m. Vymazání pole výpočet vypne. Referenční výška neposouvá model ani zdrojové body.</p><p>Objem nad rovinou a pod rovinou je vždy kladný. Bilance = nad − pod; kladná tedy znamená převahu objemu nad rovinou. Jde o svislé objemy v m³ nad půdorysnou plochou, nikoli o objem k plášti uzavřeného tělesa. Každý trojúhelník lineárního TIN se při průchodu rovinou přesně rozdělí v její úrovni; nepoužívá se pouze průměr odchylek celého trojúhelníku. Plochy, které chybí v síti nebo jsou vyřazeny max. hranou, min. úhlem, hranicí či otvorem, se nezapočítají. Povinné hrany se respektují podle výsledné triangulace. Nepřidává se automatická robustní filtrace terénu.</p><p>Výsledky jsou dostupné až po dokončení triangulace, ořezu a úspěšné kontrole sítě; samostatné části mohou zůstat jako upozornění a jejich objemy se sčítají. Výpočet běží po přerušitelných krocích. Změna výšky, modelu nebo filtrů zneplatní předchozí výsledek. Položka CSV v nabídce Data v sekci 4. Export uloží souhrn, přesná čísla, zdroje a nastavení; při výpočtu vůči Referenci uloží místo toho porovnání s Referencí, v režimu Po zdrojích souhrn po zdrojích. Legenda v dostatečně velkém 2D/3D plánu i PDF obsahuje souhrn zobrazeného Měření, ve velmi malém plánu zůstávají úplné výsledky v Nastavení. DXF zachovává původní geometrii a výšky, souhrn je pouze v komentářích souboru. Volba Výška podle nabízí nejprve ručně, pak min, max, průměr a medián a potom jednotlivé body. Číslo bodu lze napsat celé; psaní filtruje nabídku, nové otevření šipkou opět nabídne výběr bez filtru. V nabídce se vykreslí nejvýše 100 bodů, hledání prochází všechny. Shodné názvy v různých souborech vyberte konkrétním řádkem podle tooltipu. Statistika zahrnuje všechny původní body právě vybraných zdrojů modelu, bez nových vrcholů ořezu a bez plošného vážení; max. hrana, min. úhel, hranice a otvory její soubor bodů nemění. Hodnoty statistik se zaokrouhlí na 0,001 m, výška konkrétního bodu se převezme ze zdroje. Změna zdrojů statistiku přepočítá. Odebraný bod nenahradí jiný bod se stejným jménem; je třeba znovu vybrat. Při výběru z dat je výškové pole pouze pro čtení; volba ručně vrátí poslední vlastní výšku. Volba i ruční výška se pamatují po F5. Obnovení nastavení sekce Měření ji vymaže; nastavení Reference se nezmění.</p>
+<h3>Body a výstup</h3><p>Třetí box v Nastavení platí společně pro Měření i Referenci a filtruje jen bodové soubory STX, TXT a CSV; DXF a LandXML se použijí celé. Volba Všechny body (výchozí zapnuto) bere všechny body. Po vypnutí se použijí jen body s kódem shodným s některým vlastním kódem nebo s názvem začínajícím tímto kódem (až 20 kódů A–Z / 0–9, 1 až 8 znaků); bez kódu se z bodových souborů nepoužije žádný bod, a to ani v Referenci. Rozsah názvů Od–Do platí současně s kódy a používá stejné přirozené řazení jako ostatní moduly. Filtr se použije před tvorbou TIN, takže ovlivní kubatury, porovnání s Referencí, rovinu MNČ, plán i exporty; počty použitých a vyřazených bodů jsou uvedeny po souborech. Načtené soubory zůstávají celé. CSV s des. čárkou (výchozí zapnuto) řídí desetinný oddělovač v CSV kubatur a v tabulce kopírované do schránky; STX a LandXML používají vždy tečku. Nastavení se pamatuje v prohlížeči; ikona obnovení v boxu i reset modulu vrátí výchozí hodnoty.</p><h3>Hladiny DXF</h3><p>Tlačítko Hladiny DXF (žárovka) v horní liště plánu otevře seznam hladin všech načtených výkresů DXF seskupených podle souboru, s barvou hladiny a počtem prvků; je dostupné po načtení DXF a panel zavře křížek, Escape nebo klik mimo panel. DXF je v tomto modulu jen podkladem: rozsvícená hladina (žlutá žárovka) se zobrazí v podkladu plánu, PDF i DXF, zhasnutá se skryje; rozsah výkresu zůstává stejný. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Stav hladin se ukládá v prohlížeči zvlášť pro každý modul; Reset modulu všechny hladiny znovu rozsvítí.</p>
+<h3>Porovnání měření s jednou Referencí</h3><p>U Měření v Nastavení → Kubatury zvolte Počítat vůči Referenci. Výchozí volba se řídí Referencí: po načtení prvního souboru Reference se Počítat vůči přepne na Referenci, po odebrání všech souborů Reference zpět na Vodorovnou rovinu. Ruční přepnutí se zachová i při načtení dalšího souboru Reference; Obnovit výchozí nastavení Měření zvolí Referenci, je-li načtená. V modré sekci vyberte jeden ověřený referenční model; může to být hotový TIN nebo jeden TIN vytvořený z vybraných bodových vstupů. Porovnání funguje Dohromady i Po zdrojích. Volba <b>Referenci (MNČ)</b> nahradí výšky vybraného modelu Reference rovinou vyrovnanou metodou nejmenších čtverců ze svislých odchylek všech jeho vrcholů (Z = Z₀ + a·(Y − Y₀) + b·(X − X₀), těžiště Y₀, X₀). Rovina má stejný půdorys, trojúhelníky, vymezení i otvory jako Reference, takže kubatury, mapa ΔZ, svislý posun i vyrovnání bilance fungují stejně. Nastavení ukáže spád, směr spádu (jižník od +X JTSK), RMS, největší odchylky a upozorní, když RMS přesáhne 0,05 m. Volitelně lze iterativně vyloučit odlehlé vrcholy nad 3 × RMS. Plán zobrazuje místo Reference vyrovnanou rovinu; CSV a DXF uvádějí parametry roviny. Každý samostatný měřený zdroj se porovnává se stejnou Referencí. Referenční výška Z₀ ani její statistiky se v tomto režimu nepoužijí; zůstávají uchované pro návrat k vodorovné rovině.</p><p>Výpočet přesně protíná trojúhelníky obou lineárních TIN, i při odlišných vrcholech a triangulaci. Ve společné ploše integruje ΔZ = Z měření − Z Reference. Nad a pod jsou kladné svislé objemy; bilance = nad − pod. Neprovádí se extrapolace mimo síť ani přes její otvory. Výsledky respektují filtry, povinné hrany, hranice a otvory obou modelů. Oba vstupy musí mít dokončenou kontrolu sítě. Chybná Reference zablokuje celé porovnání, chybný měřený zdroj pouze svůj řádek. Při nulovém překryvu je výslovně Bez společné plochy, nikoli potvrzení shody obou terénů.</p><p>Sekce 5 uvádí společnou plochu, měření mimo Referenci, část Reference bez měření, objem nad a pod a bilanci. Při částečném pokrytí se počítá pouze skutečný průnik. Po zdrojích se řádky automaticky nesčítají kvůli možným překryvům. CSV v sekci 4 obsahuje všechny řádky, stav, min/max ΔZ a identifikaci Reference. PDF plánu shrnuje právě zobrazený zdroj. DXF plánu zachovává původní geometrii a výšky; souhrn porovnání je v komentářích. Barevnou mapu popisuje část Mapa rozdílů ΔZ, export rozdílového modelu část Export rozdílového modelu ΔZ. Zaškrtávátka zobrazení Měření/Reference ovlivňují kresbu, nikoli výpočet. Změna zdrojů nebo filtrů automaticky zneplatní starý výsledek; nový se zobrazí po dokončení výpočtu. Výpočet používá prostorový index a přerušitelné kroky; při překročení limitu 60 milionů průchodů, 8 milionů kandidátních párů nebo 5 milionů průnikových dílů nevrátí částečné objemy. Zmenšete vymezení nebo výběr. Volba se pamatuje po F5.</p><h3>Měření dohromady nebo po zdrojích</h3><p>Pouze u Měření lze přepnout Dohromady / Po zdrojích. Dohromady zachovává společný TIN vybraných bodových souborů a výběr jedné hotové sítě. Po zdrojích zaškrtněte jednotlivé bodové nebo TIN povrchy: každý má samostatnou triangulaci, filtraci, kontrolu a ořez. Hotové sítě si zachovají své trojúhelníky. Zdroj je soubor a jeho vybraný povrch, takže více povrchů LandXML/DXF dává samostatné řádky. Výsledky v sekci 5 uvádějí Z₀, plochu, nad, pod, bilanci a stav. Chybný zdroj nebrání výsledkům jiných zdrojů; jeho čísla se nevydávají za platná. Zdroje se mohou překrývat, proto se řádky automaticky nesčítají. Společný výběr má limit 250 000 bodů a 500 000 trojúhelníků, také po ořezu.</p><p>Viditelnost jednotlivých sítí se vybírá v nabídce Měření přímo v plánu, nezávisle na zdrojích zařazených do výpočtu. Kliknutí na název zdroje v tabulce zapne a přiblíží zdroj, ostatní neskryje; zaškrtávátko v prvním sloupci # zdroj v plánu zobrazí nebo skryje. Vyrovnání bilance v Kubaturách navrhne výšku vodorovné roviny Z₀ nebo svislý posun celé Reference, při kterém je bilance (násyp − výkop) nulová; u lineárního TIN platí přesně posun = bilance / plocha. Návrh se zobrazuje i používá s přesností na 4 desetinná místa (0,1 mm); zbytek bilance, který vznikne tímto zaokrouhlením, je uveden v textu. Při výpočtu vůči Referenci lze posunutou Referenci uložit v nabídce Data v sekci 4. Export jako LandXML, DXF 3D nebo STX (viz Export posunuté Reference). Tlačítko Vrátit obnoví stav před použitím návrhu. PDF/DXF plánu obsahují viditelné zdroje a případně zobrazenou Referenci. Položka CSV v nabídce Data v sekci 4. Export uloží všechny vybrané zdroje včetně stavu nevyhodnocených řádků. Volba Společná určuje jedno Z₀ ze všech vybraných zdrojů. Podle každého zdroje použije min/max/průměr/medián zvlášť; ruční výška nebo výška jednoho vybraného bodu je vždy společná. V Nastavení je vidět Z₀ právě zobrazeného zdroje. Definice ručních povinných hran musí patřit jednomu zdroji. Globální hrany DXF zatím nemají přiřazení mezi více zdroji: v režimu po zdrojích vyberte jediný zdroj nebo jejich použití vypněte. Režim, výběr zdrojů a roviny se pamatují po F5. Reference tuto novou volbu nemá.</p><h3>Export rozdílového modelu ΔZ</h3><p>Skupina Rozdílový model v nabídce Data v sekci 4. Export ukládá LandXML, DXF 3D a STX, ve kterých je výška Z nahrazena rozdílem ΔZ. Vůči Referenci platí ΔZ = měření − (Reference + posun) a TIN tvoří přesné průniky obou sítí jen na společné ploše, bez extrapolace. Vůči vodorovné rovině platí ΔZ = měření − Z₀ a TIN je měřený model. Kladné ΔZ znamená násyp, záporné výkop. Export nezávisí na zapnutí mapy ΔZ, viditelnosti zdrojů ani vyhlazení; obsahuje všechny vyhodnocované zdroje a vychází z lineárního TIN stejně jako kubatury. Název souboru začíná GeoMAT_DMT_ROZDIL_dZ_ a uvádí, vůči čemu je rozdíl počítán (Reference s posunem, nebo Z₀). LandXML obsahuje jeden povrch pro každý zdroj; popis povrchu, projektu i úvodní komentář výslovně uvádí, že nejde o nadmořské výšky. DXF R12 má vrstvy ROZDIL_DZ_TIN, _NULOVA_CARA (hranice násypu a výkopu, ΔZ = 0), _BODY a _POPIS (v režimu Po zdrojích s pořadovým číslem zdroje), plochy jsou obarvené červeně pro násyp a modře pro výkop a vrstva ROZDIL_DZ_INFO nad výkresem nese vzorec, zdroje a bilanci. STX obsahuje měřené body ve tvaru název Y X ΔZ [kód]; vůči Referenci se vynechají body mimo společnou plochu, duplicitní názvy z více zdrojů dostanou příponu _Z a číslo zdroje.</p><h3>Posun Reference v plánu</h3><p>Při porovnání s Referencí se její body, TIN, hranice a povinné hrany zobrazují ve výšce Z + posun. Hlavička a legenda uvádějí posun, tooltip bodu ukazuje původní i zobrazenou výšku. Měření vzdáleností v plánu používá zobrazené souřadnice. PDF i DXF plánu přebírají tuto polohu; DXF 2D zůstává půdorysem v Z = 0. Načtené soubory, zdrojové body a definice hran se neposouvají a posun se do výpočtů ani exportu posunuté Reference nezapočítá dvakrát. Při přepnutí na výpočet vůči vodorovné rovině se Reference zobrazuje v původních výškách; uložená hodnota posunu se uchová.</p><h3>Export posunuté Reference</h3><p>Při výpočtu kubatur vůči Referenci se v nabídce Data v sekci 4. Export zobrazí samostatná skupina <b>Posunutá Reference</b> s položkami LandXML, DXF 3D a STX. Je aktivní, když je Reference ověřená a svislý posun Reference je nenulový (zadaný ručně nebo tlačítkem vyrovnání bilance). Ukládá se <b>pouze vybraná Reference</b> s výškami Z + posun; modely měření ani jejich body se do těchto souborů nezapisují. Posun je vždy v názvu souboru (GeoMAT_DMT_REFERENCE_POSUNUTA_+0,1234m…).</p><p>Výběr <b>Rozsah</b> ve skupině určuje, co se uloží: <b>Celá Reference</b> (výchozí) zapíše celý referenční TIN, <b>Jen společná plocha s měřením</b> zapíše pouze přesný průnik Reference s měřeným TIN, tedy právě tu plochu, na které se počítá bilance; bez extrapolace. Hrany průniku jsou dopočtené body na hranách obou sítí s výškou Reference + posun; v STX se zapisují jen původní body Reference ležící na společné ploše. V režimu Po zdrojích je průnik pro každý zdroj samostatný (samostatný povrch v LandXML, vrstvy REFERENCE_POSUNUTA_01_… v DXF), v STX se stejný bod zapíše jednou. Název souboru má pro tento rozsah příponu _spolecna_plocha. Volba se pamatuje.</p><ul><li><b>LandXML</b>: TIN povrch pojmenovaný „Reference posunutá o … m“; pro celou Referenci se stejnými trojúhelníky jako Reference v GeoMAT (včetně ořezu hranicí), popis a komentář souboru uvádějí zdroj, posun a bilanci vůči měření. Souřadnice S-JTSK jako N = −X, E = −Y; soubor lze znovu načíst do GeoMAT.</li><li><b>DXF 3D</b>: vrstvy REFERENCE_POSUNUTA_TIN (3DFACE), _BODY a _POPIS; nad výkresem je ve vrstvě REFERENCE_POSUNUTA_INFO textový popis posunu. CAD X = −Y, Y = −X, Z = výška + posun.</li><li><b>STX</b>: původní body Reference (název Y X Z [kód]) se zvýšenou výškou; pomocné body ořezu a povinných hran se nezapisují. Formát nemá záhlaví, posun je uveden v názvu souboru.</li></ul><h3>Bilance na vlastní ploše</h3><p>V Nastavení → Kubatury lze zapnout volbu Bilance na vlastní ploše a tlačítkem Zadat plochu nakreslit v půdorysu plánu uzavřený polygon (kliknutím nebo zadáním souřadnic Y, X; jedna vnější hranice bez otvorů). Návrh vyrovnání bilance na nulu se pak počítá jen uvnitř polygonu: vůči Referenci na průniku polygonu se společnou plochou měření a Reference, vůči rovině Z₀ na průniku polygonu s modelem měření. Díly sítě se polygonem přesně ořezávají a ΔZ se uvnitř integruje lineárně. Kubatury v tabulkách, mapa ΔZ ani modely se nemění; mění se pouze navržený posun Reference nebo Z₀. Polygon se v plánu zobrazuje fialovou čerchovanou čarou spolu s volbou Hranice a otvory a se stejnou volbou se přenáší do PDF 2D a do DXF plánu jako vrstva PLOCHA_BILANCE (v DXF 2D v Z = 0, v DXF 3D položený na síť měření, mimo model měření se úsek vynechá). Rozdílový model DXF 3D obsahuje vrstvu ROZDIL_DZ_PLOCHA_BILANCE položenou na plochu ΔZ. Obě DXF nesou v komentáři plochu polygonu a bilanci uvnitř. Tlačítko STX u plochy bilance uloží vrcholy polygonu (PB1, PB2, … Y X Z PLOCHA_BILANCE) s výškou z modelu měření; vrchol mimo model má Z = 0. Pro režim Po zdrojích s vlastními rovinami se plocha bilance nepoužije.</p><h3>Kubatury k vodorovné rovině</h3><p>V Nastavení Měření zadejte referenční výšku Z₀ v metrech. Reference kubatury k vodorovné rovině nepočítá; slouží jako podklad pro porovnání. Kubaturu jiného povrchu k rovině získáte jeho načtením jako zdroje Měření. Výchozí pole je prázdné, kubatury se tedy nepočítají k náhodně zvolené výšce. Enter nebo opuštění pole potvrdí zadanou hodnotu; během psaní se výpočet nespouští. Povolena je i nula, záporná výška a desetinná tečka či čárka, v rozsahu výšek GeoMATu ±9999,999 m. Vymazání pole výpočet vypne. Referenční výška neposouvá model ani zdrojové body.</p><p>Objem nad rovinou a pod rovinou je vždy kladný. Bilance = nad − pod; kladná tedy znamená převahu objemu nad rovinou. Jde o svislé objemy v m³ nad půdorysnou plochou, nikoli o objem k plášti uzavřeného tělesa. Každý trojúhelník lineárního TIN se při průchodu rovinou přesně rozdělí v její úrovni; nepoužívá se pouze průměr odchylek celého trojúhelníku. Plochy, které chybí v síti nebo jsou vyřazeny max. hranou, min. úhlem, hranicí či otvorem, se nezapočítají. Povinné hrany se respektují podle výsledné triangulace. Nepřidává se automatická robustní filtrace terénu.</p><p>Výsledky jsou dostupné až po dokončení triangulace, ořezu a úspěšné kontrole sítě; samostatné části mohou zůstat jako upozornění a jejich objemy se sčítají. Výpočet běží po přerušitelných krocích. Změna výšky, modelu nebo filtrů zneplatní předchozí výsledek. Položka CSV v nabídce Data v sekci 4. Export uloží souhrn, přesná čísla, zdroje a nastavení; při výpočtu vůči Referenci uloží místo toho porovnání s Referencí, v režimu Po zdrojích souhrn po zdrojích. Legenda v dostatečně velkém 2D/3D plánu i PDF obsahuje souhrn zobrazeného Měření, ve velmi malém plánu zůstávají úplné výsledky v Nastavení. DXF zachovává původní geometrii a výšky, souhrn je pouze v komentářích souboru. Volba Výška podle nabízí nejprve ručně, pak min, max, průměr a medián a potom jednotlivé body. Číslo bodu lze napsat celé; psaní filtruje nabídku, nové otevření šipkou opět nabídne výběr bez filtru. V nabídce se vykreslí nejvýše 100 bodů, hledání prochází všechny. Shodné názvy v různých souborech vyberte konkrétním řádkem podle tooltipu. Statistika zahrnuje všechny původní body právě vybraných zdrojů modelu, bez nových vrcholů ořezu a bez plošného vážení; max. hrana, min. úhel, hranice a otvory její soubor bodů nemění. Hodnoty statistik se zaokrouhlí na 0,001 m, výška konkrétního bodu se převezme ze zdroje. Změna zdrojů statistiku přepočítá. Odebraný bod nenahradí jiný bod se stejným jménem; je třeba znovu vybrat. Při výběru z dat je výškové pole pouze pro čtení; volba ručně vrátí poslední vlastní výšku. Volba i ruční výška se pamatují po F5. Obnovení nastavení sekce Měření ji vymaže; nastavení Reference se nezmění.</p>
 <h3>Protokol</h3>
 <p>Protokol (první tlačítko v sekci 4. Export, zkratka Shift+R) otevře okno s údaji zakázky (číslo protokolu, akce, katastrální území, objednatel, přístroj…) a uloží jeden soubor PDF Protokol_RRRR_ČČČ_-_kubatury_-_Akce.pdf: úvodní strana A4, strana A4 Výpočet kubatur a plán PDF 2D A3. Údaje se průběžně ukládají v prohlížeči odděleně od protokolů ostatních modulů. Úvodní strana a záhlaví a zápatí stran A4 odpovídají šabloně Geodetický protokol GK (Excel). Volba Verze protokolu v Nastavení: Světlá (výchozí) nebo Tmavá (nadpis PROTOKOL v barvě loga s bílým textem, podnadpis modrý jako názvy bloků).</p>
 <p>Strana Výpočet kubatur je tabulka ze sekce 5. Výsledky pro aktuální režim (vůči vodorovné rovině Z₀ nebo vůči Referenci, Dohromady nebo Po zdrojích) se všemi řádky v původním pořadí bez ohledu na hledání, řazení a skryté zdroje. Zdroj je uveden názvem bez přípony a bez dovětku typu souboru. Plochy a objemy jsou zaokrouhlené na celé m² a m³, výšky a posuny na 0,001 m. Bilance je červeně při násypu, modře při výkopu a černě při nule (stejně jako mapa ΔZ). Nad tabulkou je řádek s typem výpočtu; dlouhá tabulka pokračuje na dalších stranách s opakovanou hlavičkou.</p>
@@ -2433,6 +2464,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <li>Když žádný bod projektu nemá v dosahu měření, zobrazí se nahoře červené varování (záměna Y a X, opačné znaménko, jiný souřadnicový systém).</li></ul>
 <p>Obsahuje-li projekt alespoň jednu výšku Z (i 0), přibude v tabulce sloupec <b>ΔZ [mm]</b>: výška skutečnosti minus projektovaná výška. Kladná hodnota znamená nad projektem, záporná pod projektem. U pilot bez přiřazené výšky projektu je pomlčka. Sloupec lze řadit a je také v CSV a kopírování tabulky; bez výšek projektu se nezobrazuje.</p>
 <p>Volitelná <b>Mezní odchylka ΔZ od projektu [mm]</b> (výchozí 0 = bez hodnocení) obarví ΔZ podle absolutní hodnoty: do mezní odchylky zeleně, nad ní červeně, nad 150 % mezní odchylky i s podbarvenou buňkou.</p>
+<h3>Hladiny DXF</h3><p>Tlačítko Hladiny DXF (žárovka) v horní liště plánu otevře seznam hladin všech načtených výkresů DXF seskupených podle souboru, s barvou hladiny a počtem prvků; je dostupné po načtení DXF a panel zavře křížek, Escape nebo klik mimo panel. DXF je v tomto modulu jen podkladem: rozsvícená hladina (žlutá žárovka) se zobrazí v podkladu plánu, PDF i DXF, zhasnutá se skryje; rozsah výkresu zůstává stejný. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Stav hladin se ukládá v prohlížeči zvlášť pro každý modul; Reset modulu všechny hladiny znovu rozsvítí.</p>
 <h3>4. Export</h3>
 <p><b>Porucha úložiště a reset:</b> pokud se úložiště do 5 sekund neotevře nebo čtení/zápis déle než 10 sekund nepostupuje, čekání se ukončí. Nové soubory lze načítat a používat v paměti. Upozornění a tlačítko Zkusit znovu umožní obnovu či uložení zopakovat. Reset si nejprve uloží samostatný požadavek na smazání: staré soubory se po F5 neobnoví ani při dočasně nefunkční IndexedDB. Po zprovoznění se úložiště dočistí. Pokud prohlížeč nedovolí uložit ani požadavek resetu, ani smazání v databázi, aplikace výslovně oznámí, že reset platí jen pro otevřenou stránku. Historie pohledu nevrací reset ani smazané soubory.</p>
 <p><b>Čtení souborů:</b> velké textové soubory se čtou postupně, aby se zbytečně nehromadily binární kopie v paměti. Chyba čtení a přerušení jsou uvedeny názvem souboru a důvodem; ostatní čitelné soubory z dávky se načtou. Prázdný nebo obsahově neplatný soubor se posuzuje zvlášť. Reset či nové načítání zneplatní starou dávku, takže její pozdější výsledek nepřepíše nová data.</p>
@@ -2479,7 +2511,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
  <li>Výchozí: vyhodnotí se jen body s kódem nebo s předponou názvu <b>ZSS</b> (apriorní kód, ve skupině „Body a výstup“ zobrazený jako pilulka bez křížku); zaškrtnutím volby „Všechny body“ se použijí všechny body v souboru bez omezení kódů. Ve skupině „Body a výstup“ lze přidat až 20 vlastních kódů (písmena A–Z a číslice bez diakritiky, 1 až 8 znaků; <kbd>Enter</kbd> nebo tlačítko „Přidat“): body s takovým kódem nebo předponou názvu se použijí také. Dvacátý první kód přepíše nejstarší vložený, kód odeberete křížkem. Při zapnuté volbě „Všechny body“ se kódy nepoužívají. Body mimo výběr se nevyhodnocují, v tabulce ani plánu nejsou; počet vybraných bodů je uvedený pod volbou „Všechny body“ a pod rozsahem názvů.</li>
  <li>Rozsah názvů (Od, Do) zúží výběr podle názvu bodu, podrobně viz „Rozsah názvů měřených bodů“ níže. Volba „CSV s des. čárkou“ (výchozí zapnuto) určí desetinný oddělovač budoucích exportů CSV a kopírování do schránky.</li>
  <li>Po změně se hned přepočítají výsledky, filtr, souhrn i plán. Nastavení i zabalení sekce (šipka vpravo) se pamatují v prohlížeči. Výchozí hodnoty (tlačítko vpravo) vrátí 20 mm, 3,5×, jen kód ZSS a CSV s des. čárkou a smažou vlastní kódy i rozsah názvů; jsou zašedlé, když není co vracet. Reset modulu vrátí nastavení také.</li></ul>
-<p>Karta Hladiny DXF ukazuje použitelné hladiny všech načtených výkresů seskupené podle souboru, s barvou hladiny a počtem prvků. Rozsvícená hladina (žlutá žárovka) se použije pro výpočet odchylek, zhasnutá se nepoužije. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Rozsvítit vše, Zhasnout vše a prohození (⇄) platí při hledání jen pro nalezené hladiny. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Zapnutá volba Projevit i v plánu skryje zhasnuté hladiny i v podkladu DXF v plánu; ve výchozím stavu je vypnutá a plán ukazuje celý podklad. Stav hladin se ukládá v prohlížeči; Výchozí hodnoty i Reset modulu všechny hladiny znovu rozsvítí a volbu Projevit i v plánu vypnou.</p>
+<p>Karta Hladiny DXF ukazuje použitelné hladiny všech načtených výkresů seskupené podle souboru, s barvou hladiny a počtem prvků. Rozsvícená hladina (žlutá žárovka) se použije pro výpočet odchylek, zhasnutá se nepoužije. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou (jen v panelu v plánu) zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Zapnutá volba Projevit i v plánu skryje zhasnuté hladiny i v podkladu DXF v plánu; ve výchozím stavu je zapnutá jako v ostatních modulech, po vypnutí plán ukazuje celý podklad. Stav hladin se ukládá v prohlížeči; Výchozí hodnoty i Reset modulu všechny hladiny znovu rozsvítí a volbu Projevit i v plánu zapnou. Stejnou kartu otevře i tlačítko Hladiny DXF (žárovka) v horní liště plánu; obě místa sdílejí jeden stav.</p>
 <h3>Rozsah názvů měřených bodů</h3><p>Ve skupině Body a výstup jsou pod kódy textová pole Od a Do. Hranice jsou včetně; prázdná hranice je neomezená a obě prázdné filtr vypnou. Používá se přirozené pořadí: oddělovače před číslicemi 0–9, číslice před písmeny; číselné části se porovnávají jako čísla i při velmi dlouhých názvech. Velikost písmen a úvodní nuly v číslech nerozhodují. Při shodném začátku je kratší název první, např. A, A2, A10, AA, AA2, AB, B1. Rozsah 10 až A100 zahrne 9999 a A50, nikoli 5, A200 nebo B1. Ostatní znaky mají pevné pořadí nezávislé na nastavení prohlížeče; české znaky se řadí za odpovídající základní písmeno. Změnu potvrdí Enter nebo opuštění pole; neplatné pořadí či řídicí znaky ponechají dosavadní výběr. Ikona obnovení vymaže pouze rozsah. Výběr kódů a rozsah platí současně, také při zapnuté volbě Všechny body. Filtr se použije před výpočty a robustní filtrací; ovlivní tabulku, MNČ z měření, plány, histogramy i exporty. V ZSS pilot může vynechat část obvodových bodů piloty. Původní měření i projektové body a DXF zůstanou zachované. Rozsah se pamatuje samostatně pro každý modul a Výchozí hodnoty jej vymažou.</p>
 <h3>4. Export</h3>
  <ul><li>Sekce je zatím jen vyznačená; exporty (PDF a DXF plánu, tabulka výsledků, protokol) přibudou v dalších verzích.</li></ul>
@@ -2497,7 +2529,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
  <ul><li>Plán otevřete tlačítky vpravo v záhlaví sekce Výsledky (rozdělená obrazovka nebo plán na celou obrazovku) nebo klávesou V, která přepíná jen tabulku, rozdělenou obrazovku a plán na celou obrazovku. Esc nebo tlačítko s tabulkou plán zavře. Poměr tabulky a plánu změníte tažením za okraj plánu, dvojklik vrátí polovinu. Ovládání je stejné jako v Rovinnosti a ZSS pilot.</li>
  <li>Plán je jen 2D půdorys (ZSS SK výšky nevyhodnocuje): zaměřené body jako fialové křížky, body bez protějšku oranžově a od každého bodu šipka pro každý vyhodnocený směr. Šipka ukazuje směr od projektu ke skutečnosti, její délka je orientační; barva podle mezní odchylky (zeleně do ní, červeně nad ní) a u ní odchylka v mm. U rohu jsou tedy dvě šipky (kolmo na stěnu A a B), u volného konce kolmo a podél, u kolmého vyhodnocení jedna.</li>
  <li>Pod body je šedý podklad výkresu DXF (volba Projekt DXF). Plán zobrazuje body podle filtru tabulky. Kolečko myši přibližuje, tažením se výkres posouvá, F zobrazí celý výkres. Najetí na bod ukáže jeho název, souřadnice a odchylky; klik na bod označí řádek v tabulce a klik na řádek označí bod v plánu (a vycentruje ho, je-li mimo střed); šipky nahoru / dolů posouvají označení po řádcích.</li>
- <li>V Nástrojích otevře M nebo tlačítko Měření vzdálenosti mezi dvěma body. Nabídka Upravit v půdorysu umožní přesunout popisky, opravit odchylku nebo zadat bod se souřadnicemi Y, X a Z. Poslední změnu v otevřeném nástroji lze vrátit klávesami Ctrl+Z a zopakovat klávesami Ctrl+Y.</li>
+ <li>V Nástrojích otevře M nebo tlačítko Měření vzdálenosti mezi dvěma body. Nabídka Upravit v půdorysu umožní přesunout popisky, opravit odchylku nebo přidat bod. Poslední změnu v otevřeném nástroji lze vrátit klávesami Ctrl+Z a zopakovat klávesami Ctrl+Y.</li>
+ <li>Přidat bod (nabídka Upravit ve skupině Nástroje plánu) doplní měřený bod, který v načtených souborech měření chybí. Klik do 2D plánu přidá bod v místě kliknutí; přesné souřadnice zadejte do polí Y a X a stiskněte Enter. Výška Z je nepovinná: bod bez ní má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí. Bod mimo okolí prvků DXF zůstane v tabulce jako odlehlý, stejně jako bod načtený ze souboru. Přidaný bod má kód ZSS a vyhodnotí se vůči DXF stejně jako bod z načteného souboru; v tabulce má označení „přidaný“ a počet přidaných bodů je v logu. Nové body dostanou názvy N1, N2… Seznam v panelu ukazuje výsledek vyhodnocení; klik na bod v seznamu nebo v plánu ho vybere k úpravě, křížek ho odebere. Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky po dobu otevřeného panelu, Odebrat přidané body smaže všechny. Body se ukládají v prohlížeči; odebrání měření nebo Reset je smaže, původní soubory se nemění.</li>
  <li>Volby ve skupinách Body a popisky (Měřené body, Názvy, Výšky, Odchylky, Bez protějšku) a Výkres (Projekt DXF, Mřížka, Legenda, Měřítko, Hlavička, Logo), posuvníky Písmo a Šipky (25–300 %) a zabalení záhlaví plánu se pamatují v prohlížeči; tlačítko Výchozí hodnoty je vrátí. Export plánu do PDF a DXF přibude v dalších verzích.</li></ul>
 <h3>Ukládání a reset</h3>
 <p>Načtené soubory měření i projektu (včetně výkresů DXF a jejich nastavení importu) se ukládají místně do IndexedDB a po obnovení stránky (F5) se obnoví. Úložiště je vázané na prohlížeč a adresu aplikace; smazání dat webu je odstraní. Zdrojové soubory si ponechte jako zálohu.</p>
@@ -2533,7 +2566,8 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
 <li><b>Výchozí hodnoty</b> (šipka vpravo v sekci): vrátí jednotky (mm), přesnost (1 mm), mezní odchylku (10 mm), odlišení odstínů + / −, desetinnou čárku v CSV i vyhodnocení na Odchylky od roviny a parametry latě (2 m, rozpětí 1,6 m, pás ±0,1 m, mezní odchylka 2 mm, varianta ±) na výchozí hodnoty a přepočítá tabulku. Je zašedlé, když je vše na výchozích hodnotách; načtené soubory, zadaná rovina ani volby robustní filtrace se nemění (ty vrací tlačítko u roviny a Reset).</li>
 <li><b>Odlišit + / − odstínem</b> (skupina Odchylky, výchozí zapnuto): kladné odchylky (nad rovinou, u latě hrb) světlejším a záporné (pod rovinou, prohlubeň) tmavším odstínem zelené i červené v tabulce, plánu, PDF i DXF; v legendě plánu je u každé skupiny dvojice značek. Vypnuto: jeden základní odstín zelené a červené, v legendě jedna značka, znaménko ukazuje jen číslo. Pamatuje se v prohlížeči a vrací ji „Výchozí hodnoty“.</li>
 <li><b>CSV s des. čárkou</b> (skupina Body a výstup, výchozí zapnuto): desetinná čárka v uloženém CSV i v tabulce zkopírované do schránky; vypnuto = desetinná tečka. Volba patří jen Rovinnosti, nastavení v ZSS pilot ji neovlivní, pamatuje se v prohlížeči a vrací ji i tlačítko „Výchozí hodnoty“.</li></ul>
-<h3>Skupiny nastavení</h3><p>Nastavení jsou v pořadí Vyhodnocení, Body a výstup, Odchylky. Ikona vlevo od obnovení výchozích hodnot přepíná mezi všemi rozbalenými a všemi sbalenými skupinami. Ve sbaleném režimu lze jednotlivé skupiny otevřít jejich nadpisem. Stav se pamatuje samostatně pro Rovinnost; ovládání ZSS pilot jej nemění. Reset modulu vrátí rozbalené skupiny.</p><h3>Rozsah názvů měřených bodů</h3><p>Ve skupině Body a výstup jsou pod kódy textová pole Od a Do. Hranice jsou včetně; prázdná hranice je neomezená a obě prázdné filtr vypnou. Používá se přirozené pořadí: oddělovače před číslicemi 0–9, číslice před písmeny; číselné části se porovnávají jako čísla i při velmi dlouhých názvech. Velikost písmen a úvodní nuly v číslech nerozhodují. Při shodném začátku je kratší název první, např. A, A2, A10, AA, AA2, AB, B1. Rozsah 10 až A100 zahrne 9999 a A50, nikoli 5, A200 nebo B1. Ostatní znaky mají pevné pořadí nezávislé na nastavení prohlížeče; české znaky se řadí za odpovídající základní písmeno. Změnu potvrdí Enter nebo opuštění pole; neplatné pořadí či řídicí znaky ponechají dosavadní výběr. Ikona obnovení vymaže pouze rozsah. Výběr kódů a rozsah platí současně, také při zapnuté volbě Všechny body. Filtr se použije před výpočty a robustní filtrací; ovlivní tabulku, MNČ z měření, plány, histogramy i exporty. V ZSS pilot může vynechat část obvodových bodů piloty. Původní měření i projektové body a DXF zůstanou zachované. Rozsah se pamatuje samostatně pro každý modul a Výchozí hodnoty jej vymažou.</p><h3>Histogram odchylek</h3><p>Rozbalovací blok pod souhrnem výsledků je výchozně zavřený. Pro vodorovnou rovinu ukazuje ΔZ, pro svislou a obecnou kolmou odchylku d; v režimu latě h. Zahrnuje použité body po robustní filtraci a ručním výběru, nezávisle na filtru zobrazení tabulky. Body bez vyhodnocené latě se do histogramu h nepočítají. Vodorovná osa respektuje jednotky mm/m a zvolenou přesnost; svislá udává počty bodů, nikoli podíl plochy. Intervaly jsou automatické a rozdělené na hranicích barevných tříd mezní odchylky jako v plánu. Volba Odlišit + / − odstínem platí také pro histogram: při vypnutí jsou obě strany do mezní odchylky stejně zelené a nad mezní odchylkou stejně červené. Najetí na sloupec ukáže interval, počet a procento bodů; sloupce jsou dostupné také klávesou Tab.</p><h3>Kontrola jednoznačnosti povrchu</h3><p>Nejprve proběhne robustní filtrace odlehlých bodů (je-li zapnutá). Potom se u všech typů rovin ověřuje, zda zbývající použité body nemají stejný průmět do referenční roviny, ale různé kolmé odchylky. U vodorovné roviny se porovnává Y, X a ΔZ; u svislé s, Z a d; u obecné x′, y′ a d. Při konfliktu zůstanou dostupné jednotlivé bodové odchylky, ale lať, TIN, mapa, vrstevnice a kubatury se nevyhodnotí. Upozornění uvede konfliktní body; ostatní povrchy odškrtněte. Kontrola povrchu nezastavuje robustní filtraci; lať a tvorba plochy se zablokují jen tehdy, pokud konflikt zůstane i po filtraci a ručním výběru. Platí i při vypnuté robustní filtraci. U svislé i obecné roviny se skutečná duplicita polohy hledá podle Y, X i Z (do 1 mm), takže body nad sebou v různých výškách nejsou duplicitou. U vodorovné roviny zůstává kontrola stejné půdorysné polohy Y, X; rozdíl výšek se uvede v logu. Shodné názvy bodů se kontrolují samostatně u všech typů rovin.</p><h3>5. Výsledky</h3><p><b>Znaménka:</b> vodorovná ΔZ je kladná nad rovinou. U svislé roviny je d kladné vpravo od směru 1 → 2 při pohledu shora; prohození bodů obrátí stranu. U obecné roviny je d kladné na zvolené straně normály; lze ji obrátit. V režimu latě h znamená hrb (+) nebo prohlubeň (−). Označení odbourat / doplnit předpokládá, že kladná strana směřuje ven z materiálu.</p>
+<h3>Skupiny nastavení</h3><p>Nastavení jsou v pořadí Vyhodnocení, Body a výstup, Odchylky. Ikona vlevo od obnovení výchozích hodnot přepíná mezi všemi rozbalenými a všemi sbalenými skupinami. Ve sbaleném režimu lze jednotlivé skupiny otevřít jejich nadpisem. Stav se pamatuje samostatně pro Rovinnost; ovládání ZSS pilot jej nemění. Reset modulu vrátí rozbalené skupiny.</p>
+<h3>Hladiny DXF</h3><p>Tlačítko Hladiny DXF (žárovka) v horní liště plánu otevře seznam hladin všech načtených výkresů DXF seskupených podle souboru, s barvou hladiny a počtem prvků; je dostupné po načtení DXF a panel zavře křížek, Escape nebo klik mimo panel. DXF je v tomto modulu jen podkladem: rozsvícená hladina (žlutá žárovka) se zobrazí v podkladu plánu, PDF i DXF, zhasnutá se skryje; rozsah výkresu zůstává stejný. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Stav hladin se ukládá v prohlížeči zvlášť pro každý modul; Reset modulu všechny hladiny znovu rozsvítí.</p><h3>Rozsah názvů měřených bodů</h3><p>Ve skupině Body a výstup jsou pod kódy textová pole Od a Do. Hranice jsou včetně; prázdná hranice je neomezená a obě prázdné filtr vypnou. Používá se přirozené pořadí: oddělovače před číslicemi 0–9, číslice před písmeny; číselné části se porovnávají jako čísla i při velmi dlouhých názvech. Velikost písmen a úvodní nuly v číslech nerozhodují. Při shodném začátku je kratší název první, např. A, A2, A10, AA, AA2, AB, B1. Rozsah 10 až A100 zahrne 9999 a A50, nikoli 5, A200 nebo B1. Ostatní znaky mají pevné pořadí nezávislé na nastavení prohlížeče; české znaky se řadí za odpovídající základní písmeno. Změnu potvrdí Enter nebo opuštění pole; neplatné pořadí či řídicí znaky ponechají dosavadní výběr. Ikona obnovení vymaže pouze rozsah. Výběr kódů a rozsah platí současně, také při zapnuté volbě Všechny body. Filtr se použije před výpočty a robustní filtrací; ovlivní tabulku, MNČ z měření, plány, histogramy i exporty. V ZSS pilot může vynechat část obvodových bodů piloty. Původní měření i projektové body a DXF zůstanou zachované. Rozsah se pamatuje samostatně pro každý modul a Výchozí hodnoty jej vymažou.</p><h3>Histogram odchylek</h3><p>Rozbalovací blok pod souhrnem výsledků je výchozně zavřený. Pro vodorovnou rovinu ukazuje ΔZ, pro svislou a obecnou kolmou odchylku d; v režimu latě h. Zahrnuje použité body po robustní filtraci a ručním výběru, nezávisle na filtru zobrazení tabulky. Body bez vyhodnocené latě se do histogramu h nepočítají. Vodorovná osa respektuje jednotky mm/m a zvolenou přesnost; svislá udává počty bodů, nikoli podíl plochy. Intervaly jsou automatické a rozdělené na hranicích barevných tříd mezní odchylky jako v plánu. Volba Odlišit + / − odstínem platí také pro histogram: při vypnutí jsou obě strany do mezní odchylky stejně zelené a nad mezní odchylkou stejně červené. Najetí na sloupec ukáže interval, počet a procento bodů; sloupce jsou dostupné také klávesou Tab.</p><h3>Kontrola jednoznačnosti povrchu</h3><p>Nejprve proběhne robustní filtrace odlehlých bodů (je-li zapnutá). Potom se u všech typů rovin ověřuje, zda zbývající použité body nemají stejný průmět do referenční roviny, ale různé kolmé odchylky. U vodorovné roviny se porovnává Y, X a ΔZ; u svislé s, Z a d; u obecné x′, y′ a d. Při konfliktu zůstanou dostupné jednotlivé bodové odchylky, ale lať, TIN, mapa, vrstevnice a kubatury se nevyhodnotí. Upozornění uvede konfliktní body; ostatní povrchy odškrtněte. Kontrola povrchu nezastavuje robustní filtraci; lať a tvorba plochy se zablokují jen tehdy, pokud konflikt zůstane i po filtraci a ručním výběru. Platí i při vypnuté robustní filtraci. U svislé i obecné roviny se skutečná duplicita polohy hledá podle Y, X i Z (do 1 mm), takže body nad sebou v různých výškách nejsou duplicitou. U vodorovné roviny zůstává kontrola stejné půdorysné polohy Y, X; rozdíl výšek se uvede v logu. Shodné názvy bodů se kontrolují samostatně u všech typů rovin.</p><h3>5. Výsledky</h3><p><b>Znaménka:</b> vodorovná ΔZ je kladná nad rovinou. U svislé roviny je d kladné vpravo od směru 1 → 2 při pohledu shora; prohození bodů obrátí stranu. U obecné roviny je d kladné na zvolené straně normály; lze ji obrátit. V režimu latě h znamená hrb (+) nebo prohlubeň (−). Označení odbourat / doplnit předpokládá, že kladná strana směřuje ven z materiálu.</p>
 <ul><li>Sekce se zobrazí po zadání platné roviny libovolného typu. U vodorovné roviny ukáže <b>ΔZ = Z bodu − výška roviny</b>: kladná = nad rovinou, záporná = pod rovinou. U svislé a obecné roviny ukazuje <b>kolmou odchylku d</b> podle definované kladné strany (viz příslušné kapitoly), u latě také <b>h</b>. Vše ve zvolených jednotkách. Do mezní odchylky včetně zeleně, nad ní červeně, nad 150 % mezní odchylky je červeně podbarvená i buňka; kladné odchylky světlejším, záporné tmavším odstínem. Nejvyšší a nejnižší bod jsou tučně. Přesná (nezaokrouhlená) hodnota je v tooltipu buňky ΔZ; nula má znaménko podle strany roviny (−0 těsně pod rovinou, +0 těsně nad).</li>
 <li><b>Zaškrtávátko u #</b>: odškrtnutý bod zůstane v tabulce zašedlý, ale nezapočítá se do souhrnu ani do kopírování. Zaškrtávátko v záhlaví přepne všechny body; automaticky vyřazené odlehlé body přitom zůstanou vyřazené (vrátíte je jednotlivě) a zaškrtávátko je plné, když jsou zaškrtnuté všechny ostatní body. Odškrtnutí se pamatuje i po F5.</li>
 <li><b>Filtr bodů</b>: všechny body; podle mezní odchylky: do mezní odchylky (vyhovující), nad mezní odchylkou (nevyhovující, včetně bodů nad 150 %), nad 150 % mezní odchylky, nad mezní odchylkou nad rovinou (místa k odbourání) a nad mezní odchylkou pod rovinou (místa k doplnění); podle polohy k rovině: nad rovinou, pod rovinou, v rovině (ΔZ = 0), jen nejvyšší a nejnižší. Počet bodů je u každé volby v závorce. Filtr platí pro tabulku a kopírování, souhrn se počítá vždy ze všech zaškrtnutých bodů.</li>
@@ -2745,6 +2779,7 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
   <div id="gtip" hidden></div>
 </div>
 <template id="gmPlanToolbarTemplate">
+    <button class="wi io" id="__PLAN_PREFIX__lay" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="__PLAN_PREFIX__LayPanel" aria-label="Hladiny DXF" title="Hladiny DXF: rozsvícení a zhasnutí hladin načtených výkresů DXF." disabled><svg class="ic zlb" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg></button>
     <button class="wi io" id="__PLAN_PREFIX__all" type="button" aria-label="Zaškrtnout / odškrtnout vše" title="Přepne všechny dostupné volby zobrazení plánu."><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="5" height="5" rx="1" stroke-width="1.6"></rect><path d="M4.2 6l1.2 1.2L7.2 4.8" stroke-width="1.4"></path><rect x="3" y="10" width="5" height="5" rx="1" stroke-width="1.6"></rect><path d="M4.2 12.5l1.2 1.2L7.2 11.3" stroke-width="1.4"></path><rect x="3" y="16.5" width="5" height="5" rx="1" stroke-width="1.6"></rect><path d="M4.2 19l1.2 1.2L7.2 17.8" stroke-width="1.4"></path><path d="M11 6h10M11 12.5h10M11 19h10" stroke-width="1.8"></path></svg></button>
     <button class="wi io" id="__PLAN_PREFIX__def" type="button" aria-label="Výchozí hodnoty voleb plánu" title="Vrátí výchozí volby plánu."><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button><button class="wi io" id="__PLAN_PREFIX__fold" type="button" aria-expanded="true" aria-label="Zabalit záhlaví plánu: skryje nástroje, písmo a šipky, zaškrtávací volby a podrobnosti plochy, plán se zvětší. Tlačítka PDF a DXF zůstanou." title="Sbalí nebo rozbalí záhlaví plánu."><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
     <button class="wi io" id="__PLAN_PREFIX__sp" type="button" aria-label="Rozdělená obrazovka" title="Rozdělená obrazovka"><svg class="ic" viewbox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2" stroke-width="1.8"></rect><path d="M3 12h18" stroke-width="1.8"></path><rect x="5.5" y="14.2" width="13" height="4" rx=".6" fill="currentColor" stroke="none" opacity=".55"></rect></svg></button>
@@ -2774,6 +2809,14 @@ U více zdrojů jde o součet; překrývající se zdroje se započítají více
  for(const host of document.querySelectorAll('[data-plan-toolbar]')){
   host.innerHTML=toolbar.replaceAll('__PLAN_PREFIX__',host.dataset.planToolbar);
  }
+ /* 1.556: karta Hladiny DXF je v kódu jen jednou (Nastavení ZSS SK); do plánu každého modulu se zkopíruje jako vyskakovací panel u tlačítka Hladiny DXF v horní liště, id dostanou předponu plánu */
+ const layers=document.querySelector('[data-gm-layers-src] .zlay');
+ if(layers)for(const host of document.querySelectorAll('[data-plan-toolbar]')){const p=host.dataset.planToolbar,root=host.closest('#gm,#rgm,#tpm,#kgm'),re=/^zssk(?=Layer)/;if(!root)continue;
+  const pop=document.createElement('div');pop.id=p+'LayPanel';pop.className='zlay-pop';pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Hladiny DXF');pop.hidden=true;
+  pop.innerHTML='<div class="zlay-pop-head"><b>Hladiny DXF</b></div><button type="button" class="measure-close" id="'+p+'LayClose" aria-label="Zavřít hladiny DXF (Escape)" title="Zavřít (Escape)">×</button>';
+  const copy=layers.cloneNode(true);copy.querySelector('symbol')?.closest('svg')?.remove();
+  for(const el of [copy,...copy.querySelectorAll('*')])for(const a of ['id','for','aria-controls','aria-labelledby','name'])if(el.hasAttribute(a)&&re.test(el.getAttribute(a)))el.setAttribute(a,el.getAttribute(a).replace(re,p));
+  pop.append(copy);root.prepend(pop);}
  for(const host of document.querySelectorAll('[data-plan-cube]')){
   host.innerHTML=cube.replaceAll('__FIT_ID__',host.dataset.planFit).replaceAll('__PLAN_PREFIX__',host.dataset.planCube);
  }
@@ -6057,9 +6100,9 @@ function zssAddRead(){
 }
 function zssAddResult(a){ const p=zssAddPile(a); return p?gmPreviewText("Bod je zaměřený střed piloty ⟦0⟧.",[p.name]):gmPreviewText("Výpočet bod k žádné pilotě nepřiřadil, podrobnosti jsou v logu pod tabulkou."); }
 function zssAddApply(){ zssAddSave(); if(points.length) recalc(); else renderTable(); }
-function zssAddChange(before,msg){ ZSS_ADD.hist.push(before); if(ZSS_ADD.hist.length>200) ZSS_ADD.hist.shift(); ZSS_ADD.fut=[]; zssAddApply(); zssAddUI(typeof msg==="function"?msg():msg); }
+function zssAddChange(before,msg){ ZSS_ADD.hist.push(before); if(ZSS_ADD.hist.length>200) ZSS_ADD.hist.shift(); ZSS_ADD.fut=[]; zssAddApply(); zssAddUI(msg); }
 function zssAddUndo(redo){ const from=redo?ZSS_ADD.fut:ZSS_ADD.hist,to=redo?ZSS_ADD.hist:ZSS_ADD.fut; if(!from.length)return; to.push(zssAddCopy()); ZSS_ADD.list=from.pop();
- zssAddSelect(ZSS_ADD.list.some(a=>a.id===ZSS_ADD.sel)?ZSS_ADD.sel:null,false); zssAddApply(); zssAddUI(redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
+ zssAddSelect(ZSS_ADD.list.some(a=>a.id===ZSS_ADD.sel)?ZSS_ADD.sel:null,false); zssAddApply(); zssAddUI(()=>redo?gmPreviewText("Krok znovu proveden."):gmPreviewText("Krok vrácen.")); }
 function zssAddSelect(id,redraw=true){
  const a=id===null?null:ZSS_ADD.list.find(q=>q.id===id)||null; ZSS_ADD.sel=a?a.id:null;
  for(const f of ['gAddY','gAddX','gAddZ']) gmNumericMark($(f),false);
@@ -6078,9 +6121,9 @@ function zssAddCommit(){
  ZSS_ADD.sel=a.id;
  zssAddChange(before,()=>(sel?gmPreviewText("Bod ⟦0⟧ upraven.",[a.id]):gmPreviewText("Přidán bod ⟦0⟧ (⟦1⟧).",[a.id,a.z===null?gmPreviewText("bez výšky"):"Z "+zssAddFmt(a.z)+" m"]))+" "+zssAddResult(a));
 }
-function zssAddDel(id){ const a=ZSS_ADD.list.find(q=>q.id===id); if(!a)return; const before=zssAddCopy(); ZSS_ADD.list=ZSS_ADD.list.filter(q=>q!==a); if(ZSS_ADD.sel===id) zssAddSelect(null,false); zssAddChange(before,gmPreviewText("Přidaný bod ⟦0⟧ odebrán.",[id])); }
+function zssAddDel(id){ const a=ZSS_ADD.list.find(q=>q.id===id); if(!a)return; const before=zssAddCopy(); ZSS_ADD.list=ZSS_ADD.list.filter(q=>q!==a); if(ZSS_ADD.sel===id) zssAddSelect(null,false); zssAddChange(before,()=>gmPreviewText("Přidaný bod ⟦0⟧ odebrán.",[id])); }
 function zssAddUI(msg){
- if(msg!==undefined)ZSS_ADD.msg=msg;
+ if(msg!==undefined)ZSS_ADD.msg=msg;   // 1.555: text nebo funkce (funkce se po přepnutí jazyka vyhodnotí znovu), jako v ZSS SK
  const n=ZSS_ADD.list.length, sel=ZSS_ADD.list.find(a=>a.id===ZSS_ADD.sel)||null;
  $('gAddCount').innerHTML=n?gmPreviewText("Přidané body: <b>⟦0⟧</b>",[n]):esc(gmPreviewText("Žádný bod není ručně přidaný."));
  $('gAddUndo').disabled=!ZSS_ADD.hist.length; $('gAddRedo').disabled=!ZSS_ADD.fut.length; $('gAddReset').disabled=!n;
@@ -6088,7 +6131,7 @@ function zssAddUI(msg){
  const list=ZSS_ADD.list.map(a=>{ const p=zssAddPile(a), info=p?'→ '+esc(p.name):esc(gmPreviewText("nepřiřazen"));
   return '<span class="tin-line pt-add'+(p?'':' pt-bad')+(a.id===ZSS_ADD.sel?' on':'')+'"><button type="button" class="tin-ptgo" data-add-go="'+esc(a.id)+'" title="'+esc(gmPreviewText("Vybrat bod"))+'"><b>'+esc(a.id)+'</b> · Y '+zssAddFmt(a.y)+' · X '+zssAddFmt(a.x)+' · '+(a.z===null?esc(gmPreviewText("bez Z")):'Z '+zssAddFmt(a.z))+' '+info+'</button><button type="button" data-add-del="'+esc(a.id)+'" aria-label="'+esc(gmPreviewText("Odebrat přidaný bod"))+'" title="'+esc(gmPreviewText("Odebrat přidaný bod"))+'">×</button></span>'; }).join('');
  const box=$('gAddList'),markup=list||'<span class="hp">'+esc(gmPreviewText("Zatím bez přidaných bodů."))+'</span>'; if(box._markup!==markup){ box.innerHTML=markup; box._markup=markup; }
- $('gAddStatus').textContent=(PG3&&pg3Active())?gmPreviewText("Body lze přidávat klikem jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home."):ZSS_ADD.msg||'';
+ $('gAddStatus').textContent=(PG3&&pg3Active())?gmPreviewText("Body lze přidávat klikem jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home."):(typeof ZSS_ADD.msg==="function"?ZSS_ADD.msg():ZSS_ADD.msg)||'';
 }
 function zssAddDraw(box,W,H){
  const svg=box.querySelector('svg'); if(!svg||!GV||!ZSS_ADD.list.length)return;
@@ -6108,7 +6151,7 @@ function zssAddPick(cx,cy){
  let hit=null,hd=10; for(const a of ZSS_ADD.list){ const d=Math.hypot(c0+(GV.cy-a.y)*GV.s-mx,c1+(a.x-GV.cx)*GV.s-my); if(d<hd){ hd=d; hit=a; } }
  if(hit){ zssAddSelect(hit.id); return true; }
  if(mx<pl.x||mx>pl.x+pl.w||my<pl.y||my>pl.y+pl.h)return true;
- const z=$('gAddZ').value; zssAddSelect(null,false); $('gAddZ').value=ZSS_ADD.sel===null?z:'';   // výška zadaná předem platí i pro klik do plánu
+ const keepZ=ZSS_ADD.sel===null, z=$('gAddZ').value; zssAddSelect(null,false); $('gAddZ').value=keepZ?z:'';   // výška zadaná předem platí i pro klik do plánu
  $('gAddY').value=zssAddFmt(zssAddR3(GV.cy-(mx-c0)/GV.s)); $('gAddX').value=zssAddFmt(zssAddR3(GV.cx+(my-c1)/GV.s));
  zssAddCommit(); if(ZSS_ADD.sel!==null){ $('gAddZ').focus({preventScroll:true}); $('gAddZ').select?.(); }
  return true;
@@ -6130,6 +6173,7 @@ function zssAddClose(redraw=true){
  $('gAddPanel').hidden=true; $('gAddEdit').setAttribute('aria-pressed','false');
  if(redraw&&!$('gm').hidden){ gRender(); $('gEditBtn').focus({preventScroll:true}); }
 }
+globalThis.GeoMATLanguage?.onChange(()=>{ if(!ZSS_ADD.on) return; if(typeof ZSS_ADD.msg==="string") ZSS_ADD.msg=''; zssAddUI(); });
 (()=>{
  $('gAddEdit').addEventListener('click',()=>{ if(ZSS_ADD.on)zssAddClose(); else zssAddOpen(); });
  $('gAddClose').addEventListener('click',()=>zssAddClose());
@@ -6148,8 +6192,8 @@ function zssAddClose(redraw=true){
 function zssNoteFit(){
  const tw=$("zsstw"); if(!tw||!tw.offsetParent) return;
  for(const s of tw.querySelectorAll("td.pz .tr-st")){
-  const sig=s.textContent+"|"+getComputedStyle(s).fontSize; if(s.dataset.fit===sig) continue;
-  s.style.maxInlineSize=s.style.minInlineSize=s.style.maxWidth="";
+  const sig=s.textContent+"|"+getComputedStyle(s).fontSize+"|"+tw.clientWidth+"|"+window.innerWidth; if(s.dataset.fit===sig) continue;
+  s.style.maxInlineSize=s.style.minInlineSize=s.style.maxWidth=s.style.whiteSpace="";
   const cs=getComputedStyle(s), lh=parseFloat(cs.lineHeight)||1.45*parseFloat(cs.fontSize), pad=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)+parseFloat(cs.borderBottomWidth);
   const lines=()=>(s.getBoundingClientRect().height-pad)/lh;
   if(lines()>3.5){
@@ -6157,6 +6201,7 @@ function zssNoteFit(){
    let w=Math.ceil(full/3)+2*lh;
    const set=()=>{ s.style.maxWidth="none"; s.style.minInlineSize=s.style.maxInlineSize=Math.ceil(w)+"px"; };   // min i max: tabulka štítek nezúží, místo toho se posouvá do strany
    set(); for(let k=0;k<30&&lines()>3.5;k++){ w*=1.06; set(); }
+   if(lines()>3.5){s.style.whiteSpace="nowrap";w=Math.max(w,full+lh);set();}
   }
   s.dataset.fit=sig;
  }
@@ -7669,7 +7714,7 @@ document.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented|
     // klik bez tažení: označí nejbližší pilotu (nebo výběr zruší) a v tabulce se přesune na její řádek
     if(!dn||!GV||Math.hypot(e.clientX-dn.x,e.clientY-dn.y)>4) return;
     gRequestRender.flush();
-    if(planMeasurePick("zss",e.clientX,e.clientY))return;
+    if(gmLayerPlanPick("zss",e.clientX,e.clientY))return;if(planMeasurePick("zss",e.clientX,e.clientY))return;
     if(zssAddPick(e.clientX,e.clientY))return;
     const best=pileAt(e.clientX,e.clientY);
     if(best) selPile(best.first,"plan"); else if(GSEL!==null){ GSEL=null; gRender(); renderTable(); } });
@@ -7680,7 +7725,7 @@ document.querySelectorAll("[data-d]").forEach(e=>{ const el=$(e.dataset.d); if(!
   v*=parseFloat(e.dataset.k||1); e.textContent=gmDec(Math.round(v*1e6)/1e6); });
 document.querySelectorAll(".ver").forEach(e=>{ e.textContent=(e.tagName==="SMALL"?"GeoMAT verze ":"")+APP_VERSION+" ("+APP_DATE+")"; });
 // Reset: odebere načtené soubory a ruční výběr, vrátí parametry, volby plánu, filtr, řazení i poměr rozdělení na výchozí hodnoty a smaže uložené nastavení
-function doReset(){planMeasureClear("zss");gLabelClose(false);fixClose(false);zssAddClose(false);GLBL.map={};FIX.map={};FIX.hist=[];FIX.fut=[];ZSS_ADD.list=[];ZSS_ADD.hist=[];ZSS_ADD.fut=[];
+function doReset(){planMeasureClear("zss");gmLayerReset('zss');gLabelClose(false);fixClose(false);zssAddClose(false);GLBL.map={};FIX.map={};FIX.hist=[];FIX.fut=[];ZSS_ADD.list=[];ZSS_ADD.hist=[];ZSS_ADD.fut=[];
   projectFilesBeginReset('zss');
   $("zsshist").open=false;
   clearMeasurement(); $("zssrclr").onclick(); $("zsspdef").onclick(); $("gdef").onclick();
@@ -7912,7 +7957,7 @@ function kgEditRead(data){
   const clean=kgEmptyEdits();
   for(const [key,p] of Object.entries(data?.label||{}))if(key.startsWith("[")&&Number.isFinite(p?.x)&&Number.isFinite(p?.y))clean.label[key]={x:p.x,y:p.y};
   for(const [key,p] of Object.entries(data?.fix||{}))if((key.startsWith("[")||key.startsWith("manual:"))&&kgEditCoords(p))clean.fix[key]=kgRoundPosition(p.y,p.x,p.z);
-  if(Array.isArray(data?.add))clean.add=data.add.filter(q=>kgEditCoords(q)&&typeof q.id==="string"&&/^ZSSN[1-9]\d*$/.test(q.id)).map(q=>({id:q.id,y:q.y,x:q.x,z:Number.isFinite(q.z)?q.z:null}));
+  if(Array.isArray(data?.add))clean.add=data.add.filter(q=>kgEditCoords(q)&&typeof q.id==="string"&&/^(ZSSN|N)[1-9]\d*$/.test(q.id)).map(q=>({id:q.id,y:q.y,x:q.x,z:Number.isFinite(q.z)?q.z:null}));
   return clean;
 }
 function zskDupes(pts,multi){   // 1.518: řádky logu jsou odložené (gmDeferredText), po přepnutí jazyka se přeloží; upozornění na duplicity v měření (oba body zůstávají): stejný název i mezi soubory a stejná prostorová poloha do 1 mm
@@ -7940,7 +7985,7 @@ function zskRender(){
   zskPtRender();   // 1.524: počty výběru bodů v Nastavení
   zskResultsRender();   // 1.520: tabulka výsledků
 }
-function zskLogRender(){ const lg=(ZK.log||[]).concat(ZKP.log||[]), bad=(ZK.bad||0)+(ZKP.bad||0); $("zssklog").textContent=lg.join("\n"); $("zssklogd").hidden=!lg.length; $("zssklogs").textContent=gmLogTitle(lg.length,bad); }   // 1.519: log měření i projektu (jako Rovinnost)
+function zskLogRender(){ const nAdd=KG_EDIT.data.add.length, lg=(ZK.log||[]).concat(ZKP.log||[],nAdd?[gmPreviewText("Ručně přidané body (Upravit → Přidat bod): ⟦0⟧",[nAdd])]:[]), bad=(ZK.bad||0)+(ZKP.bad||0); $("zssklog").textContent=lg.join("\n"); $("zssklogd").hidden=!lg.length; $("zssklogs").textContent=gmLogTitle(lg.length,bad); }   // 1.519: log měření i projektu (jako Rovinnost)
 function zskApply(files,restore){
   const multi=files.length>1; let pts=[], bad=0; const sk=[], rng=[], info=[];
   files.forEach((f,k)=>{ const r=parse(f.t);
@@ -8018,11 +8063,17 @@ var ZSK_SD={lim:20,k:3.5,single:false}, ZSK_SK=GM_KEY("geomat.zsssk.set.v1"), zs
 const zskTq=v=>Math.min(999,Math.max(1,Math.round(v))), zskKq=v=>Math.min(10,Math.max(1,Math.round(v*10)/10));
 // 1.524: skupina Body a výstup převzatá ze ZSS pilot (bez Způsobu zaměření): apriorní kód ZSS, vlastní kódy, rozsah názvů (GM_NAME_RANGES.zsk), CSV s des. čárkou
 // 1.535: hladiny DXF jako seznam s žárovkami. mode = výchozí stav nových hladin: "exclude" = rozsvícené (množina drží zhasnuté), "include" = zhasnuté (množina drží rozsvícené)
-const ZSK_LAYERS={mode:"exclude",choices:{include:new Set(),exclude:new Set()},catalog:new Map(),sources:[],query:"",plan:false};   // plan = zhasnuté hladiny skrýt i v plánu
-const zskLayerKey=(file,layer)=>JSON.stringify([file.n,layer||"0"]);
-const zskLayerUsable=e=>e.visible&&["line","face","curve","spline"].includes(e.kind);
-const zskLayerLit=key=>ZSK_LAYERS.mode==="include"?ZSK_LAYERS.choices.include.has(key):!ZSK_LAYERS.choices.exclude.has(key);
-function zskLayerSetLit(keys,on){ const inc=ZSK_LAYERS.mode==="include", set=ZSK_LAYERS.choices[ZSK_LAYERS.mode]; let changed=false;
+// 1.556: karta Hladiny DXF je v programu jen jednou (GM_LAYERS). Je v Nastavení ZSS SK a jako vyskakovací panel u tlačítka Hladiny DXF v horní liště plánu všech modulů (views = předpony id;
+// pp = předpona plánu). ZSS SK (calc) jí určuje hladiny pro výpočet a volbou Projevit i v plánu i podklad plánu; ostatní moduly (ZSS pilot, Rovinnost, DMT) mají DXF jen jako podklad,
+// rozsvícené hladiny tam určují podklad v plánu, PDF i DXF (plan vždy zapnuto). Stav hladin je pro každý modul zvlášť, všechny pohledy modulu sdílejí jeden stav.
+const GM_LAYER_MODS={zsssk:{pp:"kg",calc:true,views:["zssk","kg"]},zss:{pp:"g",views:["g"]},rv:{pp:"rg",views:["rg"]},tr:{pp:"tp",views:["tp"]}}, GM_LAYERS={};
+for(const m in GM_LAYER_MODS){ const c=!!GM_LAYER_MODS[m].calc; GM_LAYERS[m]={m,calc:c,mode:"exclude",choices:{include:new Set(),exclude:new Set()},catalog:new Map(),sources:[],query:"",plan:true,cache:new WeakMap(),hooks:{}}; }
+const ZSK_LAYERS=GM_LAYERS.zsssk;   // plan = zhasnuté hladiny skrýt i v plánu
+const gmLayerKey=(file,layer)=>JSON.stringify([file.n,layer||"0"]);
+const gmLayerUsable=(m,e)=>e.visible&&(!GM_LAYERS[m].calc||["line","face","curve","spline"].includes(e.kind));   // výpočet ZSS SK bere jen čáry, plochy a křivky; podklad plánu všechny viditelné prvky
+const gmLayerLit=(m,key)=>{ const L=GM_LAYERS[m]; return L.mode==="include"?L.choices.include.has(key):!L.choices.exclude.has(key); };
+const gmLayerViews=m=>GM_LAYER_MODS[m].views.filter(v=>$(v+"LayerList"));
+function gmLayerSetLit(m,keys,on){ const L=GM_LAYERS[m], inc=L.mode==="include", set=L.choices[L.mode]; let changed=false;
   for(const key of keys){ const want=inc?on:!on; if(want!==set.has(key)){ want?set.add(key):set.delete(key); changed=true; } }
   return changed; }
 function zskAciColor(n){   // AutoCAD Color Index → CSS barva vzorku (7 = bílá/černá podle pozadí)
@@ -8033,68 +8084,72 @@ function zskAciColor(n){   // AutoCAD Color Index → CSS barva vzorku (7 = bíl
   if(n>=10&&n<=249){ const h=Math.floor((n-10)/10)*15, r=n%10, v=[1,1,.8,.8,.6,.6,.5,.5,.3,.3][r]*100, sat=r%2?50:100; return `hsl(${h} ${sat}% ${Math.round(v*(1-sat/200))}%)`; }
   return "var(--fg)";
 }
-function zskLayerCatalog(cad){
-  if(cad.length===ZSK_LAYERS.sources.length&&cad.every((v,i)=>v.file===ZSK_LAYERS.sources[i].file&&v.geometry===ZSK_LAYERS.sources[i].geometry)) return ZSK_LAYERS.catalog;
+function gmLayerCatalog(m,cad){ const L=GM_LAYERS[m];
+  if(cad.length===L.sources.length&&cad.every((v,i)=>v.file===L.sources[i].file&&v.geometry===L.sources[i].geometry)) return L.catalog;
   const entries=new Map();
   cad.forEach(({file,geometry},fi)=>{
-    const table=new Map((geometry.layers||[]).map(l=>[String(l.name).toUpperCase(),l])), list=[];
+    const table=new Map((geometry.layers||[]).map(l=>[String(l.name).toUpperCase(),l]));
     for(const e of geometry.entities||[]){
-      if(!zskLayerUsable(e))continue;
-      const layer=e.layer||"0", key=zskLayerKey(file,layer);
+      if(!gmLayerUsable(m,e))continue;
+      const layer=e.layer||"0", key=gmLayerKey(file,layer);
       let x=entries.get(key);
-      if(!x){ x={key,layer,file:file.n,fi,n:0,color:zskAciColor(table.get(layer.toUpperCase())?.color)}; entries.set(key,x); list.push(x); }
+      if(!x){ x={key,layer,file:file.n,fi,n:0,color:zskAciColor(table.get(layer.toUpperCase())?.color)}; entries.set(key,x); }
       x.n++;
     }
   });
-  ZSK_LAYERS.sources=cad;
-  ZSK_LAYERS.catalog=new Map([...entries].sort(([,a],[,b])=>a.fi-b.fi||a.layer.localeCompare(b.layer,undefined,{numeric:true})));
-  return ZSK_LAYERS.catalog;
+  L.sources=cad;
+  L.catalog=new Map([...entries].sort(([,a],[,b])=>a.fi-b.fi||a.layer.localeCompare(b.layer,undefined,{numeric:true})));
+  return L.catalog;
 }
-function zskCalcCad(cad){
-  return cad.map(({file,geometry})=>({file,geometry:{...geometry,entities:(geometry.entities||[]).filter(e=>zskLayerUsable(e)&&zskLayerLit(zskLayerKey(file,e.layer)))}}))
-    .filter(({geometry})=>geometry.entities.length);
+function gmLayerReset(m){ const L=GM_LAYERS[m];
+  L.mode="exclude";
+  L.choices.include.clear();
+  L.choices.exclude.clear();
+  L.query="";
+  for(const v of gmLayerViews(m)){ const q=$(v+"LayerSearch"); if(q) q.value=""; }
+  if(L.calc&&!L.plan){ L.plan=true; setTimeout(zskPlanRedraw); }   // 1.558: Projevit i v plánu výchozí zapnuto (jako ostatní moduly)
+  if(!L.calc){ try{ removeStorage(gmLayerStoreKey(m)); }catch(e){} setTimeout(()=>{ try{ projectCADPlanInvalidate(m); }catch(e){} gmLayerRefresh(m); }); }
 }
-function zskLayerReset(){
-  ZSK_LAYERS.mode="exclude";
-  ZSK_LAYERS.choices.include.clear();
-  ZSK_LAYERS.choices.exclude.clear();
-  ZSK_LAYERS.query="";
-  const q=$("zsskLayerSearch"); if(q) q.value="";
-  if(ZSK_LAYERS.plan){ ZSK_LAYERS.plan=false; setTimeout(zskPlanRedraw); }
-}
-function zskLayerSetMode(mode){   // přepnutí výchozího stavu nových hladin zachová stav hladin načtených výkresů
-  if(mode===ZSK_LAYERS.mode||!ZSK_LAYERS.choices[mode]) return false;
-  const lit=[...ZSK_LAYERS.catalog.keys()].filter(zskLayerLit);
-  ZSK_LAYERS.mode=mode; ZSK_LAYERS.choices.include.clear(); ZSK_LAYERS.choices.exclude.clear();
-  for(const key of ZSK_LAYERS.catalog.keys()) if(lit.includes(key)===(mode==="include")) ZSK_LAYERS.choices[mode].add(key);
+function gmLayerSetMode(m,mode){   // přepnutí výchozího stavu nových hladin zachová stav hladin načtených výkresů
+  const L=GM_LAYERS[m]; if(mode===L.mode||!L.choices[mode]) return false;
+  const lit=[...L.catalog.keys()].filter(k=>gmLayerLit(m,k));
+  L.mode=mode; L.choices.include.clear(); L.choices.exclude.clear();
+  for(const key of L.catalog.keys()) if(lit.includes(key)===(mode==="include")) L.choices[mode].add(key);
   return true;
 }
 const zskLayerFold=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function zskLayerMatches(e){ const q=zskLayerFold(ZSK_LAYERS.query.trim()); return !q||zskLayerFold(e.layer).includes(q)||zskLayerFold(e.file).includes(q); }
+function gmLayerMatches(m,e){ const q=zskLayerFold(GM_LAYERS[m].query.trim()); return !q||zskLayerFold(e.layer).includes(q)||zskLayerFold(e.file).includes(q); }
 function zskPrvku(n){ return gmPreviewText(n===1?"⟦0⟧ prvek":n>=2&&n<=4?"⟦0⟧ prvky":"⟦0⟧ prvků",[n]); }
-function zskLayerRender(cad){
-  const entries=[...zskLayerCatalog(cad).values()], lit=entries.filter(e=>zskLayerLit(e.key)).length, list=$("zsskLayerList");
-  for(const input of $("zsskLayerMode").querySelectorAll("input")) input.checked=input.value===ZSK_LAYERS.mode;
+function gmLayerRender(m,cad){
+  const L=GM_LAYERS[m], entries=[...gmLayerCatalog(m,cad).values()], lit=entries.filter(e=>gmLayerLit(m,e.key)).length;
+  for(const v of gmLayerViews(m)) gmLayerRenderView(m,v,cad,entries,lit);
+  gmLayerBtnSync(m,cad);
+  return lit>0||!entries.length;
+}
+function gmLayerRenderView(m,v,cad,entries,lit){
+  const L=GM_LAYERS[m], el=s=>$(v+"Layer"+s), lit_=k=>gmLayerLit(m,k), match=e=>gmLayerMatches(m,e), list=el("List");
+  const q=el("Search"); if(q&&q.value!==L.query&&document.activeElement!==q) q.value=L.query;   // hledání sdílí pohledy modulu
+  for(const input of el("Mode").querySelectorAll("input")) input.checked=input.value===L.mode;
   const has=entries.length>0;
-  $("zsskLayerTools").hidden=$("zsskLayerSearchWrap").hidden=list.hidden=!has;
-  $("zsskLayerCount").hidden=!has;
-  if(has) gmSetText($("zsskLayerCount"),"text","Svítí ⟦0⟧ z ⟦1⟧",[lit,entries.length]);
-  const shown=entries.filter(zskLayerMatches), searching=!!ZSK_LAYERS.query.trim();
-  $("zsskLayerOn").disabled=!shown.some(e=>!zskLayerLit(e.key));
-  $("zsskLayerOff").disabled=!shown.some(e=>zskLayerLit(e.key));
-  $("zsskLayerInvert").disabled=!shown.length;
+  el("Tools").hidden=el("SearchWrap").hidden=list.hidden=!has;
+  el("Count").hidden=!has;
+  if(has) gmSetText(el("Count"),"text","Svítí ⟦0⟧ z ⟦1⟧",[lit,entries.length]);
+  const shown=entries.filter(match), searching=!!L.query.trim();
+  el("On").disabled=!shown.some(e=>!lit_(e.key));
+  el("Off").disabled=!shown.some(e=>lit_(e.key));
+  el("Invert").disabled=!shown.length;
   const bulb=on=>`<svg class="ic zlb${on?" on":""}" viewBox="0 0 24 24" aria-hidden="true"><use href="#zsskBulbIcon"/></svg>`;
   let html="";
   if(has){
     const files=[...new Set(entries.map(e=>e.fi))];
     for(const fi of files){
-      const all=entries.filter(e=>e.fi===fi), rows=all.filter(zskLayerMatches);
+      const all=entries.filter(e=>e.fi===fi), rows=all.filter(match);
       if(!rows.length) continue;
-      const on=all.filter(e=>zskLayerLit(e.key)).length, name=all[0].file, full=on===all.length;
+      const on=all.filter(e=>lit_(e.key)).length, name=all[0].file, full=on===all.length;
       const t=esc(gmPreviewText(full?"Zhasnout všechny hladiny výkresu ⟦0⟧":"Rozsvítit všechny hladiny výkresu ⟦0⟧",[name]));
       html+=`<div class="zlay-file${on?" on":""}" role="presentation"><button type="button" class="zlay-fbtn" data-file="${fi}" aria-pressed="${full?"true":on?"mixed":"false"}" aria-label="${t}" title="${t}">${bulb(on>0)}</button><span class="zlay-fname" data-gm-i18n-skip title="${esc(name)}">${esc(name)}</span><span class="zlay-fcnt">${on} / ${all.length}</span></div>`;
       for(const e of rows){
-        const o=zskLayerLit(e.key), tt=esc(gmPreviewText(o?"Hladina ⟦0⟧ svítí a použije se pro výpočet. Kliknutím ji zhasnete.":"Hladina ⟦0⟧ je zhasnutá a ve výpočtu se nepoužije. Kliknutím ji rozsvítíte.",[e.layer]));
+        const o=lit_(e.key), tt=esc(gmPreviewText(L.calc?(o?"Hladina ⟦0⟧ svítí a použije se pro výpočet. Kliknutím ji zhasnete.":"Hladina ⟦0⟧ je zhasnutá a ve výpočtu se nepoužije. Kliknutím ji rozsvítíte."):(o?"Hladina ⟦0⟧ svítí a zobrazí se v podkladu plánu, PDF i DXF. Kliknutím ji zhasnete.":"Hladina ⟦0⟧ je zhasnutá a v podkladu plánu, PDF ani DXF se nezobrazí. Kliknutím ji rozsvítíte."),[e.layer]));
         html+=`<button type="button" class="zlay-row${o?" on":""}" data-layer="${esc(e.key)}" aria-pressed="${o}" title="${tt}">${bulb(o)}<span class="zlay-sw" style="--sw:${e.color}" aria-hidden="true"></span><span class="zlay-name" data-gm-i18n-skip>${esc(e.layer)}</span><span class="zlay-n">${esc(zskPrvku(e.n))}</span></button>`;
       }
     }
@@ -8103,29 +8158,141 @@ function zskLayerRender(cad){
   if(list._html!==html){ const focus=document.activeElement, fk=list.contains(focus)?(focus.dataset.layer??"f"+focus.dataset.file):null;
     list.innerHTML=html; list._html=html;
     if(fk!=null){ const b=[...list.querySelectorAll("button")].find(x=>(x.dataset.layer??"f"+x.dataset.file)===fk); if(b) b.focus({preventScroll:true}); } }
-  const hint=$("zsskLayerHint"), none=has&&!lit;
+  const hint=el("Hint"), none=has&&!lit;
   hint.classList.toggle("zlay-warn",none);
-  gmSetText(hint,"text",none?"Žádná hladina nesvítí. Rozsviťte alespoň jednu pro výpočet odchylek.":has?"":cad.length?"DXF nemá žádné viditelné hladiny použitelné pro výpočet.":"Po načtení DXF se zde zobrazí jeho použitelné hladiny.");
+  gmSetText(hint,"text",L.calc?(none?"Žádná hladina nesvítí. Rozsviťte alespoň jednu pro výpočet odchylek.":has?"":cad.length?"DXF nemá žádné viditelné hladiny použitelné pro výpočet.":"Po načtení DXF se zde zobrazí jeho použitelné hladiny.")
+    :(none?"Žádná hladina nesvítí, podklad DXF se v plánu nezobrazí.":has?"":cad.length?"DXF nemá žádné viditelné hladiny.":"Po načtení DXF se zde zobrazí jeho hladiny."));
   hint.hidden=!hint.textContent;
-  $("zsskLayerPlan").checked=ZSK_LAYERS.plan;
-  gmSetText($("zsskLayerPlanHint"),"text",ZSK_LAYERS.plan?"Zhasnuté hladiny se skryjí i v podkladu plánu.":"Plán ukazuje celý podklad DXF.");
-  return lit>0||!has;
+  if(L.calc){ el("Plan").checked=L.plan; gmSetText(el("PlanHint"),"text",L.plan?"Zhasnuté hladiny se skryjí i v podkladu plánu.":"Plán ukazuje celý podklad DXF."); }
 }
-// 1.536: volba Projevit i v plánu – podklad DXF v plánu bez zhasnutých hladin (odvozená geometrie v mezipaměti, rozsah výkresu zůstává)
-const ZSK_PLAN_CACHE=new WeakMap();
-function zskPlanModels(models){
-  if(!ZSK_LAYERS.plan) return models;
-  const cad=projectCADGeometries('zsssk'), files=new Map(cad.map(q=>[q.geometry,q.file]));
-  zskLayerCatalog(cad);
+// 1.536: volba Projevit i v plánu – podklad DXF v plánu bez zhasnutých hladin (odvozená geometrie v mezipaměti, rozsah výkresu zůstává); 1.556 pro všechny moduly
+const GM_LAYER_GFILE=new WeakMap(), GM_LAYER_HITS={};
+const GM_LAYER_PICK={m:null,hot:null}, GM_LAYER_BOXES={zss:"gsvg",zsssk:"kgsvg",rv:"rgsvg",tr:"tpCanvas"};   // 1.559: výkres každé geometrie podkladu a poslední zobrazené čáry/texty podkladu pro výběr hladiny v plánu
+function gmLayerPlanModels(m,models){
+  const L=GM_LAYERS[m]; if(!L) return models;
+  const cad=projectCADGeometries(m), files=new Map(cad.map(q=>[q.geometry,q.file]));
+  for(const g of models){ const f=files.get(g); if(f) GM_LAYER_GFILE.set(g,f.n); }
+  if(!L.plan) return models;
+  gmLayerCatalog(m,cad);
   return models.map(g=>{ const file=files.get(g); if(!file) return g;
-    const off=new Set(); for(const e of ZSK_LAYERS.catalog.values()) if(e.file===file.n&&!zskLayerLit(e.key)) off.add(e.layer);
-    const sig=[...off].join("\u0001"); let c=ZSK_PLAN_CACHE.get(g);
-    if(!c||c.sig!==sig){ c={sig,g:off.size?{...g,entities:(g.entities||[]).filter(e=>!off.has(e.layer||"0"))}:g}; ZSK_PLAN_CACHE.set(g,c); }
-    return c.g; });
+    const off=new Set(); for(const e of L.catalog.values()) if(e.file===file.n&&!gmLayerLit(m,e.key)) off.add(e.layer);
+    const sig=[...off].join("\u0001"); let c=L.cache.get(g);
+    if(!c||c.sig!==sig){ c={sig,g:off.size?{...g,entities:(g.entities||[]).filter(e=>!off.has(e.layer||"0"))}:g}; L.cache.set(g,c); }
+    GM_LAYER_GFILE.set(c.g,file.n); return c.g; });
+}
+function gmLayerRefresh(m){ try{ gmLayerRender(m,projectCADGeometries(m)); if(GM_LAYER_PICK.m===m) gmLayerHot(m); }catch(e){} }
+function gmLayerChanged(m){ const h=GM_LAYERS[m].hooks; if(h.changed) h.changed(); gmLayerRefresh(m); }
+// uložení stavu hladin modulů bez výpočtu (ZSS SK ukládá hladiny ve svém nastavení)
+const gmLayerStoreKey=m=>GM_KEY("geomat."+m+".layers.v1");
+function gmLayerSave(m){ const L=GM_LAYERS[m]; if(L.calc) return; try{ writeStorage(gmLayerStoreKey(m),JSON.stringify({mode:L.mode,[L.mode]:[...L.choices[L.mode]]})); }catch(e){} }
+function gmLayerLoad(m,o){ const L=GM_LAYERS[m]; if(!o||typeof o!=="object") return; const mode=o.mode==="include"?"include":"exclude"; L.mode=mode;
+  L.choices.include.clear(); L.choices.exclude.clear(); if(Array.isArray(o[mode])) for(const k of o[mode]) if(typeof k==="string") L.choices[mode].add(k); }
+function gmLayerBind(m,hooks){   // společné ovládání karty: hromadné přepínače, řádky, výkresy, hledání, výchozí stav nových hladin
+  const L=GM_LAYERS[m], match=e=>gmLayerMatches(m,e), lit=k=>gmLayerLit(m,k); L.hooks=hooks||{};
+  const bulk=fn=>{ const keys=[...L.catalog.values()].filter(match).map(e=>e.key); if(fn(keys)) gmLayerChanged(m); };
+  for(const v of gmLayerViews(m)){ const el=s=>$(v+"Layer"+s);
+    el("Mode").addEventListener("change",e=>{
+      if(e.target.name!==v+"LayerMode"||!e.target.checked) return;
+      if(gmLayerSetMode(m,e.target.value)){ if(L.hooks.mode) L.hooks.mode(); gmLayerRefresh(m); }
+    });
+    el("On").onclick=()=>bulk(k=>gmLayerSetLit(m,k,true));
+    el("Off").onclick=()=>bulk(k=>gmLayerSetLit(m,k,false));
+    el("Invert").onclick=()=>bulk(k=>{ const on=k.filter(lit), off=k.filter(x=>!lit(x)); return gmLayerSetLit(m,on,false)|gmLayerSetLit(m,off,true); });
+    el("List").addEventListener("click",e=>{
+      const row=e.target.closest("button[data-layer]"), fb=e.target.closest("button[data-file]");
+      if(row&&L.catalog.has(row.dataset.layer)){ if(gmLayerSetLit(m,[row.dataset.layer],!lit(row.dataset.layer))) gmLayerChanged(m); return; }
+      if(fb){ const keys=[...L.catalog.values()].filter(x=>x.fi===+fb.dataset.file).map(x=>x.key); if(gmLayerSetLit(m,keys,!keys.every(lit))) gmLayerChanged(m); }
+    });
+    el("Search").addEventListener("input",e=>{ L.query=e.target.value; gmLayerRefresh(m); });
+    if(el("Pick")){ if(v!==GM_LAYER_MODS[m].pp){ el("Pick").hidden=true; el("PickHint").hidden=true; }   // výběr v plánu jen v panelu plánu
+      else el("Pick").onclick=()=>gmLayerPickSet(m,GM_LAYER_PICK.m!==m); }
+    el("Search").addEventListener("keydown",e=>{ if(e.key==="Escape"&&e.target.value){ e.preventDefault(); e.stopPropagation(); e.target.value=""; L.query=""; gmLayerRefresh(m); } });
+    if(L.calc&&v!==GM_LAYER_MODS[m].views[0]) el("Plan").addEventListener("change",e=>{ const s=$(GM_LAYER_MODS[m].views[0]+"LayerPlan"); s.checked=e.target.checked; s.dispatchEvent(new Event("change",{bubbles:true})); });   // druhý pohled ZSS SK přepne původní volbu
+    if(!L.calc){   // texty karty pro podklad bez výpočtu; volba Projevit i v plánu tu není (platí vždy)
+      gmSetText(el("On"),"title","Rozsvítí všechny hladiny; při hledání jen nalezené. Rozsvícené hladiny se zobrazí v podkladu plánu, PDF i DXF.");
+      gmSetText(el("Off"),"title","Zhasne všechny hladiny; při hledání jen nalezené. Zhasnuté hladiny se v podkladu plánu, PDF ani DXF nezobrazí.");
+      gmSetText(el("ModeLabel"),"title","Určuje, zda se hladiny z nově načteného výkresu DXF rovnou zobrazí v podkladu plánu (Rozsvícené), nebo je rozsvítíte ručně (Zhasnuté). Stav dosavadních hladin se nezmění.");
+      el("Plan").closest("label").hidden=true; gmSetText(el("PlanHint"),"text","Zhasnuté hladiny se nezobrazí v podkladu plánu, PDF ani DXF.");
+    }
+  }
+  gmLayerPopBind(m);
+  gmLayerRefresh(m);
+}
+/* 1.556: tlačítko Hladiny DXF v horní liště plánu otevře vyskakovací panel s kartou (převzato z panelu Viditelnost měření v plánu DMT: pozice pod tlačítkem, zavření klikem mimo, Escape) */
+const gmLayerPop=m=>$(GM_LAYER_MODS[m].pp+"LayPanel"), gmLayerBtn=m=>$(GM_LAYER_MODS[m].pp+"lay");
+function gmLayerBtnSync(m,cad){ const b=gmLayerBtn(m); if(!b) return; const has=(cad||projectCADGeometries(m)).length>0, L=GM_LAYERS[m];
+  const off=has&&[...L.catalog.keys()].some(k=>!gmLayerLit(m,k));
+  b.disabled=!has;
+  gmSetText(b,"title",!has?"Hladiny DXF jsou dostupné po načtení výkresu DXF.":off?"Hladiny DXF: některé hladiny jsou zhasnuté. Otevře seznam hladin načtených výkresů DXF.":"Hladiny DXF: otevře seznam hladin načtených výkresů DXF k rozsvícení a zhasnutí.");
+  if(!has) gmLayerPopClose(m); }
+function gmLayerPopPosition(m){ const el=gmLayerPop(m), b=gmLayerBtn(m); if(!el||el.hidden||!b) return; const box=b.getBoundingClientRect(), width=Math.min(380,innerWidth-16);
+  el.style.width=width+"px"; el.style.left=Math.max(8,Math.min(innerWidth-width-8,box.right-width))+"px"; const top=Math.max(8,box.bottom+6); el.style.top=top+"px"; el.style.maxHeight=Math.max(160,innerHeight-top-8)+"px"; }
+function gmLayerPopClose(m,focus){ const el=gmLayerPop(m), b=gmLayerBtn(m); if(!el||el.hidden) return; gmLayerPickSet(m,false); el.hidden=true; if(b){ b.setAttribute("aria-expanded","false"); if(focus) b.focus({preventScroll:true}); } }
+function gmLayerPopOpen(m){ const el=gmLayerPop(m), b=gmLayerBtn(m); if(!el||!b||b.disabled) return; gmLayerRefresh(m); el.hidden=false; b.setAttribute("aria-expanded","true"); gmLayerPopPosition(m); }
+function gmLayerPopKey(m,e){ const el=gmLayerPop(m); if(e.key!=="Escape"||!el||el.hidden) return false; e.preventDefault();
+  const q=e.target; if(q&&q.type==="search"&&q.value&&el.contains(q)){ q.value=""; GM_LAYERS[m].query=""; gmLayerRefresh(m); return true; }   // první Escape vymaže hledání
+  if(GM_LAYER_PICK.m===m){ gmLayerPickSet(m,false); return true; }   // pak ukončí výběr v plánu
+  gmLayerPopClose(m,el.contains(document.activeElement)); return true; }
+function gmLayerPopBind(m){ const el=gmLayerPop(m), b=gmLayerBtn(m); if(!el||!b) return;
+  b.onclick=()=>el.hidden?gmLayerPopOpen(m):gmLayerPopClose(m);
+  $(GM_LAYER_MODS[m].pp+"LayClose").onclick=()=>gmLayerPopClose(m,true);
+  document.addEventListener("pointerdown",e=>{ if(!el.hidden&&!el.contains(e.target)&&!b.contains(e.target)&&!(GM_LAYER_PICK.m===m&&gmLayerBox(m)?.contains(e.target))) gmLayerPopClose(m); });   // při výběru v plánu zůstane panel otevřený
+  document.addEventListener("keydown",e=>{ if(gmLayerPopKey(m,e)) e.stopImmediatePropagation(); },true);   // Escape zavře nejdřív panel, ne plán
+  window.addEventListener("resize",()=>gmLayerPopPosition(m));
+  const box=gmLayerBox(m); let raf=0, last=null;
+  if(box){ box.addEventListener("pointermove",e=>{ if(GM_LAYER_PICK.m!==m||e.buttons) return; last=e; if(!raf) raf=requestAnimationFrame(()=>{ raf=0; if(GM_LAYER_PICK.m===m&&last) gmLayerHover(m,gmLayerHit(m,last.clientX,last.clientY)); }); });
+    box.addEventListener("pointerleave",()=>{ if(GM_LAYER_PICK.m===m) gmLayerHover(m,null); }); }
+  const root=el.parentElement; if(root) new MutationObserver(()=>{ if(root.hidden) gmLayerPopClose(m); else gmLayerPopPosition(m); }).observe(root,{attributes:true,attributeFilter:["hidden","class"]});
+}
+/* 1.559: výběr hladiny přímo v plánu (tlačítko se šipkou v panelu Hladiny DXF): klik na čáru nebo text podkladu DXF přepne jeho hladinu; zapojeno do kliknutí plánu stejně jako Měření */
+const gmLayerBox=m=>$(GM_LAYER_BOXES[m]);
+function gmLayer3D(m){ try{ return m==="zss"?pg3Active():m==="zsssk"?!!KG3.active:m==="rv"?rg3Active():null; }catch(e){ return null; } }
+function gmLayerHit(m,cx,cy){ const box=gmLayerBox(m), S=GM_LAYER_HITS[m], L=GM_LAYERS[m]; if(!box||!S||!L) return null;
+  const d3=gmLayer3D(m); if(d3!==null&&d3!==S.spatial) return null;   // záznam patří jinému pohledu (2D / 3D)
+  const r=box.getBoundingClientRect(), x=cx-r.left-(box.clientLeft||0), y=cy-r.top-(box.clientTop||0), pl=S.pl;
+  if(pl.x+pl.w>box.clientWidth+2||pl.y+pl.h>box.clientHeight+2||x<pl.x||x>pl.x+pl.w||y<pl.y||y>pl.y+pl.h) return null;
+  let best=null, bd=7;
+  for(const h of S.hits){ if(!L.catalog.has(h.lk)) continue; let d;
+    if(h.m){ const [ux,uy,nvx,nvy,ax,ay]=h.m, vx=-nvx, vy=-nvy, det=ux*vy-uy*vx; if(!det) continue;
+      const px=x-ax, py=y-ay, s=(px*vy-py*vx)/det, t=(ux*py-uy*px)/det; d=s>=0&&s<=Math.max(1,h.len)*.62&&t>=-.25&&t<=1.05?1:Infinity; }
+    else{ const dx=h.x2-h.x1, dy=h.y2-h.y1, l2=dx*dx+dy*dy, t=l2?Math.max(0,Math.min(1,((x-h.x1)*dx+(y-h.y1)*dy)/l2)):0; d=Math.hypot(x-h.x1-t*dx,y-h.y1-t*dy); }
+    if(d<bd){ bd=d; best=h.lk; } }
+  return best; }
+function gmLayerPickHint(m,msg,params){ const h=$(GM_LAYER_MODS[m].pp+"LayerPickHint"); if(!h) return; h.hidden=!msg; if(msg) gmSetText(h,"text",msg,params||[]); else h.textContent=""; }
+function gmLayerHot(m){ const list=$(GM_LAYER_MODS[m].pp+"LayerList"); if(!list) return; const k=GM_LAYER_PICK.m===m?GM_LAYER_PICK.hot:null;
+  for(const row of list.querySelectorAll("button[data-layer]")){ const on=row.dataset.layer===k; row.classList.toggle("zlay-hot",on); if(on) row.scrollIntoView({block:"nearest"}); } }
+function gmLayerHover(m,k){ const box=gmLayerBox(m); if(box) box.classList.toggle("zlay-hot",!!k); if(k===GM_LAYER_PICK.hot) return; GM_LAYER_PICK.hot=k; gmLayerHot(m);
+  const e=k&&GM_LAYERS[m].catalog.get(k); if(!e&&GM_LAYER_PICK.keep) return; GM_LAYER_PICK.keep=false;   // výsledek posledního kliknutí zůstane, dokud kurzor nenajede na jinou hladinu
+  if(e) gmLayerPickHint(m,gmLayerLit(m,k)?"Hladina ⟦0⟧ (⟦1⟧): kliknutím ji zhasnete.":"Hladina ⟦0⟧ (⟦1⟧): kliknutím ji rozsvítíte.",[e.layer,e.file]);
+  else gmLayerPickHint(m,"Klikněte v plánu na čáru nebo text výkresu DXF. Escape výběr ukončí."); }
+function gmLayerPickSet(m,on){ const b=$(GM_LAYER_MODS[m].pp+"LayerPick"), box=gmLayerBox(m);
+  if(on&&GM_LAYER_PICK.m&&GM_LAYER_PICK.m!==m) gmLayerPickSet(GM_LAYER_PICK.m,false);
+  if(!on&&GM_LAYER_PICK.m!==m){ if(b) b.setAttribute("aria-pressed","false"); return; }
+  GM_LAYER_PICK.m=on?m:null; GM_LAYER_PICK.hot=null; GM_LAYER_PICK.keep=false;
+  if(b) b.setAttribute("aria-pressed",String(!!on));
+  if(box){ box.classList.toggle("zlay-picking",!!on); box.classList.remove("zlay-hot"); }
+  gmLayerHot(m); gmLayerPickHint(m,on?"Klikněte v plánu na čáru nebo text výkresu DXF. Escape výběr ukončí.":""); }
+function gmLayerPlanPick(m,cx,cy){ if(GM_LAYER_PICK.m!==m) return false;
+  const k=gmLayerHit(m,cx,cy), e=k&&GM_LAYERS[m].catalog.get(k);
+  if(!e){ gmLayerPickHint(m,"Zde není žádná čára ani text výkresu DXF. Klikněte přímo na prvek výkresu."); return true; }
+  const on=!gmLayerLit(m,k); if(gmLayerSetLit(m,[k],on)) gmLayerChanged(m);
+  GM_LAYER_PICK.hot=k; GM_LAYER_PICK.keep=true; gmLayerHot(m);
+  gmLayerPickHint(m,on?"Hladina ⟦0⟧ (⟦1⟧) je rozsvícená.":"Hladina ⟦0⟧ (⟦1⟧) je zhasnutá. V seznamu ji můžete znovu rozsvítit.",[e.layer,e.file]);
+  return true; }
+// ZSS SK: původní názvy funkcí (výpočet, nastavení a plán je dál používají)
+const zskLayerKey=gmLayerKey, zskLayerUsable=e=>gmLayerUsable("zsssk",e), zskLayerLit=key=>gmLayerLit("zsssk",key), zskLayerSetLit=(keys,on)=>gmLayerSetLit("zsssk",keys,on);
+const zskLayerCatalog=cad=>gmLayerCatalog("zsssk",cad), zskLayerReset=()=>gmLayerReset("zsssk"), zskLayerSetMode=mode=>gmLayerSetMode("zsssk",mode), zskLayerMatches=e=>gmLayerMatches("zsssk",e);
+const zskLayerRender=cad=>gmLayerRender("zsssk",cad), zskPlanModels=models=>gmLayerPlanModels("zsssk",models), zskLayerRefresh=()=>gmLayerRefresh("zsssk");
+function zskCalcCad(cad){
+  return cad.map(({file,geometry})=>({file,geometry:{...geometry,entities:(geometry.entities||[]).filter(e=>zskLayerUsable(e)&&zskLayerLit(zskLayerKey(file,e.layer)))}}))
+    .filter(({geometry})=>geometry.entities.length);
 }
 function zskPlanRedraw(){ try{ if(typeof kgState==="function"&&kgState()) kgRender(); }catch(e){} }
 function zskLayerChanged(){ zskSetApply(); if(ZSK_LAYERS.plan) zskPlanRedraw(); }
-function zskLayerRefresh(){ try{ zskLayerRender(projectCADGeometries('zsssk')); }catch(e){} }
+// moduly s DXF jen jako podklad: uložený stav, překreslení plánu po změně a obnova karty po změně jazyka
+for(const m of ["zss","rv","tr"]){ try{ gmLayerLoad(m,JSON.parse(localStorage.getItem(gmLayerStoreKey(m))||"null")); }catch(e){}
+  gmLayerBind(m,{changed:()=>{ gmLayerSave(m); try{ projectCADPlanInvalidate(m); }catch(e){} },mode:()=>gmLayerSave(m)}); }
+globalThis.GeoMATLanguage?.onChange(()=>{ for(const m of ["zss","rv","tr"]) gmLayerRefresh(m); });
 const ZSK_FIXED=["ZSS"], ZSK_PT={all:false,codes:[],comma:true,version:0,source:null,selected:null,sv:-1,rv:-1};
 try{ const o=JSON.parse(localStorage.getItem(ZSK_SK)||"null"); if(o){ if(isFinite(o.t)) ZSK_EVAL.lim=zskTq(+o.t); if(isFinite(o.k)) ZSK_EVAL.k=zskKq(+o.k); if(o.f===1) zskFoldMode=1;
   ZSK_EVAL.single=o.single===true;
@@ -8133,7 +8300,7 @@ try{ const o=JSON.parse(localStorage.getItem(ZSK_SK)||"null"); if(o){ if(isFinit
   for(const [saved,set] of [[o.off,ZSK_OFF],[o.keep,ZSK_KEEP]]) if(Array.isArray(saved)) for(const key of saved) if(typeof key==='string') set.add(key);
   const layers=o.layers;
   const lm=["include","exclude"].includes(layers?.mode)?layers.mode:layers?.all===false?"include":"exclude";   // 1.535: dřívější „Všechny hladiny“ = vše rozsvícené
-  ZSK_LAYERS.mode=lm; ZSK_LAYERS.plan=layers?.plan===true;
+  ZSK_LAYERS.mode=lm; ZSK_LAYERS.plan=layers?.pl!==false;   // 1.558: nový klíč pl (výchozí zapnuto); dřívější plan:false byl jen výchozí stav, proto se nepřebírá
   const keys=layers?.mode===lm?layers?.[lm]:lm==="include"?(layers?.include??layers?.selected):null;
   if(Array.isArray(keys)) for(const key of keys) if(typeof key==="string") ZSK_LAYERS.choices[lm].add(key);
   if(Array.isArray(o.cc)) o.cc.forEach(v=>{ const c=String(v).trim().toUpperCase(); if(CC_RE.test(c)&&!ZSK_FIXED.includes(c)&&!ZSK_PT.codes.includes(c)&&ZSK_PT.codes.length<CC_MAX) ZSK_PT.codes.push(c); }); } }catch(e){}
@@ -8143,7 +8310,7 @@ function zskPts(){ const {fix,add}=KG_EDIT.data,fixed=Object.keys(fix).length,ed
   const rv=GM_NAME_RANGES.zsk.version;
   if(ZSK_PT.source!==ZK.pts||!ZSK_PT.selected||ZSK_PT.sv!==ZSK_PT.version||ZSK_PT.rv!==rv){
     ZSK_PT.source=ZK.pts; ZSK_PT.sv=ZSK_PT.version; ZSK_PT.rv=rv;
-    const points=edited?ZK.pts.concat(add.map(q=>({...q,src:-1,file:"",code:"ZSS",originalKey:"manual:"+q.id}))):ZK.pts;
+    const points=edited?ZK.pts.concat(add.map(q=>({...q,src:-1,file:"",code:"ZSS",originalKey:"manual:"+q.id,added:true}))):ZK.pts;
     ZSK_PT.selected=points.filter(p=>(ZSK_PT.all||zskCodeMatches(p))&&gmNameRangePass('zsk',p.id)).map(p=>{
       if(!fixed)return p;
       const key=zskPointKey(p);return Object.hasOwn(fix,key)?{...p,...fix[key],originalKey:key}:p;
@@ -8167,7 +8334,7 @@ function zskCcAdd(){ if(ZSK_PT.all) return; const v=$("zsskccin").value.trim().t
   ZSK_PT.codes.push(v); const gone=ZSK_PT.codes.length>CC_MAX?ZSK_PT.codes.shift():"";
   $("zsskccin").value=""; zskCcMsg(gone?gmPreviewText("Seznam má nejvýš ⟦0⟧ kódů, nejstarší kód ⟦1⟧ byl přepsán.", [CC_MAX, gone]):"",gone?"warn":""); zskPtChanged(); }
 function zskPtResetVals(){ ZSK_PT.all=false; ZSK_PT.codes.length=0; ZSK_PT.comma=true; gmNameRangeSet('zsk',null); $("zsskccin").value=""; zskCcMsg(""); ZSK_PT.version++; ZSK_PT.selected=null; KGSEL=null; }
-function zskSetSave(){ try{ writeStorage(ZSK_SK,JSON.stringify({t:ZSK_EVAL.lim,k:ZSK_EVAL.k,single:ZSK_EVAL.single,f:zskFoldMode,a:ZSK_PT.all,cc:ZSK_PT.codes.slice(),nr:gmNameRangeValue('zsk'),c:ZSK_PT.comma,off:[...ZSK_OFF],keep:[...ZSK_KEEP],layers:{mode:ZSK_LAYERS.mode,[ZSK_LAYERS.mode]:[...ZSK_LAYERS.choices[ZSK_LAYERS.mode]],plan:ZSK_LAYERS.plan}})); }catch(e){} }
+function zskSetSave(){ try{ writeStorage(ZSK_SK,JSON.stringify({t:ZSK_EVAL.lim,k:ZSK_EVAL.k,single:ZSK_EVAL.single,f:zskFoldMode,a:ZSK_PT.all,cc:ZSK_PT.codes.slice(),nr:gmNameRangeValue('zsk'),c:ZSK_PT.comma,off:[...ZSK_OFF],keep:[...ZSK_KEEP],layers:{mode:ZSK_LAYERS.mode,[ZSK_LAYERS.mode]:[...ZSK_LAYERS.choices[ZSK_LAYERS.mode]],pl:ZSK_LAYERS.plan}})); }catch(e){} }
 function zskSetUi(){ if(document.activeElement!==$("zssktol")) $("zssktol").value=String(ZSK_EVAL.lim); if(document.activeElement!==$("zsskk")) $("zsskk").value=String(ZSK_EVAL.k);
   gmSetText($("zsskkh"),"text","× mezní odchylka = ⟦0⟧ mm; platí i pro kolmou vzdálenost",[Math.round(ZSK_EVAL.k*ZSK_EVAL.lim)]);
   const single=ZSK_EVAL.single;
@@ -8176,7 +8343,7 @@ function zskSetUi(){ if(document.activeElement!==$("zssktol")) $("zssktol").valu
   $("zsskDevHeadDouble").hidden=single;
   $("zsskDev2Head").hidden=single;
   if(single&&ZSK_SORT.k==="d2"){ ZSK_SORT.k="d1"; }
-  const b=$("zsskpdef"), d=!single&&ZSK_EVAL.lim===ZSK_SD.lim&&ZSK_EVAL.k===ZSK_SD.k&&zskPtDefault()&&ZSK_LAYERS.mode==="exclude"&&!ZSK_LAYERS.plan&&!ZSK_LAYERS.choices.include.size&&!ZSK_LAYERS.choices.exclude.size; b.disabled=d; b.title=gmPreviewText(d?"Nastavení už je na výchozích hodnotách (mezní odchylka 20 mm, okolí vrcholu 3,5 × mezní odchylka, jen body s kódem ZSS, CSV s des. čárkou), není co vracet.":"Vrátí nastavení (mezní odchylka 20 mm, okolí vrcholu 3,5 × mezní odchylka, jen body s kódem ZSS, CSV s des. čárkou) na výchozí hodnoty a přepočítá výsledky i plán. Smaže vlastní kódy i rozsah názvů. Načtené soubory, filtr, řazení a volby plánu zůstanou."); }
+  const b=$("zsskpdef"), d=!single&&ZSK_EVAL.lim===ZSK_SD.lim&&ZSK_EVAL.k===ZSK_SD.k&&zskPtDefault()&&ZSK_LAYERS.mode==="exclude"&&ZSK_LAYERS.plan&&!ZSK_LAYERS.choices.include.size&&!ZSK_LAYERS.choices.exclude.size; b.disabled=d; b.title=gmPreviewText(d?"Nastavení už je na výchozích hodnotách (mezní odchylka 20 mm, okolí vrcholu 3,5 × mezní odchylka, jen body s kódem ZSS, CSV s des. čárkou), není co vracet.":"Vrátí nastavení (mezní odchylka 20 mm, okolí vrcholu 3,5 × mezní odchylka, jen body s kódem ZSS, CSV s des. čárkou) na výchozí hodnoty a přepočítá výsledky i plán. Smaže vlastní kódy i rozsah názvů. Načtené soubory, filtr, řazení a volby plánu zůstanou."); }
 function zskSetApply(){ ZSK_RES.stamp=null; zskSetUi(); zskSetSave(); zskResultsRender(); }
 $("zsskDevMode").addEventListener("change",e=>{
   if(e.target.name!=="zsskDevMode"||!e.target.checked)return;
@@ -8197,22 +8364,8 @@ $("zsskallp").addEventListener("change",()=>{ ZSK_PT.all=$("zsskallp").checked; 
 $("zsskcomma").addEventListener("change",()=>{ ZSK_PT.comma=$("zsskcomma").checked; zskSetUi(); zskSetSave(); });
 $("zsskccadd").onclick=zskCcAdd; $("zsskccin").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); zskCcAdd(); } }); $("zsskccin").addEventListener("input",()=>zskCcMsg(""));
 $("zsskcclist").addEventListener("click",e=>{ const b=e.target.closest("button[data-cc]"); if(!b) return; const i=ZSK_PT.codes.indexOf(b.dataset.cc); if(i>=0) ZSK_PT.codes.splice(i,1); zskCcMsg(""); zskPtChanged(); });
-$("zsskLayerMode").addEventListener("change",e=>{
-  if(e.target.name!=="zsskLayerMode"||!e.target.checked) return;
-  if(zskLayerSetMode(e.target.value)){ zskSetUi(); zskSetSave(); zskLayerRefresh(); }
-});
-function zskLayerBulk(fn){ const keys=[...ZSK_LAYERS.catalog.values()].filter(zskLayerMatches).map(e=>e.key); if(fn(keys)) zskLayerChanged(); }
-$("zsskLayerOn").onclick=()=>zskLayerBulk(k=>zskLayerSetLit(k,true));
-$("zsskLayerOff").onclick=()=>zskLayerBulk(k=>zskLayerSetLit(k,false));
-$("zsskLayerInvert").onclick=()=>zskLayerBulk(k=>{ const on=k.filter(zskLayerLit), off=k.filter(x=>!zskLayerLit(x)); return zskLayerSetLit(on,false)|zskLayerSetLit(off,true); });
-$("zsskLayerList").addEventListener("click",e=>{
-  const row=e.target.closest("button[data-layer]"), fb=e.target.closest("button[data-file]");
-  if(row&&ZSK_LAYERS.catalog.has(row.dataset.layer)){ if(zskLayerSetLit([row.dataset.layer],!zskLayerLit(row.dataset.layer))) zskLayerChanged(); return; }
-  if(fb){ const keys=[...ZSK_LAYERS.catalog.values()].filter(x=>x.fi===+fb.dataset.file).map(x=>x.key); if(zskLayerSetLit(keys,!keys.every(zskLayerLit))) zskLayerChanged(); }
-});
+gmLayerBind("zsssk",{changed:zskLayerChanged,mode:()=>{ zskSetUi(); zskSetSave(); }});
 $("zsskLayerPlan").addEventListener("change",e=>{ ZSK_LAYERS.plan=e.target.checked; zskSetUi(); zskSetSave(); zskLayerRefresh(); zskPlanRedraw(); });
-$("zsskLayerSearch").addEventListener("input",e=>{ ZSK_LAYERS.query=e.target.value; zskLayerRefresh(); });
-$("zsskLayerSearch").addEventListener("keydown",e=>{ if(e.key==="Escape"&&e.target.value){ e.preventDefault(); e.stopPropagation(); e.target.value=""; ZSK_LAYERS.query=""; zskLayerRefresh(); } });
 gmNameRangeBind('zsk');
 zskSetUi(); zskApplyFold(); zskPtRender(); zskLayerRefresh();
 globalThis.GeoMATLanguage?.onChange(()=>{ try{ zskSetUi(); zskApplyFold(); zskPtRender(); zskLayerRefresh(); }catch(e){} });
@@ -8373,7 +8526,7 @@ function zskResultsRender(){
     const excluded=!zskUsed(r), cls=(excluded?"skip ":"")+(KGSEL===i-1?"sel":"");
     const remote=r.type==="remote", kept=remote&&zskUsed(r);
     const tip=remote?gmPreviewText(kept?"Odlehlý bod ručně vrácený do výběru.":"Automaticky vyřazený odlehlý bod. Zaškrtnutím ho vrátíte do výběru."):"";
-    const badge=remote?`<span class="rvol${kept?" kp":""}" title="${esc(tip)}">${esc(gmPreviewText("odlehlý"))}</span>`:"";
+    const badge=(remote?`<span class="rvol${kept?" kp":""}" title="${esc(tip)}">${esc(gmPreviewText("odlehlý"))}</span>`:"")+(r.q.added?`<span class="rvol rvad" title="${esc(gmPreviewText("Ručně přidaný bod (Upravit → Přidat bod)"))}">${esc(gmPreviewText("přidaný"))}</span>`:"");
     return `<tr data-zk="${i-1}" class="${cls}"><td class="hd"><input type="checkbox" data-zsk-use="${i-1}" ${excluded?"":"checked"} aria-label="${esc(gmPreviewText("Použít bod ⟦0⟧", [r.q.id]))}" title="${remote?esc(tip):checkTitle}"> ${i}</td><td><b>${esc(r.q.id)}</b>${badge}</td><td class="n">${zskCo(r.q.y)}</td><td class="n">${zskCo(r.q.x)}</td><td class="n">${zskCo(r.q.z)}</td><td>${esc(zskType(r))}</td>${cell(r.c[0])}${single?"":cell(r.c[1])}${ent(r)}<td>${esc(note(r))}</td></tr>`;
   }).join("");
   if(focused!==undefined) tb.querySelector(`input[data-zsk-use="${focused}"]`)?.focus({preventScroll:true});
@@ -8758,7 +8911,8 @@ function kgScene(W,H,v){
   if($("kglogo").checked) fr.push(logoItem(W-18,H-(hd?20:8)));
   const out=projectCADAdd2D({W,H,pl,items:it,frame:fr},'zsssk',v,{}); out.pts=pts; out.editLabels=editLabels; out.deviationHits=deviationHits; out.deviationBottom=scaleTop; return out;
 }
-function kgRender(){
+function kgRender(){ kgRender0(); try{ kgAddDraw(); kgAddUI(); }catch(e){ if(typeof gmDiagnostic==="function") gmDiagnostic("zsssk.add.overlay",e); } }
+function kgRender0(){
   projectCADPlanUI('zsssk');
   const box=$("kgsvg"); if(!box||$("kgm").hidden) return;
   const W=box.clientWidth, H=box.clientHeight; if(!(W>0&&H>0)) return;
@@ -8858,11 +9012,12 @@ if(window.ResizeObserver){ let sz=''; new ResizeObserver(()=>{ const b=$("kgsvg"
 const KG_EDIT_MODES={
   label:{button:"kgLabelEdit",title:"Přesunout popisky",reset:"Obnovit automatické polohy",hint:"Přetáhněte popisek odchylky. Dvojklik vrátí jeho automatickou polohu."},
   fix:{button:"kgFixEdit",title:"Opravit odchylky",reset:"Vrátit všechny opravy",hint:"Dvojklikem na popisek zadejte novou odchylku v milimetrech. Hodnota i opravené souřadnice se zaokrouhlí na celé milimetry."},
-  add:{button:"kgAddEdit",title:"Přidat bod",reset:"Odebrat přidané body",hint:"Klik do půdorysu přidá bod v místě kliknutí, nebo zadejte Y a X ručně a potvrďte. Výška Z je nepovinná; zadaná předem platí i pro klik do plánu."}
+  add:{button:"kgAddEdit",title:"Přidat bod",reset:"Odebrat přidané body",hint:""}   // 1.555: Přidat bod má vlastní panel kgAddPanel (nápověda kgAddHint)
 };
 function kgEditUi(message,params=[]){
   const {mode,data,undo,redo,target}=KG_EDIT;
   if(!mode)return;
+  if(mode==="add"){kgAddUI(message);return;}
   const cfg=KG_EDIT_MODES[mode];
   $("kgEditTitle").textContent=gmPreviewText(cfg.title);
   $("kgEditStatus").textContent=gmPreviewText(message||cfg.hint,message?params:[]);
@@ -8870,13 +9025,12 @@ function kgEditUi(message,params=[]){
   $("kgEditRedo").disabled=!redo.length;
   $("kgEditReset").disabled=!Object.keys(data[mode]).length;
   $("kgEditReset").textContent=gmPreviewText(cfg.reset);
-  $("kgEditCoords").hidden=mode!=="add";
   $("kgEditNumber").hidden=mode!=="fix";
   $("kgEditForm").hidden=mode==="label"||mode==="fix"&&!target;
 }
 function kgEditClose(){
   KG_EDIT.mode=null; KG_EDIT.target=null; KG_EDIT.preview=null; KG_EDIT.hover=null; KG_EDIT.lastClick=null;
-  $("kgEditPanel").hidden=true;
+  $("kgEditPanel").hidden=true; $("kgAddPanel").hidden=true; KG_ADD.sel=null; KG_ADD.msg=""; kgAddDraw();
   for(const {button} of Object.values(KG_EDIT_MODES))$(button).setAttribute("aria-pressed","false");
 }
 function kgEditOpen(mode){
@@ -8886,34 +9040,38 @@ function kgEditOpen(mode){
   planMeasureClear("zsssk");
   KG_EDIT.mode=mode; KG_EDIT.undo=[]; KG_EDIT.redo=[];
   $(KG_EDIT_MODES[mode].button).setAttribute("aria-pressed","true");
-  $("kgEditPanel").hidden=false;
-  if(mode==="add")for(const id of ["kgAddY","kgAddX","kgAddZ"])$(id).value="";
+  $(mode==="add"?"kgAddPanel":"kgEditPanel").hidden=false;
+  if(mode==="add"){ tipHideKg(); kgAddSelect(null,false); }
   else $("kgdv").checked=true;
   kgEditUi(); kg3ReturnToPlan();
-  if(mode==="add")$("kgAddY").focus();
+  if(mode==="add")$("kgAddY").focus({preventScroll:true});
   else $("kgEditClose").focus({preventScroll:true});
 }
+var KG_ADD={sel:null,msg:""}; const KG_ADD_MAX=500;   // 1.555: výběr a hlášení panelu Přidat bod (body jsou v KG_EDIT.data.add)
 var KG_EDIT_KEEP=null, KG3_EDIT_KEEP=null;   // 1.554: úprava bodů nemění přiblížení plánu (žádné „F“)
-function kgEditApply(data){
+function kgEditApply(data,message){
   const changedPoints=KG_EDIT.data.fix!==data.fix||KG_EDIT.data.add!==data.add;
   KG_EDIT.data=data;
   KG_EDIT.target=null;
   if(KGV)kgKeep();
   kgOptSave();
-  if(changedPoints){KG_EDIT_KEEP=KG3_EDIT_KEEP=data;ZSK_PT.selected=null;ZSK_RES.stamp=null;zskRender();}
+  if(changedPoints){KG_EDIT_KEEP=KG3_EDIT_KEEP=data;ZSK_PT.selected=null;ZSK_RES.stamp=null;zskRender();zskLogRender();}   // 1.555: počet přidaných bodů v logu jako v ZSS pilot
   else kgRender();
-  kgEditUi();
+  kgEditUi(message);
 }
-function kgEditCommit(data){
+function kgEditCommit(data,message){
   KG_EDIT.undo.push(KG_EDIT.data);
   if(KG_EDIT.undo.length>200)KG_EDIT.undo.shift();
   KG_EDIT.redo=[];
-  kgEditApply(data);
+  kgEditApply(data,message);
 }
 function kgEditUndo(redo){
   const from=redo?KG_EDIT.redo:KG_EDIT.undo,to=redo?KG_EDIT.undo:KG_EDIT.redo;
   if(!from.length)return;
-  to.push(KG_EDIT.data); kgEditApply(from.pop());
+  to.push(KG_EDIT.data); const next=from.pop(), add=KG_EDIT.mode==="add";
+  if(add) KG_ADD.sel=next.add.some(q=>q.id===KG_ADD.sel)?KG_ADD.sel:null;
+  kgEditApply(next,add?()=>gmPreviewText(redo?"Krok znovu proveden.":"Krok vrácen."):undefined);
+  if(add) kgAddSelect(KG_ADD.sel,false);   // pole formuláře podle vráceného stavu (až po přepočtu)
 }
 function kgEditReset(){
   const {mode,data}=KG_EDIT;
@@ -8921,21 +9079,12 @@ function kgEditReset(){
   if(mode!=="add"){kgEditCommit({...data,[mode]:{}});return;}
   const fix=Object.fromEntries(Object.entries(data.fix).filter(([key])=>!key.startsWith("manual:")));
   const label=Object.fromEntries(Object.entries(data.label).filter(([key])=>!key.startsWith('["manual:')));
-  kgEditCommit({label,fix,add:[]});
+  kgEditCommit({label,fix,add:[]},()=>gmPreviewText("Všechny přidané body odebrány."));
+  kgAddForget(data.add);
 }
 function kgEditSubmit(){
   const {mode,data,target}=KG_EDIT;
-  if(mode==="add"){
-    const [y,x,z]=["kgAddY","kgAddX","kgAddZ"].map(id=>{const value=$(id).value.trim();return value?gmDecimal(value):id==="kgAddZ"?null:NaN;});
-    if(!kgEditCoords({y,x,z})){kgEditUi("Zadejte platné souřadnice Y a X v metrech. Výška Z je nepovinná.");return;}
-    const ids=new Set(ZK.pts.map(p=>p.id).concat(data.add.map(p=>p.id)));
-    let n=1; while(ids.has("ZSSN"+n))n++;
-    const r3=v=>v===null?null:Math.round(v*1000)/1000||0, id="ZSSN"+n;
-    kgEditCommit({...data,add:[...data.add,{id,y:r3(y),x:r3(x),z:r3(z)}]});
-    kgEditUi("Přidán bod ⟦0⟧ (⟦1⟧).",[id,z===null?gmPreviewText("bez výšky"):"Z "+gmDec(r3(z).toFixed(3))+" m"]);
-    for(const id of ["kgAddY","kgAddX","kgAddZ"])$(id).value="";
-    $("kgAddY").focus(); return;
-  }
+  if(mode==="add"){kgAddCommit();return;}
   if(mode!=="fix"||!target)return;
   const {r,component}=target;
   if(!ZSK_RES.rows.includes(r)){KG_EDIT.target=null;kgEditUi("Výsledky se změnily. Vyberte popisek znovu.");return;}
@@ -8950,6 +9099,133 @@ function kgEditSubmit(){
   if(!kgEditCoords(position)){kgEditUi("Souřadnice po opravě jsou mimo povolený rozsah.");return;}
   if(position.y!==r.q.y||position.x!==r.q.x||position.z!==r.q.z)kgEditCommit({...data,fix:{...data.fix,[r.key]:position}});
 }
+/* 1.555: ZSS SK → Plán → Upravit → Přidat bod – stejný panel a chování jako Přidat bod v ZSS pilot. Ručně doplněný bod (KG_EDIT.data.add) vstupuje
+   do výpočtu jako bod dalšího souboru měření s kódem ZSS: vyhodnotí se vůči DXF a zařadí do tabulky, plánu i zakázky. Klik do plánu bod rovnou přidá
+   (výška Z je nepovinná; zadaná předem platí i pro klik), klik na přidaný bod ho vybere k úpravě, × v seznamu ho odebere. Názvy N1, N2…
+   Bod mimo okolí prvků DXF se uloží a vyhodnotí jako odlehlý. Zpět/Znovu platí po dobu otevřeného panelu. */
+const kgAddFmt=v=>gmDec(v.toFixed(3)), kgAddR3=v=>v===null?null:Math.round(v*1000)/1000||0, kgAddKey=a=>"manual:"+a.id;
+function kgAddOn(){ return KG_EDIT.mode==="add"&&!$("kgm").hidden; }
+function kgAddName(){ const used=new Set(ZK.pts.map(q=>String(q.id)).concat(KG_EDIT.data.add.map(a=>a.id))); let n=1;
+ for(const a of KG_EDIT.data.add){ const m=/^N(\d+)$/.exec(a.id); if(m) n=Math.max(n,+m[1]+1); } while(used.has("N"+n)) n++; return "N"+n; }
+function kgAddRowIndex(a){ const k=kgAddKey(a); return (ZSK_RES.rows||[]).findIndex(r=>r.key===k); }
+function kgAddRow(a){ return (ZSK_RES.rows||[])[kgAddRowIndex(a)]||null; }
+function kgAddPos(a){ return KG_EDIT.data.fix[kgAddKey(a)]||a; }   // přidaný bod opravený nástrojem Opravit odchylky
+function kgAddMm(r){ return r.c.filter(Boolean).map(c=>Math.round(c.mm)); }
+function kgAddInfo(r){
+ if(!r) return {t:gmPreviewText("mimo výběr bodů"),bad:true};
+ if(r.type==="nolayers") return {t:gmPreviewText("bez vyhodnocení"),bad:false};
+ if(r.type==="remote") return {t:gmPreviewText("odlehlý"),bad:true};
+ if(r.type==="none") return {t:gmPreviewText("bez protějšku"),bad:true};
+ const mm=kgAddMm(r); return {t:zskType(r)+(mm.length?" "+mm.join(" / ")+" mm":""),bad:mm.some(v=>pdOver(v,ZSK_EVAL.lim))};
+}
+function kgAddResult(a){ const r=kgAddRow(a);
+ if(!r) return gmPreviewText("Bod nevyhovuje výběru bodů (rozsah názvů ve skupině Body a výstup), v tabulce není.");
+ if(r.type==="nolayers") return gmPreviewText("Bod je v tabulce bez vyhodnocení odchylek.");
+ if(r.type==="remote") return gmPreviewText("Bod je v tabulce, ale leží mimo dosah prvků DXF a vyřadil se jako odlehlý.");
+ if(r.type==="none") return gmPreviewText("Bod je v tabulce, v DXF se k němu nenašel protějšek.");
+ return gmPreviewText("Bod je v tabulce: ⟦0⟧, odchylka ⟦1⟧ mm.",[zskType(r),kgAddMm(r).join(" / ")]);
+}
+function kgAddRead(){
+ let err=""; const out={};
+ for(const [k,el] of [["Y",$("kgAddY")],["X",$("kgAddX")]]){ const t=el.value.trim(), v=gmDecimal(t), num=t!==""&&Number.isFinite(v), bad=!num||Math.abs(v)>YX_MAX; gmNumericMark(el,bad);
+  if(bad&&!err) err=num?gmPreviewText("⟦0⟧ musí být v rozsahu −⟦1⟧ až +⟦1⟧ m.",[k,fmtCz(YX_MAX)]):gmPreviewText("Zadejte číselnou hodnotu ⟦0⟧ v metrech.",[k]); out[k]=v; }
+ const zt=$("kgAddZ").value.trim(), z=zt===""?null:gmDecimal(zt), zbad=zt!==""&&(!Number.isFinite(z)||Math.abs(z)>Z_MAX); gmNumericMark($("kgAddZ"),zbad);
+ if(zbad&&!err) err=Number.isFinite(z)?gmPreviewText("⟦0⟧ musí být v rozsahu −⟦1⟧ až +⟦1⟧ m.",["Z",fmtCz(Z_MAX)]):gmPreviewText("Z je nepovinné: zadejte číslo v metrech, nebo pole nechte prázdné.");
+ return err?{err}:{y:kgAddR3(out.Y),x:kgAddR3(out.X),z:kgAddR3(z)};
+}
+function kgAddCheck(v,sel){
+ if(KG_EDIT.data.add.some(a=>a!==sel&&Math.abs(a.y-v.y)<5e-4&&Math.abs(a.x-v.x)<5e-4)) return gmPreviewText("Ve stejné půdorysné poloze už bod je.");
+ return "";
+}
+function kgAddForget(list){ let changed=false; for(const a of list){ const k=kgAddKey(a); for(const set of [ZSK_OFF,ZSK_KEEP]) if(set.delete(k)) changed=true; } if(changed) zskSetSave(); }
+function kgAddSelect(id,redraw=true){
+ const a=id===null?null:KG_EDIT.data.add.find(q=>q.id===id)||null; KG_ADD.sel=a?a.id:null;
+ for(const f of ["kgAddY","kgAddX","kgAddZ"]) gmNumericMark($(f),false);
+ $("kgAddY").value=a?kgAddFmt(a.y):""; $("kgAddX").value=a?kgAddFmt(a.x):""; $("kgAddZ").value=a&&a.z!==null?kgAddFmt(a.z):"";
+ if(!redraw) return;
+ const i=a?kgAddRowIndex(a):-1;
+ if(i>=0) kgSelect(i,"plan"); else kgRender();
+ kgAddUI(a?()=>gmPreviewText("Bod ⟦0⟧ vybrán: upravte Y, X nebo Z a stiskněte Enter.",[a.id])+" "+kgAddResult(a):"");
+ (a?$("kgAddZ"):$("kgAddY")).focus({preventScroll:true});
+}
+function kgAddCommit(){
+ const v=kgAddRead(); if(v.err){ kgAddUI(v.err); return; }
+ const data=KG_EDIT.data, sel=data.add.find(a=>a.id===KG_ADD.sel)||null;
+ if(sel&&sel.y===v.y&&sel.x===v.x&&sel.z===v.z){ kgAddUI(()=>gmPreviewText("Bez změny.")); return; }
+ const err=kgAddCheck(v,sel); if(err){ kgAddUI(err); return; }
+ if(!sel&&data.add.length>=KG_ADD_MAX){ kgAddUI(()=>gmPreviewText("Nejvýše ⟦0⟧ přidaných bodů.",[KG_ADD_MAX])); return; }
+ const a=sel?{...sel,...v}:{id:kgAddName(),...v}, fix={...data.fix};
+ if(sel) delete fix[kgAddKey(sel)];   // nové souřadnice nahradí i opravu odchylky přidaného bodu
+ const next={...data,fix,add:sel?data.add.map(q=>q===sel?a:q):[...data.add,a]};
+ KG_ADD.sel=a.id;
+ kgEditCommit(next,()=>(sel?gmPreviewText("Bod ⟦0⟧ upraven.",[a.id]):gmPreviewText("Přidán bod ⟦0⟧ (⟦1⟧).",[a.id,a.z===null?gmPreviewText("bez výšky"):"Z "+kgAddFmt(a.z)+" m"]))+" "+kgAddResult(a));
+ const i=kgAddRowIndex(a);
+ if(i>=0){
+  const filter=$("zsskflt"),passes=zskFilters(ZSK_EVAL.lim)[filter.value];
+  if(passes&&!passes(ZSK_RES.rows[i])){
+   filter.value="all";zskResultsRender();
+  }
+  kgSelect(kgAddRowIndex(a),"plan");
+ }
+}
+function kgAddDel(id){
+ const data=KG_EDIT.data, a=data.add.find(q=>q.id===id); if(!a) return;
+ const k=kgAddKey(a), prefix=JSON.stringify([k]).slice(0,-1)+",", fix={...data.fix}; delete fix[k];
+ const label=Object.fromEntries(Object.entries(data.label).filter(([key])=>!key.startsWith(prefix)));
+ if(KG_ADD.sel===id) kgAddSelect(null,false);
+ kgAddForget([a]);
+ kgEditCommit({label,fix,add:data.add.filter(q=>q!==a)},()=>gmPreviewText("Přidaný bod ⟦0⟧ odebrán.",[id]));
+}
+function kgAddUI(msg){
+ if(msg!==undefined) KG_ADD.msg=msg;   // text nebo funkce (funkce se po přepnutí jazyka vyhodnotí znovu)
+ if(KG_EDIT.mode!=="add") return;
+ const list=KG_EDIT.data.add, n=list.length, sel=list.find(a=>a.id===KG_ADD.sel)||null;
+ $("kgAddCount").innerHTML=n?gmPreviewText("Přidané body: <b>⟦0⟧</b>",[n]):esc(gmPreviewText("Žádný bod není ručně přidaný."));
+ $("kgAddUndo").disabled=!KG_EDIT.undo.length; $("kgAddRedo").disabled=!KG_EDIT.redo.length; $("kgAddReset").disabled=!n;
+ gmSetText($("kgAddSet"),"text",sel?"Zapsat změny":"Přidat bod"); $("kgAddNew").hidden=!sel;
+ const markup=list.map(a=>{ const r=kgAddRow(a), info=kgAddInfo(r);
+  return '<span class="tin-line pt-add'+(info.bad?' pt-bad':'')+(a.id===KG_ADD.sel?' on':'')+'"><button type="button" class="tin-ptgo" data-add-go="'+esc(a.id)+'" title="'+esc(gmPreviewText("Vybrat bod"))+'"><b>'+esc(a.id)+'</b> · Y '+kgAddFmt(a.y)+' · X '+kgAddFmt(a.x)+' · '+(a.z===null?esc(gmPreviewText("bez Z")):'Z '+kgAddFmt(a.z))+' → '+esc(info.t)+'</button><button type="button" data-add-del="'+esc(a.id)+'" aria-label="'+esc(gmPreviewText("Odebrat přidaný bod"))+'" title="'+esc(gmPreviewText("Odebrat přidaný bod"))+'">×</button></span>'; }).join("")
+  ||'<span class="hp">'+esc(gmPreviewText("Zatím bez přidaných bodů."))+'</span>';
+ const box=$("kgAddList"); if(box._markup!==markup){ box.innerHTML=markup; box._markup=markup; }
+ $("kgAddStatus").textContent=KG3.active?gmPreviewText("Body lze přidávat klikem jen ve 2D půdorysu. Vraťte pohled tlačítkem Půdorys nebo klávesou Home."):(typeof KG_ADD.msg==="function"?KG_ADD.msg():KG_ADD.msg)||"";
+}
+// značky přidaných bodů (oranžový trojúhelník a název) v překryvné vrstvě nad plánem, jako v Rovinnosti
+function kgAddDraw(){
+ const cv=$("kgAddOverlay"); if(!cv) return;
+ const show=kgAddOn()&&KG_EDIT.data.add.length>0&&!KG3.active&&!!KGV&&!!KG2SC; cv.toggleAttribute("hidden",!show);
+ if(!show){ const c=cv.getContext?.("2d"); if(c){ c.setTransform(1,0,0,1,0,0); c.clearRect(0,0,cv.width,cv.height); } return; }
+ const ctx=planCanvasPrepare(cv,cv.clientWidth,cv.clientHeight); if(!ctx) return;
+ const box=$("kgsvg"), r=box.getBoundingClientRect(), o=cv.getBoundingClientRect(), ox=r.left+(box.clientLeft||0)-o.left, oy=r.top+(box.clientTop||0)-o.top, pl=KG2SC.pl, c0=pl.x+pl.w/2, c1=pl.y+pl.h/2;
+ ctx.font="11px sans-serif"; ctx.lineJoin="round";
+ for(const a of KG_EDIT.data.add){ const p=kgAddPos(a), sx=c0+(KGV.cy-p.y)*KGV.s, sy=c1+(p.x-KGV.cx)*KGV.s; if(sx<pl.x-20||sx>pl.x+pl.w+20||sy<pl.y-20||sy>pl.y+pl.h+20) continue;
+  const on=a.id===KG_ADD.sel, k=on?10:8, x=sx+ox, y=sy+oy;
+  ctx.beginPath(); ctx.moveTo(x,y-k); ctx.lineTo(x+k*.87,y+k/2); ctx.lineTo(x-k*.87,y+k/2); ctx.closePath();
+  if(on){ ctx.fillStyle="rgba(194,65,12,.25)"; ctx.fill(); } ctx.strokeStyle="#c2410c"; ctx.lineWidth=on?2:1.5; ctx.stroke();
+  ctx.lineWidth=3; ctx.strokeStyle="#fff"; ctx.strokeText(a.id,x+k+2,y-k+2); ctx.fillStyle="#9a3412"; ctx.fillText(a.id,x+k+2,y-k+2); }
+}
+function kgAddPick(cx,cy){
+ if(!kgAddOn()) return false;
+ if(KG3.active||!KGV||!KG2SC){ kgAddUI(); return true; }
+ const [mx,my]=kgCanvasPoint(cx,cy), pl=KG2SC.pl, c0=pl.x+pl.w/2, c1=pl.y+pl.h/2;
+ let hit=null, hd=10; for(const a of KG_EDIT.data.add){ const p=kgAddPos(a), d=Math.hypot(c0+(KGV.cy-p.y)*KGV.s-mx,c1+(p.x-KGV.cx)*KGV.s-my); if(d<hd){ hd=d; hit=a; } }
+ if(hit){ kgAddSelect(hit.id); return true; }
+ if(mx<pl.x||mx>pl.x+pl.w||my<pl.y||my>pl.y+pl.h) return true;
+ const y=kgAddR3(KGV.cy-(mx-c0)/KGV.s), x=kgAddR3(KGV.cx+(my-c1)/KGV.s);
+ const keepZ=KG_ADD.sel===null, z=$("kgAddZ").value; kgAddSelect(null,false); $("kgAddZ").value=keepZ?z:"";   // výška zadaná předem platí i pro klik do plánu
+ $("kgAddY").value=kgAddFmt(y); $("kgAddX").value=kgAddFmt(x);
+ kgAddCommit();
+ if(KG_ADD.sel!==null){ $("kgAddZ").focus({preventScroll:true}); $("kgAddZ").select?.(); }
+ return true;
+}
+$("kgAddClose").onclick=()=>{kgEditClose();kgRender();$("kgEditBtn").focus({preventScroll:true});};
+$("kgAddSet").onclick=()=>kgAddCommit();
+$("kgAddNew").onclick=()=>kgAddSelect(null);
+$("kgAddUndo").onclick=()=>kgEditUndo(false);
+$("kgAddRedo").onclick=()=>kgEditUndo(true);
+$("kgAddReset").onclick=kgEditReset;
+for(const f of ["kgAddY","kgAddX","kgAddZ"]){ $(f).addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); kgAddCommit(); } }); $(f).addEventListener("input",e=>gmNumericMark(e.target,false)); }
+globalThis.GeoMATLanguage?.onChange(()=>{ if(KG_EDIT.mode!=="add") return; if(typeof KG_ADD.msg==="string") KG_ADD.msg=""; kgAddUI(); });   // hláška v novém jazyce (texty bez funkce se smažou)
+$("kgAddList").addEventListener("click",e=>{ const del=e.target.closest("[data-add-del]"); if(del){ kgAddDel(del.dataset.addDel); return; } const go=e.target.closest("[data-add-go]"); if(go) kgAddSelect(go.dataset.addGo); });
 function kgCanvasPoint(x,y){
   const box=$("kgsvg"),rect=box.getBoundingClientRect();
   return [x-rect.left-(box.clientLeft||0),y-rect.top-(box.clientTop||0)];
@@ -9080,16 +9356,10 @@ $("kgsvg").addEventListener("dblclick",e=>{
     }
     if(!tapped)return;
     kgRequestRender.flush();
+    if(gmLayerPlanPick("zsssk",e.clientX,e.clientY))return;
     if(planMeasurePick("zsssk",e.clientX,e.clientY))return;
     if(KG_EDIT.mode){
-      if(KG_EDIT.mode==="add"&&!KG3.active&&KGV&&KG2SC){
-        const boxRect=box.getBoundingClientRect(),x=e.clientX-boxRect.left,y=e.clientY-boxRect.top,{pl}=KG2SC;
-        if(x>=pl.x&&x<=pl.x+pl.w&&y>=pl.y&&y<=pl.y+pl.h){
-          $("kgAddY").value=gmDec((KGV.cy-(x-pl.x-pl.w/2)/KGV.s).toFixed(3));
-          $("kgAddX").value=gmDec((KGV.cx+(y-pl.y-pl.h/2)/KGV.s).toFixed(3));
-          kgEditSubmit();   // 1.554: klik bod rovnou přidá jako v ZSS pilot; výška zadaná předem platí i pro klik
-        }
-      }
+      if(KG_EDIT.mode==="add")kgAddPick(e.clientX,e.clientY);
       return;
     }
     const selected=hitAt(e.clientX,e.clientY)?.i??kgDeviationAt(e.clientX,e.clientY);
@@ -9105,7 +9375,8 @@ document.addEventListener("keydown",e=>{
   if(e.target?.type==="search"&&e.target.value)return;
   e.preventDefault(); e.stopImmediatePropagation();
   if(!$("kgEditPop").hidden){$("kgEditPop").hidden=true;$("kgEditBtn").setAttribute("aria-expanded","false");$("kgEditBtn").focus();return;}
-  if(KG_EDIT.mode){$("kgEditClose").click();return;}
+  if(KG_EDIT.mode==="add"&&KG_ADD.sel!==null){kgAddSelect(null);return;}
+  if(KG_EDIT.mode){$(KG_EDIT.mode==="add"?"kgAddClose":"kgEditClose").click();return;}
   if(planMeasureState("zsssk")?.on){$("kgMeasureClose").click();return;}
   $("kgx").click();
 },true);
@@ -11893,6 +12164,7 @@ if(window.ResizeObserver){ let rgSz=''; new ResizeObserver(()=>{ const b=$("rgsv
   box.addEventListener("pointerup",e=>{ drag=null; box.style.cursor="grab";
     if(!dn||Math.hypot(e.clientX-dn.x,e.clientY-dn.y)>4){ dn=null; return; } dn=null;   // klik bez tažení: označí nejbližší bod (nebo výběr zruší)
     rgRequestRender.flush();
+    if(gmLayerPlanPick("rv",e.clientX,e.clientY))return;
     if(planMeasurePick("rv",e.clientX,e.clientY))return;
     const p=hitAt(e.clientX,e.clientY); if(p) rgSelect(p.r.key,"plan"); else if(RV.selk!==null) rgSelect(null,"plan"); });
 })();
@@ -12415,7 +12687,7 @@ document.addEventListener("keydown",e=>{
   if(e.code==="KeyP"&&e.shiftKey){ e.preventDefault(); if(rgCan()) rvSavePdf(); }   // PDF plánu (stejně jako v ZSS pilot)
   if(e.code==="KeyR"&&e.shiftKey){ e.preventDefault(); if(!$("rvprt").disabled) zprtOpen("rv"); } });   // Protokol PDF (okno s údaji, stejně jako v ZSS pilot)
 // Reset modulu Rovinnost: měření, PD, typ a zadání roviny, odškrtnuté body, filtr, řazení, hledání a uložená nastavení modulu; ZSS pilot se nemění
-function rvReset(){planMeasureClear("rv");
+function rvReset(){planMeasureClear("rv");gmLayerReset('rv');
   projectFilesBeginReset('rv');
   rvFoldMode=0;rvApplyFold();
   $("rvhist").open=false;
@@ -12664,7 +12936,7 @@ function pg3BindViewport(){
   box.addEventListener('wheel',e=>{if(!pg3Active())return;e.preventDefault();tip.hidden=true;const r=box.getBoundingClientRect();pg3Zoom(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.25:1/1.25,box.clientWidth,box.clientHeight);},{passive:false});
   box.addEventListener('pointerdown',e=>{if(e.button!==0||!pg3Active()&&!e.shiftKey)return;e.preventDefault();drag={x:e.clientX,y:e.clientY,rotate:e.shiftKey};down={x:e.clientX,y:e.clientY};box.setPointerCapture(e.pointerId);tip.hidden=true;});
   box.addEventListener('pointermove',e=>{if(drag){if(drag.rotate)pg3Turn(e.clientX-drag.x,e.clientY-drag.y);else pg3Pan(e.clientX-drag.x,e.clientY-drag.y);drag.x=e.clientX;drag.y=e.clientY;return;}if(!pg3Active()||PG3.moving)return;const p=hit(e.clientX,e.clientY);if(!p){tip.hidden=true;return;}const r=p.r,o=r.owner;tip.innerHTML='<b>'+esc(r.label)+'</b><br>'+({centre:o&&o.direct?gmPreviewText("Přímo zaměřený střed"):gmPreviewText("Vyhodnocený střed"),measured:gmPreviewText("Měřený bod"),pd:gmPreviewText("Bod PD"),missing:gmPreviewText("Bod PD bez výšky – pouze projekce")}[r.kind])+`<br>Y ${r.y.toFixed(3)}, X ${r.x.toFixed(3)} m`+(r.virtual?gmPreviewText("<br>Z není zadáno; pomocná rovina není skutečná výška."):`<br>Z ${r.height.toFixed(3)} m`)+(o&&o.ref?`<br>ΔY ${mmv(o.dy)}, ΔX ${mmv(o.dx)} mm`+(zDelta(o)!==null?` · ΔZ ${(()=>{const zl=parseFloat($("zsszlim").value)||0,v=Math.abs(zDelta(o))*1000;return zl>0?`<span class="${pdOver(v,zl)?'bad':'ok'}">${mmv(zDelta(o))}</span>`:mmv(zDelta(o));})()} mm`:''): '');tip.hidden=false;tip.style.left=Math.max(4,Math.min(innerWidth-350,e.clientX+14))+'px';tip.style.top=Math.max(4,e.clientY+15)+'px';});
-  box.addEventListener('pointerup',e=>{if(!down)return;const d=down;down=null;drag=null;if(!pg3Active()||Math.hypot(e.clientX-d.x,e.clientY-d.y)>4)return;gRequestRender.flush();if(planMeasurePick("zss",e.clientX,e.clientY))return;const p=hit(e.clientX,e.clientY);if(p&&p.r.owner)selPile(p.r.owner.first,'plan');else if(GSEL!==null)selPile(null,'plan');});
+  box.addEventListener('pointerup',e=>{if(!down)return;const d=down;down=null;drag=null;if(!pg3Active()||Math.hypot(e.clientX-d.x,e.clientY-d.y)>4)return;gRequestRender.flush();if(gmLayerPlanPick("zss",e.clientX,e.clientY))return;if(planMeasurePick("zss",e.clientX,e.clientY))return;const p=hit(e.clientX,e.clientY);if(p&&p.r.owner)selPile(p.r.owner.first,'plan');else if(GSEL!==null)selPile(null,'plan');});
   box.addEventListener('pointercancel',()=>{drag=down=null;tip.hidden=true;});box.addEventListener('pointerleave',()=>{tip.hidden=true;});
 }
 async function pgPdf3A3(){if(!pg3Active()||PG3.transition||!pg3State())return null;pg3Stop();gRender();const sc=PG3.scene,m=PG3.model,v=PG3.view,G=PG3.gl;if(!sc||!G||!pg3Draw(sc,m,v))throw Error(gmPreviewText("Prostorový pohled se nepodařilo vykreslit."));const canvas=$('g3canvas'),width=canvas.width,height=canvas.height,rgba=new Uint8Array(width*height*4);G.gl.readPixels(0,0,width,height,G.gl.RGBA,G.gl.UNSIGNED_BYTE,rgba);if(G.gl.isContextLost&&G.gl.isContextLost())throw Error(gmT("camera.error.context"));const rgb=new Uint8Array(width*height*3);for(let y=0;y<height;y++)for(let x=0;x<width;x++){const a=((height-1-y)*width+x)*4,b=(y*width+x)*3;rgb[b]=rgba[a];rgb[b+1]=rgba[a+1];rgb[b+2]=rgba[a+2];}const result={...sc,items:projectCADPDFOverlay(sc,'zss',m,v),frame:sc.frame.map(i=>({...i})),page:sc.W>=sc.H?{W:1190.55,H:841.89}:{W:841.89,H:1190.55}};let bytes=rgb,deflated=false;if(typeof CompressionStream!=='undefined')try{bytes=new Uint8Array(await new Response(new Blob([rgb]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer());deflated=true;}catch(e){}const table=Array.from({length:256},(_,i)=>i.toString(16).padStart(2,'0')),parts=[];for(let i=0;i<bytes.length;i+=16384)parts.push(Array.from(bytes.subarray(i,i+16384),v=>table[v]).join(''));result.image={width,height,deflated,hex:parts.join('')};return result;}
@@ -12835,7 +13107,7 @@ function projectCADPlanSync(module){
  if(!CAD_PLAN_READY||!CAD_PLAN[module])return;const state=CAD_PLAN[module],files=PROJECT_CAD[module],models=projectCADGeometries(module).map(q=>q.geometry),changed=state.files.length!==files.length||state.files.some((f,i)=>f!==files[i])||state.models.length!==models.length||state.models.some((g,i)=>g!==models[i]);
  if(!changed){projectCADPlanUI(module);return;}state.files=files.slice();state.models=models;
  if(!files.length){state.show=null;removeStorage(projectCADPlanKey(module));}else if(models.length&&state.show===null){let saved=null;try{saved=JSON.parse(localStorage.getItem(projectCADPlanKey(module))||'null');}catch{}state.show=typeof saved==='boolean'?saved:true;}
- projectCADPlanUI(module);projectCADPlanInvalidate(module);
+ projectCADPlanUI(module);projectCADPlanInvalidate(module);if(typeof gmLayerRefresh==='function')gmLayerRefresh(module);
 }
 function projectCADPlanInvalidate(module){
  if(module==='tr'){if(typeof TPLAN==='undefined')return;TPLAN.cache=TPLAN.scene=null;tpGpuRelease();if(tp3State())trDrawRequest();return;}
@@ -12843,7 +13115,7 @@ function projectCADPlanInvalidate(module){
  else if(module==='zsssk'){KGV=KGZ=null;KG3.view=null;KGSIG='';if(kgState())kgRender();}
  else {RGV=RGZ=null;RGSIG='';RG3.model=RG3.view=null;if(rgState())rgRender();}
 }
-function projectCADPlanModels(module,spatial=false){if(!CAD_PLAN_READY)return [];const state=CAD_PLAN[module];if(state.show===false)return [];const local=module==='rv'&&RV.plane!=='h';return (module==='zsssk'&&typeof zskPlanModels==='function'?zskPlanModels(state.models):state.models).filter(g=>g.type==='3d'||Number.isFinite(g.referenceZ)||!spatial&&!local);}
+function projectCADPlanModels(module,spatial=false){if(!CAD_PLAN_READY)return [];const state=CAD_PLAN[module];if(state.show===false)return [];const local=module==='rv'&&RV.plane!=='h';return (typeof gmLayerPlanModels==='function'?gmLayerPlanModels(module,state.models):state.models).filter(g=>g.type==='3d'||Number.isFinite(g.referenceZ)||!spatial&&!local);}
 function projectCADLocal(module,p){
  if(module!=='rv')return {s:-p[0],z:-p[1],d:p[2]};const f=rvPlaneFrame();if(!f)return null;const q=f.at({y:p[0],x:p[1],z:p[2]});return RV.plane==='h'?{s:-p[0],z:-p[1],d:q.d}:RV.plane==='v'?{s:q.u,z:q.v,d:q.d}:{s:-q.yp,z:-q.xp,d:q.d};
 }
@@ -12868,10 +13140,12 @@ function projectCADTextItems(e,project,pl,exporting=false){
 }
 
 function projectCADScene(module,spatial,project,pl,scale,exporting=false){
- const items=[];for(const g of projectCADPlanModels(module,spatial)){const paths=projectCADPaths(g,scale*(exporting?4:1));for(const l of paths.lines){const a=project(l.a),b=project(l.b);if(!a||!b||![a.x,a.y,b.x,b.y].every(Number.isFinite)||Math.max(a.x,b.x)<pl.x-4||Math.min(a.x,b.x)>pl.x+pl.w+4||Math.max(a.y,b.y)<pl.y-4||Math.min(a.y,b.y)>pl.y+pl.h+4)continue;
+ const items=[],hits=exporting?null:[];for(const g of projectCADPlanModels(module,spatial)){const paths=projectCADPaths(g,scale*(exporting?4:1)),fn=hits&&typeof GM_LAYER_GFILE!=='undefined'?GM_LAYER_GFILE.get(g):undefined,lk=layer=>JSON.stringify([fn,layer||'0']);for(const l of paths.lines){const a=project(l.a),b=project(l.b);if(!a||!b||![a.x,a.y,b.x,b.y].every(Number.isFinite)||Math.max(a.x,b.x)<pl.x-4||Math.min(a.x,b.x)>pl.x+pl.w+4||Math.max(a.y,b.y)<pl.y-4||Math.min(a.y,b.y)>pl.y+pl.h+4)continue;
  if(l.point){for(const [x,y] of [[3,0],[0,3]])items.push({t:'line',x1:a.x-x,y1:a.y-y,x2:a.x+x,y2:a.y+y,depth1:a.depth,depth2:a.depth,c:'#aaa',sw:.7,k:'PD_'+l.layer});}
- else items.push({t:'line',x1:a.x,y1:a.y,x2:b.x,y2:b.y,depth1:a.depth,depth2:b.depth,c:'#aaa',sw:.8,k:'PD_'+l.layer});}
- for(const e of paths.texts)items.push(...projectCADTextItems(e,project,pl,exporting));}return items;
+ else items.push({t:'line',x1:a.x,y1:a.y,x2:b.x,y2:b.y,depth1:a.depth,depth2:b.depth,c:'#aaa',sw:.8,k:'PD_'+l.layer});
+ if(hits&&fn!==undefined)hits.push({x1:a.x,y1:a.y,x2:b.x,y2:b.y,lk:lk(l.layer)});}
+ for(const e of paths.texts){const t=projectCADTextItems(e,project,pl,exporting);items.push(...t);if(hits&&fn!==undefined)for(const i of t)hits.push({m:i.matrix,len:i.s.length,lk:lk(e.layer)});}}
+ if(hits)GM_LAYER_HITS[module]={pl:{...pl},spatial:!!spatial,hits};return items;
 }
 function projectCADAdd2D(sc,module,v,o={}){if(o.dxf)return sc;const project=p=>{const q=projectCADLocal(module,p);return q?{x:sc.pl.x+sc.pl.w/2+(q.s+v.cy)*v.s,y:sc.pl.y+sc.pl.h/2-(q.z+v.cx)*v.s}:null;};const items=projectCADScene(module,false,project,sc.pl,v.s,!!o.a3);return items.length?{...sc,items:items.concat(sc.items)}:sc;}
 function projectCADSpatialItems(sc,module,m,v){const project=p=>{const q=projectCADLocal(module,p);return q?(module==='zss'?pg3Project(q,m,v,sc.W,sc.H):rg3Project(q,m,v,sc.W,sc.H,sc.pl)):null;};return projectCADScene(module,true,project,sc.pl,v.s*(module==='rv'?Math.max(1,rg3Factor):1));}
@@ -13516,7 +13790,7 @@ function terrainResetToken(key){try{return localStorage.getItem(GM_KEY('geomat.t
 async function terrainReset(){if(!terrainAdmin()||TERRAIN.busy)return false;trVolumePickClose();TR_COMPARE.state=null;TR_COMPARE.index=null;TR_MEAS_BATCH.state?.tinJob?.cancel();TR_MEAS_BATCH.state=null;TR_MEAS_BATCH.cache.clear();trClearTinBase('m');trClearTinBase('p');
  tpPlanClose();tpDefaults();TPLAN.split=false;TPLAN.ratio=50;TP3.yaw=TP3.pitch=TP3.roll=0;TP3.view=null;tpSavePrefs();gmInfoClose(false);TERRAIN.epoch++;TERRAIN.busy=true;
  for(const key of ['m','p']){const g=TERRAIN[key];g.revision++;g.files=[];g.breakFiles=[];if(key==='p'){PROJECT_CAD.tr=[];trCadRender();}TR_BREAK_STATES[key]=null;TR_BREAK_STANDALONE[key]=null;TR_VOLUME_STATES[key]=null;TR_VOLUME_REFERENCES[key]=null;g.model=trPrefs();TRMODEL[key]=null;TRMODEL.view=null;g.error='';g.resetDurable=false;const token=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);try{localStorage.setItem(GM_KEY('geomat.tr.reset.'+key+'.v1'),token);g.resetDurable=terrainResetToken(key)===token;}catch{}g.resetToken=terrainResetToken(key);}
- TRMODEL.drag=null;trPtsReset(false);
+ TRMODEL.drag=null;trPtsReset(false);gmLayerReset('tr');
  removeStorage(ZPRT_TR_K);
  $('trInfoSearch').value='';im3Search(false);terrainRender('m');terrainRender('p');
  try{await Promise.all(['m','p'].map(terrainSave));const errors=['m','p'].filter(k=>TERRAIN[k].error);if(!errors.length)toastSuccess(gmPreviewText("Modul DMT je resetován."));else toast(errors.every(k=>TERRAIN[k].resetDurable)?gmPreviewText("Data byla odebrána a reset je zapamatovaný; dočištění úložiště lze zopakovat."):gmT("storage.reset.warning"));return !errors.length;}finally{TERRAIN.busy=false;terrainRender('m');terrainRender('p');if(terrainAdmin())$('trResetAll').focus({preventScroll:true});}
@@ -15733,6 +16007,7 @@ function tpZoom(mx,my,factor){
 function tpMeasureToggle(force){if(tpEditing()&&force!==false)return;const s=TPLAN.measure;s.on=typeof force==='boolean'?force:!s.on;if(!s.on){s.a=s.b=null;TPLAN.measureList=null;clearTimeout(TPLAN.measureSearchTimer);}tpMeasureUI();trDrawRequest();}
 function tpHit(x,y,key=null){const sc=TPLAN.scene;if(!sc||!key&&!$('tpPoints').checked)return null;let best=null,dist=12;for(const p of sc.projected){if(key&&key!==p.q.key)continue;if(p.x<sc.pl.x||p.x>sc.pl.x+sc.pl.w||p.y<sc.pl.y||p.y>sc.pl.y+sc.pl.h)continue;const d=Math.hypot(x-p.x,y-p.y);if(d>dist+.1)continue;const depth=tpSceneDepth(sc);if(depth&&p.depth<gmPlanDepthAt(depth,p.x,p.y)-sc.depthTolerance)continue;if(d<dist-.1||Math.abs(d-dist)<.1&&p.depth>(best?.depth??-Infinity)){best=p;dist=d;}}return best;}
 function tpPlanKey(e){
+ if(typeof gmLayerPopKey==='function'&&gmLayerPopKey('tr',e))return true;   // panel Hladiny DXF: Escape nejdřív hledání, výběr v plánu a panel, až pak plán
  if(!$('tpTinPanel').hidden){
   const typing=planIsTyping(e.target),d=TPLAN.tinDraft;
   if(e.key==='Escape'){
@@ -16081,7 +16356,7 @@ const tpFontCommit=value=>{const num=gmDecimal(value);if(!Number.isFinite(num)||
 $('tpMeasure').onclick=()=>tpMeasureToggle();$('tpMeasureClose').onclick=()=>{tpMeasureToggle(false);$('tpCanvas').focus();};$('tpMeasureNew').onclick=()=>{TPLAN.measure.a=TPLAN.measure.b=null;tpMeasureUI();trDrawRequest();};for(const [id,key] of [['tpMeasureA','a'],['tpMeasureB','b']])$(id).onchange=()=>tpMeasureChoose($(id).value||null,key);$('tpMeasureSearch').addEventListener('input',()=>{clearTimeout(TPLAN.measureSearchTimer);TPLAN.measureSearchTimer=setTimeout(tpMeasureUI,120);});
 $('trxpdf').onclick=()=>tpSavePDF(false,true);$('trxprt').onclick=()=>{if(trPrtCan())zprtOpen('tr');};globalThis.GeoMATLanguage?.onChange(()=>{if(typeof TERRAIN_PLAN_READY!=='undefined'&&TERRAIN_PLAN_READY)trExportUI();});$('trxpdf3').onclick=()=>tpSavePDF(true);$('trxdxf').onclick=()=>tpSaveDXF(false,true);$('trxdxf3').onclick=()=>tpSaveDXF(true,true);
 $('tppdf').onclick=()=>tpSavePDF(false);$('tppdf3').onclick=()=>tpSavePDF(true);$('tpdxf').onclick=()=>tpSaveDXF(false);$('tpdxf3').onclick=()=>tpSaveDXF(true);
-(()=>{const canvas=$('tpCanvas');canvas.addEventListener('wheel',e=>{if(!tp3State())return;e.preventDefault();const box=canvas.getBoundingClientRect(),grouped=performance.now()<TPLAN.wheelUntil;TPLAN.gesture=grouped;tpZoom(e.clientX-box.left,e.clientY-box.top,e.deltaY<0?1.25:.8);TPLAN.gesture=false;TPLAN.wheelUntil=performance.now()+350;},{passive:false});canvas.addEventListener('pointerdown',e=>{if(e.button!==0||!tp3State())return;e.preventDefault();canvas.focus();if(TPLAN.tinDraft&&tpTinTool()==='del'&&TPLAN.tinMode==='box'&&!e.shiftKey){const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;TPLAN.tinBox={id:e.pointerId,x0:x,y0:y,x1:x,y1:y};TPLAN.tinDraft.hover=[];canvas.setPointerCapture?.(e.pointerId);$('tptip').hidden=true;return;}TPLAN.wheelUntil=0;tpRemember();TPLAN.gesture=true;TPLAN.drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,rotate:e.shiftKey};canvas.setPointerCapture?.(e.pointerId);$('tptip').hidden=true;});canvas.addEventListener('pointermove',e=>{const box=TPLAN.tinBox;if(box&&box.id===e.pointerId){const r=canvas.getBoundingClientRect();box.x1=e.clientX-r.left;box.y1=e.clientY-r.top;tpTinDraw();return;}const d=TPLAN.drag;if(d&&d.id===e.pointerId){const dx=e.clientX-d.x,dy=e.clientY-d.y;d.x=e.clientX;d.y=e.clientY;if(d.rotate)tp3Turn(dx,dy);else{const m=tpScene(),v=tpView(m,canvas.clientWidth||800,canvas.clientHeight||500,tp3Active());gmCameraPan(v,v.scale,dx,dy);trDrawRequest();}return;}if(!tp3State())return;const r=canvas.getBoundingClientRect();if(TPLAN.tinDraft){tpTinHover(e.clientX-r.left,e.clientY-r.top);return;}const p=tpHit(e.clientX-r.left,e.clientY-r.top),delta=trDeltaHit(e.clientX-r.left,e.clientY-r.top),tip=$('tptip');tip.hidden=!p&&!delta;if(p||delta){tip.innerHTML=delta?trDeltaTooltip(delta):tpPointTooltip(p.q);tip.style.left=Math.max(4,Math.min(innerWidth-300,e.clientX+14))+'px';tip.style.top=Math.max(4,e.clientY+15)+'px';}});canvas.addEventListener('pointerup',e=>{const box=TPLAN.tinBox;if(box&&box.id===e.pointerId){TPLAN.tinBox=null;const r=canvas.getBoundingClientRect();box.x1=e.clientX-r.left;box.y1=e.clientY-r.top;if(Math.hypot(box.x1-box.x0,box.y1-box.y0)>4)tpTinBoxPick(box);else tpTinToggle(tpTinHit(box.x1,box.y1,false).faces);tpTinDraw();return;}const d=TPLAN.drag;TPLAN.drag=null;TPLAN.gesture=false;tpHistoryUI();if(!d||Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>4)return;if(TPLAN.tinDraft){const r=canvas.getBoundingClientRect();tpTinPick(e.clientX-r.left,e.clientY-r.top);return;}if(TPLAN.breakDraft){const r=canvas.getBoundingClientRect();tpBreakPick(e.clientX-r.left,e.clientY-r.top);return;}if(TPLAN.domainDraft){const r=canvas.getBoundingClientRect();tpDomainPick(e.clientX-r.left,e.clientY-r.top);return;}if(!TPLAN.measure.on)return;const r=canvas.getBoundingClientRect(),p=tpHit(e.clientX-r.left,e.clientY-r.top);if(p)tpMeasureChoose(p.q.id);});for(const event of ['pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{if(TPLAN.tinBox&&TPLAN.tinBox.id===e.pointerId&&e.type==='pointercancel'){TPLAN.tinBox=null;tpTinDraw();}TPLAN.drag=null;TPLAN.gesture=false;tpHistoryUI();});canvas.addEventListener('pointerleave',()=>{$('tptip').hidden=true;tpTinHover();});canvas.addEventListener('dblclick',()=>tp3Face('top',true));
+(()=>{const canvas=$('tpCanvas');canvas.addEventListener('wheel',e=>{if(!tp3State())return;e.preventDefault();const box=canvas.getBoundingClientRect(),grouped=performance.now()<TPLAN.wheelUntil;TPLAN.gesture=grouped;tpZoom(e.clientX-box.left,e.clientY-box.top,e.deltaY<0?1.25:.8);TPLAN.gesture=false;TPLAN.wheelUntil=performance.now()+350;},{passive:false});canvas.addEventListener('pointerdown',e=>{if(e.button!==0||!tp3State())return;e.preventDefault();canvas.focus();if(TPLAN.tinDraft&&tpTinTool()==='del'&&TPLAN.tinMode==='box'&&!e.shiftKey){const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;TPLAN.tinBox={id:e.pointerId,x0:x,y0:y,x1:x,y1:y};TPLAN.tinDraft.hover=[];canvas.setPointerCapture?.(e.pointerId);$('tptip').hidden=true;return;}TPLAN.wheelUntil=0;tpRemember();TPLAN.gesture=true;TPLAN.drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,rotate:e.shiftKey};canvas.setPointerCapture?.(e.pointerId);$('tptip').hidden=true;});canvas.addEventListener('pointermove',e=>{const box=TPLAN.tinBox;if(box&&box.id===e.pointerId){const r=canvas.getBoundingClientRect();box.x1=e.clientX-r.left;box.y1=e.clientY-r.top;tpTinDraw();return;}const d=TPLAN.drag;if(d&&d.id===e.pointerId){const dx=e.clientX-d.x,dy=e.clientY-d.y;d.x=e.clientX;d.y=e.clientY;if(d.rotate)tp3Turn(dx,dy);else{const m=tpScene(),v=tpView(m,canvas.clientWidth||800,canvas.clientHeight||500,tp3Active());gmCameraPan(v,v.scale,dx,dy);trDrawRequest();}return;}if(!tp3State())return;const r=canvas.getBoundingClientRect();if(TPLAN.tinDraft){tpTinHover(e.clientX-r.left,e.clientY-r.top);return;}const p=tpHit(e.clientX-r.left,e.clientY-r.top),delta=trDeltaHit(e.clientX-r.left,e.clientY-r.top),tip=$('tptip');tip.hidden=!p&&!delta;if(p||delta){tip.innerHTML=delta?trDeltaTooltip(delta):tpPointTooltip(p.q);tip.style.left=Math.max(4,Math.min(innerWidth-300,e.clientX+14))+'px';tip.style.top=Math.max(4,e.clientY+15)+'px';}});canvas.addEventListener('pointerup',e=>{const box=TPLAN.tinBox;if(box&&box.id===e.pointerId){TPLAN.tinBox=null;const r=canvas.getBoundingClientRect();box.x1=e.clientX-r.left;box.y1=e.clientY-r.top;if(Math.hypot(box.x1-box.x0,box.y1-box.y0)>4)tpTinBoxPick(box);else tpTinToggle(tpTinHit(box.x1,box.y1,false).faces);tpTinDraw();return;}const d=TPLAN.drag;TPLAN.drag=null;TPLAN.gesture=false;tpHistoryUI();if(!d||Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>4)return;if(gmLayerPlanPick('tr',e.clientX,e.clientY))return;if(TPLAN.tinDraft){const r=canvas.getBoundingClientRect();tpTinPick(e.clientX-r.left,e.clientY-r.top);return;}if(TPLAN.breakDraft){const r=canvas.getBoundingClientRect();tpBreakPick(e.clientX-r.left,e.clientY-r.top);return;}if(TPLAN.domainDraft){const r=canvas.getBoundingClientRect();tpDomainPick(e.clientX-r.left,e.clientY-r.top);return;}if(!TPLAN.measure.on)return;const r=canvas.getBoundingClientRect(),p=tpHit(e.clientX-r.left,e.clientY-r.top);if(p)tpMeasureChoose(p.q.id);});for(const event of ['pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{if(TPLAN.tinBox&&TPLAN.tinBox.id===e.pointerId&&e.type==='pointercancel'){TPLAN.tinBox=null;tpTinDraw();}TPLAN.drag=null;TPLAN.gesture=false;tpHistoryUI();});canvas.addEventListener('pointerleave',()=>{$('tptip').hidden=true;tpTinHover();});canvas.addEventListener('dblclick',()=>tp3Face('top',true));
 const split=$('tpsplit');let dragging=null;split.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();dragging=e.pointerId;split.setPointerCapture?.(e.pointerId);});split.addEventListener('pointermove',e=>{if(dragging!==e.pointerId)return;const wide=window.matchMedia('(min-width:900px)').matches;
     const size=wide?innerWidth:innerHeight,position=wide?e.clientX:e.clientY;
     TPLAN.ratio=Math.max(20,Math.min(80,(size-position)/size*100));tpSplitUI();trDrawRequest();});for(const name of ['pointerup','pointercancel','lostpointercapture'])split.addEventListener(name,()=>{dragging=null;tpSavePrefs();});split.addEventListener('dblclick',()=>{TPLAN.ratio=50;tpSplitUI();tpSavePrefs();trDrawRequest();});})();
@@ -17064,6 +17339,21 @@ gmJobResume();
 }
 </script>
 <script type="application/json" id="gmLanguageDictionary">{
+ "Hladiny DXF: rozsvícení a zhasnutí hladin načtených výkresů DXF.": "DXF layers: turn the layers of loaded DXF drawings on and off.",
+ "Hladiny DXF jsou dostupné po načtení výkresu DXF.": "DXF layers are available after loading a DXF drawing.",
+ "Hladiny DXF: některé hladiny jsou zhasnuté. Otevře seznam hladin načtených výkresů DXF.": "DXF layers: some layers are off. Opens the list of layers of the loaded DXF drawings.",
+ "Hladiny DXF: otevře seznam hladin načtených výkresů DXF k rozsvícení a zhasnutí.": "DXF layers: opens the list of layers of the loaded DXF drawings to turn them on and off.",
+ "Zavřít hladiny DXF (Escape)": "Close DXF layers (Escape)",
+ "Rozsvítí všechny hladiny; při hledání jen nalezené. Rozsvícené hladiny se zobrazí v podkladu plánu, PDF i DXF.": "Turns all layers on; while searching, only the layers found. Layers that are on are shown in the plan, PDF and DXF underlay.",
+ "Zhasne všechny hladiny; při hledání jen nalezené. Zhasnuté hladiny se v podkladu plánu, PDF ani DXF nezobrazí.": "Turns all layers off; while searching, only the layers found. Layers that are off are not shown in the plan, PDF or DXF underlay.",
+ "Určuje, zda se hladiny z nově načteného výkresu DXF rovnou zobrazí v podkladu plánu (Rozsvícené), nebo je rozsvítíte ručně (Zhasnuté). Stav dosavadních hladin se nezmění.": "Sets whether the layers of a newly loaded DXF drawing are shown in the plan underlay straight away (On) or you turn them on manually (Off). The state of existing layers does not change.",
+ "Zhasnuté hladiny se nezobrazí v podkladu plánu, PDF ani DXF.": "Layers that are off are not shown in the plan, PDF or DXF underlay.",
+ "Po načtení DXF se zde zobrazí jeho hladiny.": "The layers appear here after loading a DXF.",
+ "DXF nemá žádné viditelné hladiny.": "The DXF has no visible layers.",
+ "Žádná hladina nesvítí, podklad DXF se v plánu nezobrazí.": "No layer is on; the DXF underlay is not shown in the plan.",
+ "Hladina ⟦0⟧ svítí a zobrazí se v podkladu plánu, PDF i DXF. Kliknutím ji zhasnete.": "Layer ⟦0⟧ is on and is shown in the plan, PDF and DXF underlay. Click to turn it off.",
+ "Hladina ⟦0⟧ je zhasnutá a v podkladu plánu, PDF ani DXF se nezobrazí. Kliknutím ji rozsvítíte.": "Layer ⟦0⟧ is off and is not shown in the plan, PDF or DXF underlay. Click to turn it on.",
+ "Tlačítko Hladiny DXF (žárovka) v horní liště plánu otevře seznam hladin všech načtených výkresů DXF seskupených podle souboru, s barvou hladiny a počtem prvků; je dostupné po načtení DXF a panel zavře křížek, Escape nebo klik mimo panel. DXF je v tomto modulu jen podkladem: rozsvícená hladina (žlutá žárovka) se zobrazí v podkladu plánu, PDF i DXF, zhasnutá se skryje; rozsah výkresu zůstává stejný. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Stav hladin se ukládá v prohlížeči zvlášť pro každý modul; Reset modulu všechny hladiny znovu rozsvítí.": "The DXF layers button (bulb) in the plan's top bar opens a list of the layers of all loaded DXF drawings, grouped by file, with the layer colour and element count; it is available once a DXF is loaded, and the panel closes with the cross, Escape or a click outside it. In this module the DXF is only an underlay: a layer that is on (yellow bulb) is shown in the plan, PDF and DXF underlay, a layer that is off is hidden; the drawing extent stays the same. Click a row to turn the layer on or off; the bulb next to the drawing name switches all of its layers. While searching, All, None and swap (⇄) apply only to the layers found. The arrow button turns on layer picking directly in the plan: click a line or text of the drawing to turn its layer off, or back on if it is off; the layer under the cursor is highlighted in the list, panning and zooming the plan keep working and Escape ends picking. The New layers after loading a DXF option sets whether the layers of the next drawing start on (default) or off. The layer state is saved in the browser separately for each module; Module reset turns all layers back on.",
  "Odlehlý bod ručně vrácený do výběru.": "Manually reinstated outlier.",
  "Automaticky vyřazený odlehlý bod. Zaškrtnutím ho vrátíte do výběru.": "Automatically excluded outlier. Check it to reinstate it.",
  "odlehlých vyřazeno": "outliers excluded",
@@ -17136,11 +17426,9 @@ gmJobResume();
  "Pravděpodobně nesourodá data: červené upozornění porovná soubory měření s bodovým i DXF projektem a varuje, je-li půdorysná mezera mezi nimi příliš velká. Načtení neblokuje; zkontrolujte jednotky, osu a znaménka.": "Probably inconsistent data: a red warning compares the survey files with the point and DXF project and warns when the plan gap between them is too large. Loading is not blocked; check the units, axes and signs.",
  "Hladiny DXF": "DXF layers",
  "Projevit i v plánu": "Apply to the plan",
- "Zapnuto: zhasnuté hladiny se skryjí i v podkladu DXF v plánu, rozsvícené zůstanou. Vypnuto (výchozí): plán ukazuje celý podklad DXF bez ohledu na stav hladin; výpočet odchylek používá vždy jen rozsvícené hladiny.": "On: layers that are off are also hidden in the DXF underlay of the plan; layers that are on remain. Off (default): the plan shows the full DXF underlay regardless of the layer state; the deviation calculation always uses only the layers that are on.",
+ "Zapnuto (výchozí, stejně jako v ostatních modulech): zhasnuté hladiny se skryjí i v podkladu DXF v plánu, rozsvícené zůstanou. Vypnuto: plán ukazuje celý podklad DXF bez ohledu na stav hladin; výpočet odchylek používá vždy jen rozsvícené hladiny.": "On (default, as in the other modules): layers that are off are also hidden in the DXF underlay of the plan; layers that are on remain. Off: the plan shows the full DXF underlay regardless of the layer state; the deviation calculation always uses only the layers that are on.",
  "Zhasnuté hladiny se skryjí i v podkladu plánu.": "Layers that are off are also hidden in the plan underlay.",
  "Plán ukazuje celý podklad DXF.": "The plan shows the full DXF underlay.",
- "Rozsvítit vše": "Turn all on",
- "Zhasnout vše": "Turn all off",
  "Hledat hladinu": "Search layer",
  "Nové hladiny po načtení DXF": "New layers after loading a DXF",
  "Zhasnuté": "Off",
@@ -17154,6 +17442,14 @@ gmJobResume();
  "Svítí ⟦0⟧ z ⟦1⟧": "⟦0⟧ of ⟦1⟧ on",
  "Rozsvítit všechny hladiny výkresu ⟦0⟧": "Turn on all layers of drawing ⟦0⟧",
  "Zhasnout všechny hladiny výkresu ⟦0⟧": "Turn off all layers of drawing ⟦0⟧",
+ "Výběr hladiny v plánu: kliknutím na čáru nebo text výkresu DXF jeho hladinu zhasnete, zhasnutou rozsvítíte. Posun a přiblížení plánu fungují dál, Escape výběr ukončí.": "Layer picking in the plan: click a line or text of the DXF drawing to turn its layer off, or back on if it is off. Panning and zooming the plan keep working; Escape ends picking.",
+ "Vybrat hladinu v plánu": "Pick a layer in the plan",
+ "Klikněte v plánu na čáru nebo text výkresu DXF. Escape výběr ukončí.": "Click a line or text of the DXF drawing in the plan. Escape ends picking.",
+ "Hladina ⟦0⟧ (⟦1⟧): kliknutím ji zhasnete.": "Layer ⟦0⟧ (⟦1⟧): click to turn it off.",
+ "Hladina ⟦0⟧ (⟦1⟧): kliknutím ji rozsvítíte.": "Layer ⟦0⟧ (⟦1⟧): click to turn it on.",
+ "Hladina ⟦0⟧ (⟦1⟧) je zhasnutá. V seznamu ji můžete znovu rozsvítit.": "Layer ⟦0⟧ (⟦1⟧) is off. You can turn it back on in the list.",
+ "Hladina ⟦0⟧ (⟦1⟧) je rozsvícená.": "Layer ⟦0⟧ (⟦1⟧) is on.",
+ "Zde není žádná čára ani text výkresu DXF. Klikněte přímo na prvek výkresu.": "There is no line or text of the DXF drawing here. Click directly on a drawing element.",
  "Hladina ⟦0⟧ svítí a použije se pro výpočet. Kliknutím ji zhasnete.": "Layer ⟦0⟧ is on and is used for the calculation. Click to turn it off.",
  "Hladina ⟦0⟧ je zhasnutá a ve výpočtu se nepoužije. Kliknutím ji rozsvítíte.": "Layer ⟦0⟧ is off and is not used in the calculation. Click to turn it on.",
  "⟦0⟧ prvek": "⟦0⟧ element",
@@ -17161,7 +17457,7 @@ gmJobResume();
  "⟦0⟧ prvků": "⟦0⟧ elements",
  "Hledání neodpovídá žádná hladina.": "No layer matches the search.",
  "Žádná hladina nesvítí. Rozsviťte alespoň jednu pro výpočet odchylek.": "No layer is on. Turn on at least one to calculate deviations.",
- "Karta Hladiny DXF ukazuje použitelné hladiny všech načtených výkresů seskupené podle souboru, s barvou hladiny a počtem prvků. Rozsvícená hladina (žlutá žárovka) se použije pro výpočet odchylek, zhasnutá se nepoužije. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Rozsvítit vše, Zhasnout vše a prohození (⇄) platí při hledání jen pro nalezené hladiny. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Zapnutá volba Projevit i v plánu skryje zhasnuté hladiny i v podkladu DXF v plánu; ve výchozím stavu je vypnutá a plán ukazuje celý podklad. Stav hladin se ukládá v prohlížeči; Výchozí hodnoty i Reset modulu všechny hladiny znovu rozsvítí a volbu Projevit i v plánu vypnou.": "The DXF Layers card shows the usable layers of all loaded drawings, grouped by file, with the layer colour and element count. A layer that is on (yellow bulb) is used to calculate deviations; a layer that is off is not used. Click a row to turn the layer on or off; the bulb next to the drawing name switches all of its layers. While searching, Turn all on, Turn all off and swap (⇄) apply only to the layers found. The New layers after loading a DXF option sets whether the layers of the next drawing start on (default) or off. When Apply to the plan is on, layers that are off are also hidden in the DXF underlay of the plan; it is off by default and the plan shows the full underlay. The layer state is saved in the browser; Default values and Module reset turn all layers back on and switch Apply to the plan off.",
+ "Karta Hladiny DXF ukazuje použitelné hladiny všech načtených výkresů seskupené podle souboru, s barvou hladiny a počtem prvků. Rozsvícená hladina (žlutá žárovka) se použije pro výpočet odchylek, zhasnutá se nepoužije. Kliknutím na řádek hladinu rozsvítíte nebo zhasnete, žárovka u názvu výkresu přepne všechny jeho hladiny. Tlačítka Vše, Nic a prohození (⇄) platí při hledání jen pro nalezené hladiny. Tlačítko se šipkou (jen v panelu v plánu) zapne výběr hladiny přímo v plánu: kliknutím na čáru nebo text výkresu jeho hladinu zhasnete, zhasnutou rozsvítíte; řádek hladiny pod kurzorem se v seznamu zvýrazní, posun a přiblížení plánu fungují dál a Escape výběr ukončí. Volba Nové hladiny po načtení DXF určí, zda hladiny dalšího výkresu začnou rozsvícené (výchozí), nebo zhasnuté. Zapnutá volba Projevit i v plánu skryje zhasnuté hladiny i v podkladu DXF v plánu; ve výchozím stavu je zapnutá jako v ostatních modulech, po vypnutí plán ukazuje celý podklad. Stav hladin se ukládá v prohlížeči; Výchozí hodnoty i Reset modulu všechny hladiny znovu rozsvítí a volbu Projevit i v plánu zapnou. Stejnou kartu otevře i tlačítko Hladiny DXF (žárovka) v horní liště plánu; obě místa sdílejí jeden stav.": "The DXF Layers card shows the usable layers of all loaded drawings, grouped by file, with the layer colour and element count. A layer that is on (yellow bulb) is used to calculate deviations; a layer that is off is not used. Click a row to turn the layer on or off; the bulb next to the drawing name switches all of its layers. While searching, All, None and swap (⇄) apply only to the layers found. The arrow button (only in the plan panel) turns on layer picking directly in the plan: click a line or text of the drawing to turn its layer off, or back on if it is off; the layer under the cursor is highlighted in the list, panning and zooming the plan keep working and Escape ends picking. The New layers after loading a DXF option sets whether the layers of the next drawing start on (default) or off. When Apply to the plan is on, layers that are off are also hidden in the DXF underlay of the plan; it is on by default as in the other modules; when it is off, the plan shows the full underlay. The layer state is saved in the browser; Default values and Module reset turn all layers back on and switch Apply to the plan on. The DXF layers button (bulb) in the plan's top bar opens the same card; both places share one state.",
  "Potřeba pro odchylky": "Required for deviations",
  "Středy pilot lze určit i bez projektu. Projektované body jsou potřeba pro výpočet odchylek. DXF slouží jako podklad plánu.": "Pile centres can be determined without a design. Design points are required to calculate deviations. DXF serves as a drawing underlay.",
  "DXF nemá žádné viditelné hladiny použitelné pro výpočet.": "The DXF has no visible layers suitable for calculation.",
@@ -17475,7 +17771,8 @@ gmJobResume();
  "Zadejte nezápornou odchylku v milimetrech.": "Enter a non-negative deviation in millimetres.",
  "U nulové odchylky nelze určit směr opravy.": "The correction direction cannot be determined for this zero deviation.",
  "Souřadnice po opravě jsou mimo povolený rozsah.": "The corrected coordinates are outside the allowed range.",
- "V Nástrojích otevře M nebo tlačítko Měření vzdálenosti mezi dvěma body. Nabídka Upravit v půdorysu umožní přesunout popisky, opravit odchylku nebo zadat bod se souřadnicemi Y, X a Z. Poslední změnu v otevřeném nástroji lze vrátit klávesami Ctrl+Z a zopakovat klávesami Ctrl+Y.": "Press M or use Measure under Tools to measure between two points. Edit in plan view lets you move labels, correct a deviation, or add a point with Y, X and Z coordinates. Use Ctrl+Z to undo the last change in the open tool and Ctrl+Y to redo it.",
+ "V Nástrojích otevře M nebo tlačítko Měření vzdálenosti mezi dvěma body. Nabídka Upravit v půdorysu umožní přesunout popisky, opravit odchylku nebo přidat bod. Poslední změnu v otevřeném nástroji lze vrátit klávesami Ctrl+Z a zopakovat klávesami Ctrl+Y.": "In Tools, M or the Measure button opens distance measurement between two points. The Edit menu in plan view lets you move labels, correct a deviation or add a point. The last change in the open tool can be undone with Ctrl+Z and redone with Ctrl+Y.",
+ "Přidat bod (nabídka Upravit ve skupině Nástroje plánu) doplní měřený bod, který v načtených souborech měření chybí. Klik do 2D plánu přidá bod v místě kliknutí; přesné souřadnice zadejte do polí Y a X a stiskněte Enter. Výška Z je nepovinná: bod bez ní má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí. Bod mimo okolí prvků DXF zůstane v tabulce jako odlehlý, stejně jako bod načtený ze souboru. Přidaný bod má kód ZSS a vyhodnotí se vůči DXF stejně jako bod z načteného souboru; v tabulce má označení „přidaný“ a počet přidaných bodů je v logu. Nové body dostanou názvy N1, N2… Seznam v panelu ukazuje výsledek vyhodnocení; klik na bod v seznamu nebo v plánu ho vybere k úpravě, křížek ho odebere. Zpět a Znovu (Ctrl+Z, Ctrl+Y) vrací jednotlivé kroky po dobu otevřeného panelu, Odebrat přidané body smaže všechny. Body se ukládají v prohlížeči; odebrání měření nebo Reset je smaže, původní soubory se nemění.": "Add point (Edit menu in the Plan tools group) adds a measured point that is missing from the loaded measurement files. A click in the 2D plan adds a point at the clicked location; enter exact coordinates in the Y and X fields and press Enter. Elevation Z is optional: a point without it has an empty elevation in the table and is not shown in 3D view. A point outside the DXF search range stays in the table as an outlier, like an imported point. The added point has code ZSS and is evaluated against the DXF just like a point from a loaded file; in the table it is marked “added” and the number of added points is shown in the log. New points are named N1, N2… The list in the panel shows the evaluation result; clicking a point in the list or in the plan selects it for editing, the cross removes it. Undo and Redo (Ctrl+Z, Ctrl+Y) step through changes while the panel is open, Remove added points deletes them all. Points are stored in the browser; removing the measurement or Reset deletes them, the original files are not changed.",
  "Vrátí výchozí volby plánu.": "Restore the default plan options.",
  "Sbalí nebo rozbalí záhlaví plánu.": "Collapse or expand the plan header.",
  "Zobrazí souřadnicovou mřížku. Hodnoty na osách v 2D zůstanou viditelné i bez mřížky.": "Show the coordinate grid. In 2D, axis values stay visible when the grid is off.",
@@ -20928,8 +21225,14 @@ gmJobResume();
  "Ručně přidané body (Upravit → Přidat bod): ⟦0⟧": "Manually added points (Edit → Add point): ⟦0⟧",
  "ručně přidaný bod": "manually added point",
  "bez výšky": "no elevation",
- "Zadejte platné souřadnice Y a X v metrech. Výška Z je nepovinná.": "Enter valid Y and X coordinates in metres. Elevation Z is optional.",
- "Klik do půdorysu přidá bod v místě kliknutí, nebo zadejte Y a X ručně a potvrďte. Výška Z je nepovinná; zadaná předem platí i pro klik do plánu.": "Clicking in plan view adds a point at the clicked location, or enter Y and X manually and confirm. Elevation Z is optional; if entered beforehand, it also applies to a click in the plan.",
+ "Ručně přidaný bod (Upravit → Přidat bod)": "Manually added point (Edit → Add point)",
+ "mimo výběr bodů": "outside point selection",
+ "bez vyhodnocení": "not evaluated",
+ "Bod nevyhovuje výběru bodů (rozsah názvů ve skupině Body a výstup), v tabulce není.": "The point does not match the point selection (name range in Points and output), it is not in the table.",
+ "Bod je v tabulce bez vyhodnocení odchylek.": "The point is in the table without deviation evaluation.",
+ "Bod je v tabulce, ale leží mimo dosah prvků DXF a vyřadil se jako odlehlý.": "The point is in the table, but it lies out of reach of DXF elements and was excluded as an outlier.",
+ "Bod je v tabulce, v DXF se k němu nenašel protějšek.": "The point is in the table, no counterpart was found for it in the DXF.",
+ "Klik do plánu přidá bod v místě kliknutí, nebo zadejte Y, X a volitelně Z a stiskněte Enter. Bod se přidá jen tehdy, když leží v okolí prvku DXF (Okolí vrcholu × mezní odchylka); potom se vyhodnotí a zařadí do tabulky stejně jako bod z načteného souboru měření. Názvy N1, N2…": "Clicking in the plan adds a point at the clicked location, or enter Y, X and optionally Z and press Enter. The point is added only if it lies within the neighbourhood of a DXF element (Vertex range × deviation limit); it is then evaluated and listed in the table just like a point from a loaded measurement file. Names N1, N2…",
  "Výška je nepovinná. Bod bez Z má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí.": "Elevation is optional. A point without Z has an empty elevation in the table and is not shown in 3D view.",
  "Přidat bod lze až po načtení projektu (PD): bod se přiřazuje ke středu z PD.": "A point can be added only after loading the design (PD): the point is matched to a design centre.",
  "V režimu Pouze obvod se zaměřené středy nepoužívají, bod nelze přidat.": "Surveyed centres are not used in Perimeter only mode, so the point cannot be added.",
