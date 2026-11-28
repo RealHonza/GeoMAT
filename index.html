@@ -50,7 +50,7 @@ Postup:
 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GeoMAT</title>
-<script>const APP_VERSION="1.551", APP_DATE="28. 11. 2026";
+<script>const APP_VERSION="1.554", APP_DATE="28. 11. 2026";
 const ZPRT_VER_K="geomat.report.version.v1";
 function zprtDark(){
   // Starší varianty se v Nastavení zobrazovaly jako Světlá.
@@ -1371,7 +1371,8 @@ summary .gm-info[hidden]{display:none}
 }
 
 /* Na úzkém displeji zůstává kresba i měřítko vlevo, ovládání pohledu má vlastní pás vpravo. */
-/* 1.509: Poznámka se zalamuje jen výjimečně – štítek až 38rem (typická poznámka o sloučení skupin a více souborech se vejde na jeden řádek), zalamuje se jen mezi slovy */
+/* 1.509: Poznámka se zalamuje jen výjimečně – štítek až 38rem (typická poznámka o sloučení skupin a více souborech se vejde na jeden řádek), zalamuje se jen mezi slovy.
+   1.554: nejvýš 3 řádky – delší poznámce zvětší šířku zssNoteFit() a tabulka se posouvá do strany */
 #zsstw td.pz .tr-st{display:inline-block;max-inline-size:clamp(16rem,60vw,38rem);white-space:normal;overflow-wrap:break-word;text-wrap:pretty;vertical-align:middle}
 #zsstw td.pz .tr-st::before{margin-inline-end:5px}
 @media (max-width:560px){
@@ -1862,8 +1863,8 @@ body.mzsssk :is(#gm,#rgm,#tpm){display:none!important}body.mhome :is(#gm,#rgm,#t
   <button type="button" class="measure-close" id="kgEditClose" aria-label="Zavřít (Escape)" title="Zavřít (Escape)">×</button>
   <div class="tin-head"><strong id="kgEditTitle"></strong></div>
   <form class="tin-ptform" id="kgEditForm" hidden>
-    <span id="kgEditCoords"><label>Y <input type="text" inputmode="decimal" id="kgAddY" autocomplete="off"></label> <label>X <input type="text" inputmode="decimal" id="kgAddX" autocomplete="off"></label> <label>Z <input type="text" inputmode="decimal" id="kgAddZ" autocomplete="off"></label></span>
-    <label id="kgEditNumber"><span id="kgEditPoint"></span> <input type="text" inputmode="decimal" id="kgFixVal" aria-label="Nová odchylka v mm" autocomplete="off"> mm</label>
+    <span id="kgEditCoords"><label>Y <input type="text" inputmode="decimal" id="kgAddY" autocomplete="off"></label> <label>X <input type="text" inputmode="decimal" id="kgAddX" autocomplete="off"></label> <label>Z <input type="text" inputmode="decimal" id="kgAddZ" autocomplete="off" placeholder="nepovinné" title="Výška je nepovinná. Bod bez Z má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí."></label></span>
+    <label id="kgEditNumber"><span id="kgEditPoint"></span> <input type="text" inputmode="numeric" id="kgFixVal" aria-label="Nová odchylka v mm" autocomplete="off"> mm</label>
     <button type="submit" class="wi">Použít</button>
   </form>
   <div class="tin-foot"><p class="hp" id="kgEditStatus" role="status" aria-live="polite"></p>
@@ -4112,7 +4113,7 @@ function renderTable(){
         p.mem.map(m=>`<label class="chip${m.on?"":" off"}${m.key===worst?" worst":""}" title="${m.on?gmPreviewText("Bod se používá pro výpočet středu. Odškrtnutím ho z výpočtu vyřadíte."):gmPreviewText("Bod je ručně vyřazen z výpočtu. Zaškrtnutím ho vrátíte.")}${m.on&&m.res!=null?gmPreviewText(" Číslo = vzdálenost bodu od vypočtené kružnice."):""}${m.key===worst?gmPreviewText(" Nejhorší bod (nejdál od kružnice)."):""}"><input type="checkbox" data-pt="${esc(m.key)}"${m.on?" checked":""}> ${esc(m.id)}${m.on&&m.res!=null?` <small>${m.res} mm</small>`:""}</label>`).join("")+`</td></tr>`);
     }
   });
-  $("zsstb").innerHTML=rows.join(""); tbSearch(false);
+  $("zsstb").innerHTML=rows.join(""); zssNoteFit(); tbSearch(false);
   tw.scrollTop=st; tw.scrollLeft=sl;
   if(fk){ const el=[...$("zsstb").querySelectorAll("input,button")].find(x=>x.dataset[fk[0]]===fk[1]); if(el) el.focus({preventScroll:true}); }
   const skipVis=allRows.filter(p=>!p.invalid&&skip.has(p.first)).length, memKeys=new Set(allRows.flatMap(p=>p.mem.map(m=>m.key))), offVis=[...off].filter(k=>memKeys.has(k)).length;
@@ -6142,6 +6143,25 @@ function zssAddClose(redraw=true){
  window.addEventListener('keydown',e=>{ if(!ZSS_ADD.on||$('gm').hidden||!(e.ctrlKey||e.metaKey)||e.altKey)return; const t=e.target,tag=t&&t.tagName; if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t?.isContentEditable)return;
   const k=e.key.toLowerCase(); if(k==='z'&&!e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); zssAddUndo(false); } else if(k==='y'||k==='z'&&e.shiftKey){ e.preventDefault(); e.stopImmediatePropagation(); zssAddUndo(true); } },true);
 })();
+/* 1.554: Poznámka v tabulce ZSS pilot se zalamuje nejvýš na 3 řádky. Delší text štítek rozšíří (tabulka se posouvá do strany), aby se vešel do 3 řádků.
+   Měří se jen viditelná tabulka; skrytá se dorovná po zobrazení (ResizeObserver). */
+function zssNoteFit(){
+ const tw=$("zsstw"); if(!tw||!tw.offsetParent) return;
+ for(const s of tw.querySelectorAll("td.pz .tr-st")){
+  const sig=s.textContent+"|"+getComputedStyle(s).fontSize; if(s.dataset.fit===sig) continue;
+  s.style.maxInlineSize=s.style.minInlineSize=s.style.maxWidth="";
+  const cs=getComputedStyle(s), lh=parseFloat(cs.lineHeight)||1.45*parseFloat(cs.fontSize), pad=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)+parseFloat(cs.borderBottomWidth);
+  const lines=()=>(s.getBoundingClientRect().height-pad)/lh;
+  if(lines()>3.5){
+   s.style.whiteSpace="nowrap"; s.style.maxWidth=s.style.maxInlineSize="none"; const full=s.getBoundingClientRect().width; s.style.whiteSpace=s.style.maxWidth=s.style.maxInlineSize="";
+   let w=Math.ceil(full/3)+2*lh;
+   const set=()=>{ s.style.maxWidth="none"; s.style.minInlineSize=s.style.maxInlineSize=Math.ceil(w)+"px"; };   // min i max: tabulka štítek nezúží, místo toho se posouvá do strany
+   set(); for(let k=0;k<30&&lines()>3.5;k++){ w*=1.06; set(); }
+  }
+  s.dataset.fit=sig;
+ }
+}
+if(window.ResizeObserver){ let sz=""; new ResizeObserver(()=>{ const t=$("zsstw"), z=t.clientWidth+"x"+(t.offsetParent?1:0); if(z===sz) return; sz=z; zssNoteFit(); }).observe($("zsstw")); }
 // rozdělená obrazovka jako v DMT a Rovinnosti: od 900 px vpravo plán, vlevo tabulka, pod 900 px plán dole; plán na celou obrazovku zůstává beze změny
 const IC_SPLIT='<rect x="3" y="3.5" width="18" height="17" rx="2" stroke-width="1.8"/><path d="M3 12h18" stroke-width="1.8"/><rect x="5.5" y="14.2" width="13" height="4" rx=".6" fill="currentColor" stroke="none" opacity=".55"/>',
   ZSS_IC_SPLIT='<rect x="3.5" y="3" width="17" height="18" rx="2" stroke-width="1.8"/><path d="M12 3v18" stroke-width="1.8"/><rect x="14.2" y="5.5" width="4" height="13" rx=".6" fill="currentColor" stroke="none" opacity=".55"/>',
@@ -7881,13 +7901,18 @@ const zskAutoOut=r=>r.type==="remote"&&!ZSK_KEEP.has(r.key);
 const zskUsed=r=>!ZSK_OFF.has(r.key)&&!zskAutoOut(r);
 const zskPointKey=q=>q.originalKey??JSON.stringify([q.file,q.line,q.id,q.y,q.x,q.z]);
 const kgEmptyEdits=()=>({label:{},fix:{},add:[]});
-const KG_EDIT={data:kgEmptyEdits(),mode:null,undo:[],redo:[],preview:null,target:null};
-function kgEditCoords(q){return q&&[q.y,q.x,q.z].every(Number.isFinite)&&!rangeWhy(q.y,q.x,q.z);}
+const KG_EDIT={data:kgEmptyEdits(),mode:null,undo:[],redo:[],preview:null,target:null,hover:null,lastClick:null};
+// 1.554: výška Z je u ručně přidaného bodu nepovinná (z = null) jako v ZSS pilot
+function kgEditCoords(q){return q&&[q.y,q.x].every(Number.isFinite)&&(q.z===null||Number.isFinite(q.z))&&!rangeWhy(q.y,q.x,q.z);}
+function kgRoundPosition(y,x,z){
+  const round=v=>Math.round(v*1000)/1000||0;
+  return {y:round(y),x:round(x),z:Number.isFinite(z)?round(z):null};
+}
 function kgEditRead(data){
   const clean=kgEmptyEdits();
   for(const [key,p] of Object.entries(data?.label||{}))if(key.startsWith("[")&&Number.isFinite(p?.x)&&Number.isFinite(p?.y))clean.label[key]={x:p.x,y:p.y};
-  for(const [key,p] of Object.entries(data?.fix||{}))if((key.startsWith("[")||key.startsWith("manual:"))&&kgEditCoords(p))clean.fix[key]={y:p.y,x:p.x,z:p.z};
-  if(Array.isArray(data?.add))clean.add=data.add.filter(q=>kgEditCoords(q)&&typeof q.id==="string"&&/^ZSSN[1-9]\d*$/.test(q.id)).map(q=>({id:q.id,y:q.y,x:q.x,z:q.z}));
+  for(const [key,p] of Object.entries(data?.fix||{}))if((key.startsWith("[")||key.startsWith("manual:"))&&kgEditCoords(p))clean.fix[key]=kgRoundPosition(p.y,p.x,p.z);
+  if(Array.isArray(data?.add))clean.add=data.add.filter(q=>kgEditCoords(q)&&typeof q.id==="string"&&/^ZSSN[1-9]\d*$/.test(q.id)).map(q=>({id:q.id,y:q.y,x:q.x,z:Number.isFinite(q.z)?q.z:null}));
   return clean;
 }
 function zskDupes(pts,multi){   // 1.518: řádky logu jsou odložené (gmDeferredText), po přepnutí jazyka se přeloží; upozornění na duplicity v měření (oba body zůstávají): stejný název i mezi soubory a stejná prostorová poloha do 1 mm
@@ -8577,7 +8602,7 @@ function kg3Scene(W,H){
   const models=projectCADPlanModels("zsssk",true);
   const lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
   const extend=p=>{for(let j=0;j<3;j++){lo[j]=Math.min(lo[j],p[j]);hi[j]=Math.max(hi[j],p[j]);}};
-  for(const {r:{q}} of (planMeasureState("zsssk")?.on?kgRows(true):rows)) extend([q.y,q.x,q.z]);
+  for(const {r:{q}} of (planMeasureState("zsssk")?.on?kgRows(true):rows)) if(Number.isFinite(q.z)) extend([q.y,q.x,q.z]);   // bod bez výšky (ručně přidaný) se v 3D nezobrazuje
   for(const g of models){if(g.visibleBounds){extend(g.visibleBounds.min);extend(g.visibleBounds.max);}}
   if(!Number.isFinite(lo[0]))return null;
   const center=lo.map((v,j)=>(v+hi[j])/2), axes=kg3Axes();
@@ -8585,6 +8610,8 @@ function kg3Scene(W,H){
   for(const y of [lo[0],hi[0]])for(const x of [lo[1],hi[1]])for(const z of [lo[2],hi[2]])corners.push([y,x,z]);
   const fit=gmCameraFit(corners,p=>gmCameraRotate(axes,...local(p)),pl,.5,1.2,1.3);
   const sig=lo.concat(hi).join("|"), prior=KG3.view;
+  if(prior&&KG3_EDIT_KEEP===KG_EDIT.data){ if(prior.sig!==sig){ prior.fit=fit.scale; prior.sig=sig; } }   // 1.554: po úpravě bodů zůstane pohled
+  KG3_EDIT_KEEP=null;
   const v=prior&&prior.sig===sig?prior:{cx:fit.cx,cy:fit.cy,s:fit.scale,fit:fit.scale,sig};
   if(v.fit!==fit.scale){v.s*=fit.scale/v.fit;v.fit=fit.scale;}
   KG3.view=v;
@@ -8601,7 +8628,7 @@ function kg3Scene(W,H){
   gmAppend(items,projectCADScene("zsssk",true,project,pl,v.s));
   const rad=Math.max(4,4*fs),ordered=[];
   for(const {r,i} of rows){
-    const {q}=r,p=project([q.y,q.x,q.z]);
+    const {q}=r; if(!Number.isFinite(q.z))continue; const p=project([q.y,q.x,q.z]);
     if(p.x<pl.x||p.x>pl.x+pl.w||p.y<pl.y||p.y>pl.y+pl.h)continue;
     ordered.push({r,i,px:p.x,py:p.y,depth:p.depth,rad});
   }
@@ -8661,36 +8688,47 @@ function kgScene(W,H,v){
   // obsazená místa pro popisky (body a šipky), aby se texty nepřekrývaly
   const occ=labelGrid(32), near=(x,y,m)=>x>=pl.x-m&&x<=pl.x+pl.w+m&&y>=pl.y-m&&y<=pl.y+pl.h+m, inPl=b=>b.x>=pl.x&&b.y>=pl.y&&b.x+b.w<=pl.x+pl.w&&b.y+b.h<=pl.y+pl.h;
   const tw=(t,sz)=>pdfWidth(pdfTxt(t),sz)*1.04, cd=Math.max(4,4*fs), AL=Math.max(28,52*fb)*ax, sw=1.6*fb*Math.sqrt(ax);
-  const vis=[], labels=[], editLabels=[];
+  const vis=[], labels=[], editLabels=[], deviationHits=[];
+  const scale=planScale(pl,s,fs,"kg"), scaleTop=scale[0]?.rs[0][1]??pl.y+pl.h;
   rows.forEach(({r,i,point})=>{ const px=SX(r.q.y), py=SY(r.q.x); if(!near(px,py,AL+60)) return;
     if(point){
       const col=kgPointColor(r);
       if(!zskUsed(r)) it.push({t:"circ",x:px,y:py,r:cd,fill:"#fff",c:col,sw:1.5});
       else { it.push({t:"line",x1:px-cd,y1:py-cd,x2:px+cd,y2:py+cd,c:col,sw:1.3*fs}); it.push({t:"line",x1:px-cd,y1:py+cd,x2:px+cd,y2:py-cd,c:col,sw:1.3*fs}); }
       occ.add({x:px-cd-2,y:py-cd-2,w:2*cd+4,h:2*cd+4});
-      if(KGSEL===i) it.push({t:"circ",x:px,y:py,r:Math.max(9,10*fs),c:"#f59e0b",sw:2.2});
       pts.push({r,i,px,py,rad:Math.max(6,cd+2)});
     }
     const av=[]; if(zskUsed(r)) r.c.forEach((c,component)=>{ if(!c) return; const d=Math.hypot(c.vy,c.vx), cl=zssPdColor(c.mm,lim);
       if(d<0.0005){ av.push({c,component,cl,ux:0,uy:0,tx:px,ty:py,zero:true}); return; }
       const ux=-c.vy/d, uy=c.vx/d, ax0=SX(r.q.y-c.vy), ay0=SY(r.q.x-c.vx), tx=ax0+ux*AL, ty=ay0+uy*AL;
       arrow(it,ax0,ay0,tx,ty,cl,sw);
+      deviationHits.push({i,x1:ax0,y1:ay0,x2:tx,y2:ty});
       for(let k=1;k<=4;k++){ const qx=ax0+ux*AL*k/4, qy=ay0+uy*AL*k/4; occ.add({x:qx-3,y:qy-3,w:6,h:6}); }
       av.push({c,component,cl,ux,uy,tx,ty}); });
-    vis.push({r,px,py,av,point}); });
+    if(KGSEL===i)it.push({t:"circ",x:px,y:py,r:Math.max(9,10*fs),c:"#f59e0b",sw:2.2});
+    vis.push({r,i,px,py,av,point}); });
   const place=(cands,text,sz,c,edit)=>{ const w=tw(text,sz), h=sz*1.25;
     const offset=edit&&(KG_EDIT.preview?.key===edit.key?KG_EDIT.preview.offset:KG_EDIT.data.label[edit.key]);
-    for(const base of offset?cands.slice(0,1):cands){
-      const p=offset?{x:base.x+offset.x*fs,y:base.y+offset.y*fs,a:base.a}:base;
-      const x=p.a==="end"?p.x-w:p.a==="middle"?p.x-w/2:p.x,b={x,y:p.y-h*.8,w,h};
-      if(!inPl(b)||(!offset&&occ.hit(b)))continue;
-      occ.add(b); labels.push({t:"text",x:p.x,y:p.y,s:text,size:sz,c,a:p.a,halo:true});
-      if(edit)editLabels.push({...edit,b,fs,offset:{x:(p.x-cands[0].x)/fs,y:(p.y-cands[0].y)/fs}});
+    const align=a=>a==="end"?w:a==="middle"?w/2:0, first=cands[0];
+    const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+    for(const base of offset?[first]:cands){
+      const anchor=align(base.a);
+      const x=offset?clamp(base.x-anchor+offset.x*fs,pl.x+2,pl.x+pl.w-w-2):base.x-anchor;
+      const y=offset?clamp(base.y-h*.8+offset.y*fs,pl.y+2,scaleTop-h-2):base.y-h*.8;
+      const b={x,y,w,h};
+      if(!inPl(b)||edit&&y+h>scaleTop||(!offset&&occ.hit(b)))continue;
+      occ.add(b);
+      if(edit&&KG_EDIT.mode==="label"){
+        const active=edit.key===KG_EDIT.hover||edit.key===KG_EDIT.preview?.key;
+        labels.push({t:"rect",x:x-1,y:y-1,w:w+2,h:h+2,c:active?"#2563eb":"#94a3b8",sw:active?1.6:0.8});
+      }
+      labels.push({t:"text",x:x+anchor,y:y+h*.8,s:text,size:sz,c,a:base.a,halo:true});
+      if(edit)editLabels.push({...edit,b,fs,offset:{x:(x-first.x+align(first.a))/fs,y:(y-first.y+h*.8)/fs}});
       return true;
     }
     return false; };
   const sz=10.5*fs;
-  if($("kgdv").checked) vis.forEach(o=>o.av.forEach(a=>{ const t=Math.round(a.c.mm)+" mm", g=4*fs+2, edit={r:o.r,component:a.component,key:JSON.stringify([o.r.key,a.c.lab])};
+  if($("kgdv").checked) vis.forEach(o=>o.av.forEach(a=>{ const t=Math.round(a.c.mm)+" mm", g=4*fs+2, edit={r:o.r,i:o.i,component:a.component,key:JSON.stringify([o.r.key,a.c.lab])};
     if(a.zero){ place([{x:o.px+cd+3,y:o.py-cd-2,a:"start"},{x:o.px-cd-3,y:o.py-cd-2,a:"end"},{x:o.px+cd+3,y:o.py+cd+sz,a:"start"}],t,sz,a.cl,edit); return; }
     const hx=a.ux>0.35?"start":a.ux<-0.35?"end":"middle", bx=a.tx+a.ux*g, by=a.ty+a.uy*g+(a.uy>0.35?sz*.85:a.uy<-0.35?0:sz*.35);
     const mx=(o.px+a.tx)/2, my=(o.py+a.ty)/2, nx=-a.uy, ny=a.ux;
@@ -8706,7 +8744,7 @@ function kgScene(W,H,v){
   fr.push({t:"text",x:pl.x,y:52*hs,s:gmPreviewText(HEAD3),size:10*hs,c:GC.gray,a:"start"});
   const hd=$("kghd").checked;
   if(hd) fr.push({t:"text",x:pl.x+pl.w,y:16*hs,s:gmPreviewText("Měření: ")+listName((ZK.files||[]).map(f=>({n:f.n})),60)+", "+gmDateText(new Date()),size:8.5*hs,c:GC.gray,a:"end",k:"hlavicka"});
-  fr.push(...planScale(pl,s,fs,"kg"));
+  fr.push(...scale);
   if($("kgll").checked&&leg.LG.length){ const {ls,lsz,LG,mw,colW,cols,rowH,nrows}=leg, yb=pl.y+pl.h;
     const cross=(cx,cy,c)=>{ const d=4.5*ls; fr.push({t:"line",x1:cx-d,y1:cy-d,x2:cx+d,y2:cy+d,c,sw:1.5*ls}); fr.push({t:"line",x1:cx-d,y1:cy+d,x2:cx+d,y2:cy-d,c,sw:1.5*ls}); };
     LG.forEach((g,k)=>{ const x=pl.x+(k%cols)*colW, cx=x+9*ls, cy=yb+17*ls+Math.floor(k/cols)*rowH;
@@ -8718,7 +8756,7 @@ function kgScene(W,H,v){
     if(hd) fr.push({t:"text",x:pl.x,y:Math.max(H-14-kgLogoBand(),sepY+13*ls),s:gmPreviewText("Šipka: od projektu ke skutečnosti (délka orientační), u ní odchylka v mm · JTSK [m]: Y doleva (západ), X dolů (jih)"),size:8.5*ls,c:GC.gray,a:"start",k:"hlavicka"}); }
   if(hd) fr.push({t:"text",x:W-16,y:H-14,s:gmPreviewText("Autor: Jan Bartůněk · GeoMAT verze ")+APP_VERSION,size:8*hs,c:GC.gray,a:"end",k:"hlavicka"});
   if($("kglogo").checked) fr.push(logoItem(W-18,H-(hd?20:8)));
-  const out=projectCADAdd2D({W,H,pl,items:it,frame:fr},'zsssk',v,{}); out.pts=pts; out.editLabels=editLabels; return out;
+  const out=projectCADAdd2D({W,H,pl,items:it,frame:fr},'zsssk',v,{}); out.pts=pts; out.editLabels=editLabels; out.deviationHits=deviationHits; out.deviationBottom=scaleTop; return out;
 }
 function kgRender(){
   projectCADPlanUI('zsssk');
@@ -8729,9 +8767,13 @@ function kgRender(){
   planNavFit("kg",box,kgPlot(W,H,kgLegend(W,H,kgRows(true))));
   if(!kgRows(true).length&&!projectCADPlanModels("zsssk").some(g=>g.visibleBounds)){ KGP=[]; KGV=null; KGZ=null; KGSIG=""; KG2SC=null; box.innerHTML=gmPreviewText("<div style=\"padding:20px;color:var(--mut)\">Žádný bod nevyhovuje zobrazení plánu. Změňte filtr nebo nastavení zobrazení měřených bodů.</div>"); planMeasureRender("zsssk"); planHistoryUI("zsssk"); return; }
   const f=kgFit(W,H), size=W+"×"+H;
-  if(size!==KG_SIZE){ KG_SIZE=size; KGV=null; }
+  const keep=KG_EDIT_KEEP===KG_EDIT.data&&KGV?{...KGV}:null; KG_EDIT_KEEP=null;   // 1.554: po úpravě bodů (Přidat bod, Posunout, Zpět) zůstane přiblížení i střed
+  const sameW=KG_SIZE.split("×")[0]===String(W), held=KGV&&KGZ&&sameW&&f.sig===KGSIG?{...KGV}:null;   // 1.554: přiblížený plán: změna výšky panelem Upravit nemění měřítko
+  if(size!==KG_SIZE){ KG_SIZE=size; KGV=held; }
   KG_FIT_SCALE=f.s;
   if(f.sig!==KGSIG){ KGSIG=f.sig; KGV=null; KGZ=null; }   // jiné body: pohled se znovu přizpůsobí
+  if(held&&!keep) KGZ={z:KGV.s/f.s,cy:KGV.cy,cx:KGV.cx};
+  if(keep){ KGV=keep; KGZ={z:KGV.s/f.s,cy:KGV.cy,cx:KGV.cx}; }   // jiné body: pohled se znovu přizpůsobí; 1.554: po úpravě bodů (Přidat bod, Posunout, Zpět) zůstane přiblížení
   if(!KGV){ KGV={cy:f.cy,cx:f.cx,s:f.s}; if(KGZ){ KGV.s*=KGZ.z; KGV.cy=KGZ.cy; KGV.cx=KGZ.cx; } }
   const sc=kgScene(W,H,KGV); KGP=sc.pts;
   const c=rgCanvas(box); c.style.width=W+"px"; c.style.height=H+"px"; const ctx=planCanvasPrepare(c,W,H); KG2SC=sc; if(ctx) planCanvasScene(ctx,planScreenScene(sc,"kg"),{seams:true}); planMeasureRender("zsssk"); planHistoryUI("zsssk");
@@ -8749,8 +8791,8 @@ function kgSelect(i,from){
       tr.scrollIntoView({block:"nearest"}); } }
   if(from==="x"||$("kgm").hidden) return;
   if(KGSEL!==null&&from!=="plan"&&KG3.active&&KG3.view&&KG2SC?.project){
-    const {q}=ZSK_RES.rows[KGSEL], {pl,project}=KG2SC, p=project([q.y,q.x,q.z]);
-    if(p.x<pl.x||p.x>pl.x+pl.w||p.y<pl.y||p.y>pl.y+pl.h)gmCameraPan(KG3.view,KG3.view.s,pl.x+pl.w/2-p.x,pl.y+pl.h/2-p.y);
+    const {q}=ZSK_RES.rows[KGSEL], {pl,project}=KG2SC, p=project([q.y,q.x,Number.isFinite(q.z)?q.z:NaN]);
+    if(Number.isFinite(p.x)&&Number.isFinite(p.y)&&(p.x<pl.x||p.x>pl.x+pl.w||p.y<pl.y||p.y>pl.y+pl.h))gmCameraPan(KG3.view,KG3.view.s,pl.x+pl.w/2-p.x,pl.y+pl.h/2-p.y);
   }
   if(KGSEL!==null&&from!=="plan"&&KGV&&!KG3.active){ const r=ZSK_RES.rows[KGSEL], box=$("kgsvg");
     if(r){ const pl=kgPlot(box.clientWidth,box.clientHeight,kgLegend(box.clientWidth,box.clientHeight,kgRows(true))), mx=pl.x+pl.w/2+(KGV.cy-r.q.y)*KGV.s, my=pl.y+pl.h/2+(r.q.x-KGV.cx)*KGV.s;
@@ -8761,7 +8803,7 @@ function kgPlanSync(){ const has=kgCan();
   [$("zsskgbs"),$("zsskgb")].forEach(b=>{ b.disabled=!has; });
   if(has&&kgPend){ kgPend=false; if(kgWant){ kgSetView(kgWant); return; } }
   if(!has){ if(!kgPend&&kgState()) kgSetView(0); KG3.active=false; KG3.view=null; kgSync(); return; }
-  if(KGSEL!==null&&!kgRows().some(({i})=>i===KGSEL)) kgSelect(null,"x");
+  if(KGSEL!==null&&!kgRows(!KG3.active).some(({i})=>i===KGSEL)) kgSelect(null,"x");
   if(KGSEL!==null){ const tr=$("zssktb").querySelector(`tr[data-zk="${KGSEL}"]`); if(tr) tr.classList.add("sel"); }
   kgSync(); kgRender(); }
 function kgRefresh(){ try{ kgSync(); kgRender(); }catch(e){ gmDiagnostic&&gmDiagnostic('zsssk.plan.render',e); } }   // po přepnutí do modulu ZSS SK se plán přepočítá na skutečnou velikost
@@ -8776,7 +8818,7 @@ function kgOptSync(){ for(const [r,n] of [["kgt","kgtn"],["kga","kgan"]]){ if(do
   const ok=points===KG_POINT_DEFAULT&&Object.entries(KG_DEF).filter(([id])=>!$(id).disabled).every(([id,v])=>$(id).checked===v)&&Math.round(kgPct())===100&&Math.round(kgApct())===100&&($("kgproject").disabled||$("kgproject").checked);
   gmResetIdle($("kgdef"),ok,"Volby plánu, velikost písma i šipek už jsou na výchozích hodnotách, není co vracet."); }
 const kgOptCh=()=>{
-  if(KGSEL!==null&&!kgRows().some(({i})=>i===KGSEL)) kgSelect(null,"x");
+  if(KGSEL!==null&&!kgRows(!KG3.active).some(({i})=>i===KGSEL)) kgSelect(null,"x");
   kgOptSave(); kgOptSync(); kgRequestRender();
 };
 $("kgall").onclick=()=>{
@@ -8814,16 +8856,16 @@ if(window.ResizeObserver){ let sz=''; new ResizeObserver(()=>{ const b=$("kgsvg"
   h.addEventListener("pointerup",end); h.addEventListener("pointercancel",end);
   h.addEventListener("dblclick",()=>{ setKsp(50); saveKsp(); kgRequestRender(); }); }
 const KG_EDIT_MODES={
-  label:{button:"kgLabelEdit",title:"Přesunout popisky",reset:"Obnovit automatické polohy",hint:"Přetáhněte popisek odchylky do nové polohy."},
-  fix:{button:"kgFixEdit",title:"Opravit odchylky",reset:"Vrátit všechny opravy",hint:"Dvojklikem na popisek zadejte novou hodnotu v mm. Přepočítají se polohové odchylky i přiřazení k projektu."},
-  add:{button:"kgAddEdit",title:"Přidat bod",reset:"Odebrat přidané body",hint:"Kliknutím do půdorysu vyplňte Y a X, nebo je zadejte ručně. Doplňte výšku Z v metrech a potvrďte."}
+  label:{button:"kgLabelEdit",title:"Přesunout popisky",reset:"Obnovit automatické polohy",hint:"Přetáhněte popisek odchylky. Dvojklik vrátí jeho automatickou polohu."},
+  fix:{button:"kgFixEdit",title:"Opravit odchylky",reset:"Vrátit všechny opravy",hint:"Dvojklikem na popisek zadejte novou odchylku v milimetrech. Hodnota i opravené souřadnice se zaokrouhlí na celé milimetry."},
+  add:{button:"kgAddEdit",title:"Přidat bod",reset:"Odebrat přidané body",hint:"Klik do půdorysu přidá bod v místě kliknutí, nebo zadejte Y a X ručně a potvrďte. Výška Z je nepovinná; zadaná předem platí i pro klik do plánu."}
 };
-function kgEditUi(message){
+function kgEditUi(message,params=[]){
   const {mode,data,undo,redo,target}=KG_EDIT;
   if(!mode)return;
   const cfg=KG_EDIT_MODES[mode];
   $("kgEditTitle").textContent=gmPreviewText(cfg.title);
-  $("kgEditStatus").textContent=gmPreviewText(message||cfg.hint);
+  $("kgEditStatus").textContent=gmPreviewText(message||cfg.hint,message?params:[]);
   $("kgEditUndo").disabled=!undo.length;
   $("kgEditRedo").disabled=!redo.length;
   $("kgEditReset").disabled=!Object.keys(data[mode]).length;
@@ -8833,7 +8875,7 @@ function kgEditUi(message){
   $("kgEditForm").hidden=mode==="label"||mode==="fix"&&!target;
 }
 function kgEditClose(){
-  KG_EDIT.mode=null; KG_EDIT.target=null; KG_EDIT.preview=null;
+  KG_EDIT.mode=null; KG_EDIT.target=null; KG_EDIT.preview=null; KG_EDIT.hover=null; KG_EDIT.lastClick=null;
   $("kgEditPanel").hidden=true;
   for(const {button} of Object.values(KG_EDIT_MODES))$(button).setAttribute("aria-pressed","false");
 }
@@ -8851,13 +8893,14 @@ function kgEditOpen(mode){
   if(mode==="add")$("kgAddY").focus();
   else $("kgEditClose").focus({preventScroll:true});
 }
+var KG_EDIT_KEEP=null, KG3_EDIT_KEEP=null;   // 1.554: úprava bodů nemění přiblížení plánu (žádné „F“)
 function kgEditApply(data){
   const changedPoints=KG_EDIT.data.fix!==data.fix||KG_EDIT.data.add!==data.add;
   KG_EDIT.data=data;
   KG_EDIT.target=null;
   if(KGV)kgKeep();
   kgOptSave();
-  if(changedPoints){ZSK_PT.selected=null;ZSK_RES.stamp=null;zskRender();}
+  if(changedPoints){KG_EDIT_KEEP=KG3_EDIT_KEEP=data;ZSK_PT.selected=null;ZSK_RES.stamp=null;zskRender();}
   else kgRender();
   kgEditUi();
 }
@@ -8883,33 +8926,58 @@ function kgEditReset(){
 function kgEditSubmit(){
   const {mode,data,target}=KG_EDIT;
   if(mode==="add"){
-    const [y,x,z]=["kgAddY","kgAddX","kgAddZ"].map(id=>{const value=$(id).value.trim();return value?gmDecimal(value):NaN;});
-    if(!kgEditCoords({y,x,z})){kgEditUi("Zadejte platné souřadnice Y, X a Z v metrech.");return;}
+    const [y,x,z]=["kgAddY","kgAddX","kgAddZ"].map(id=>{const value=$(id).value.trim();return value?gmDecimal(value):id==="kgAddZ"?null:NaN;});
+    if(!kgEditCoords({y,x,z})){kgEditUi("Zadejte platné souřadnice Y a X v metrech. Výška Z je nepovinná.");return;}
     const ids=new Set(ZK.pts.map(p=>p.id).concat(data.add.map(p=>p.id)));
     let n=1; while(ids.has("ZSSN"+n))n++;
-    kgEditCommit({...data,add:[...data.add,{id:"ZSSN"+n,y,x,z}]});
+    const r3=v=>v===null?null:Math.round(v*1000)/1000||0, id="ZSSN"+n;
+    kgEditCommit({...data,add:[...data.add,{id,y:r3(y),x:r3(x),z:r3(z)}]});
+    kgEditUi("Přidán bod ⟦0⟧ (⟦1⟧).",[id,z===null?gmPreviewText("bez výšky"):"Z "+gmDec(r3(z).toFixed(3))+" m"]);
     for(const id of ["kgAddY","kgAddX","kgAddZ"])$(id).value="";
     $("kgAddY").focus(); return;
   }
   if(mode!=="fix"||!target)return;
   const {r,component}=target;
   if(!ZSK_RES.rows.includes(r)){KG_EDIT.target=null;kgEditUi("Výsledky se změnily. Vyberte popisek znovu.");return;}
-  const c=r.c[component],value=$("kgFixVal").value.trim(),mm=gmDecimal(value);
-  if(!value||!Number.isFinite(mm)||mm<0){kgEditUi("Zadejte nezápornou odchylku v milimetrech.");return;}
+  const c=r.c[component],input=$("kgFixVal"),entered=gmDecimal(input.value);
+  if(!Number.isFinite(entered)||entered<0){kgEditUi("Zadejte nezápornou odchylku v milimetrech.");return;}
+  const mm=Math.round(entered);
+  input.value=String(mm);
   const magnitude=Math.hypot(c.vy,c.vx),basis=magnitude>1e-9?[c.vy/magnitude,c.vx/magnitude]:c.normal;
   if(!basis&&mm!==0){kgEditUi("U nulové odchylky nelze určit směr opravy.");return;}
-  const delta=(mm-c.mm)/1000,position={y:r.q.y+delta*(basis?.[0]||0),x:r.q.x+delta*(basis?.[1]||0),z:r.q.z};
+  const delta=(mm-c.mm)/1000;
+  const position=kgRoundPosition(r.q.y+delta*(basis?.[0]||0),r.q.x+delta*(basis?.[1]||0),r.q.z);
   if(!kgEditCoords(position)){kgEditUi("Souřadnice po opravě jsou mimo povolený rozsah.");return;}
-  if(Math.abs(delta)>1e-10)kgEditCommit({...data,fix:{...data.fix,[r.key]:position}});
+  if(position.y!==r.q.y||position.x!==r.q.x||position.z!==r.q.z)kgEditCommit({...data,fix:{...data.fix,[r.key]:position}});
+}
+function kgCanvasPoint(x,y){
+  const box=$("kgsvg"),rect=box.getBoundingClientRect();
+  return [x-rect.left-(box.clientLeft||0),y-rect.top-(box.clientTop||0)];
 }
 function kgEditLabelAt(x,y){
-  const rect=$("kgsvg").getBoundingClientRect(),px=x-rect.left,py=y-rect.top;
+  const [px,py]=kgCanvasPoint(x,y);
   const labels=KG2SC?.editLabels||[];
   for(let i=labels.length-1;i>=0;i--){
     const L=labels[i],b=L.b;
     if(px>=b.x-2&&px<=b.x+b.w+2&&py>=b.y-2&&py<=b.y+b.h+2)return L;
   }
   return null;
+}
+function kgDeviationAt(x,y){
+  const scene=KG2SC;
+  if(KG3.active||!scene)return null;
+  const [px,py]=kgCanvasPoint(x,y),{pl}=scene;
+  if(px<pl.x||px>pl.x+pl.w||py<pl.y||py>=scene.deviationBottom)return null;
+  const label=kgEditLabelAt(x,y);
+  if(label)return label.i;
+  let best=null, distance=7;
+  for(const {i,x1,y1,x2,y2} of scene.deviationHits){
+    const dx=x2-x1,dy=y2-y1,len2=dx*dx+dy*dy;
+    const t=len2?Math.max(0,Math.min(1,((px-x1)*dx+(py-y1)*dy)/len2)):0;
+    const d=Math.hypot(px-x1-t*dx,py-y1-t*dy);
+    if(d<distance){best=i;distance=d;}
+  }
+  return best;
 }
 for(const [mode,{button}] of Object.entries(KG_EDIT_MODES))$(button).onclick=()=>kgEditOpen(mode);
 $("kgEditClose").onclick=()=>{kgEditClose();kgRender();$("kgEditBtn").focus({preventScroll:true});};
@@ -8922,14 +8990,15 @@ $("kgsvg").addEventListener("dblclick",e=>{
   const hit=kgEditLabelAt(e.clientX,e.clientY); if(!hit)return;
   KG_EDIT.target=hit;
   $("kgEditPoint").textContent=hit.r.q.id+" · "+kgLab(hit.r.c[hit.component].lab);
-  $("kgFixVal").value=gmDec(hit.r.c[hit.component].mm.toFixed(3));
+  $("kgFixVal").value=String(Math.round(hit.r.c[hit.component].mm));
   kgEditUi(); $("kgFixVal").focus(); $("kgFixVal").select();
 });
 
 // zoom kolečkem, posun tažením, bublina při najetí, klik = označit bod
 (()=>{ const box=$("kgsvg"), tip=$("kgtip"); let drag=null;
   const plotOf=()=>kgPlot(box.clientWidth,box.clientHeight,kgLegend(box.clientWidth,box.clientHeight,kgRows(true)));
-  const hitAt=(cx,cy)=>{ const r=box.getBoundingClientRect(), mx=cx-r.left, my=cy-r.top; let best=null, bd=1e9;
+  const hitAt=(cx,cy)=>{ const [mx,my]=kgCanvasPoint(cx,cy),pl=KG2SC?.pl; let best=null, bd=1e9;
+    if(!pl||mx<pl.x||mx>pl.x+pl.w||my<pl.y||my>= (KG3.active?pl.y+pl.h:KG2SC.deviationBottom))return null;
     for(let i=KGP.length-1;i>=0;i--){ const p=KGP[i], d=Math.hypot(mx-p.px,my-p.py); if(d<=Math.max(p.rad+4,10)&&d<bd){ bd=d; best=p; } } return best; };
   const tipHtml=p=>{ const r=p.r, lim=ZSK_EVAL.lim;
     return `<b>${esc(r.q.id)}</b> <span class="m">(${esc(zskType(r))})</span><br>Y ${gmDec(r.q.y.toFixed(3))}, X ${gmDec(r.q.x.toFixed(3))}, Z ${gmDec(r.q.z.toFixed(3))} m`
@@ -8952,6 +9021,7 @@ $("kgsvg").addEventListener("dblclick",e=>{
     const label=!KG3.active&&!e.shiftKey&&KG_EDIT.mode==="label"?kgEditLabelAt(e.clientX,e.clientY):null;
     drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,rotate:e.shiftKey,label,startX:e.clientX,startY:e.clientY};
     box.setPointerCapture(e.pointerId); tip.hidden=true;
+    if(label){e.preventDefault();KG_EDIT.hover=label.key;box.style.cursor="move";kgRequestRender();}
   });
   box.addEventListener("pointermove",e=>{
     if(drag){
@@ -8973,19 +9043,41 @@ $("kgsvg").addEventListener("dblclick",e=>{
       box.style.cursor="grabbing"; kgRequestRender(); return;
     }
     if(e.pointerType==="touch"){ tip.hidden=true; return; }
+    if(KG_EDIT.mode==="label"){
+      const label=kgEditLabelAt(e.clientX,e.clientY),key=label?.key??null;
+      box.style.cursor=label?"move":"grab";tip.hidden=true;
+      if(key!==KG_EDIT.hover){KG_EDIT.hover=key;kgRequestRender();}
+      return;
+    }
     { const r=box.getBoundingClientRect(), t=planCanvasTitleAt(KG2SC,e.clientX-r.left,e.clientY-r.top); if(box.title!==t) box.title=t; }
-    const p=hitAt(e.clientX,e.clientY); if(!p){ hideTip(); return; }
+    const p=hitAt(e.clientX,e.clientY); if(!p){ hideTip(); if(!KG_EDIT.mode&&kgDeviationAt(e.clientX,e.clientY)!==null)box.style.cursor="pointer"; return; }
     box.style.cursor="pointer"; tip.innerHTML=tipHtml(p); tip.hidden=false;
     const w=tip.offsetWidth, h=tip.offsetHeight; tip.style.left=Math.max(4,Math.min(innerWidth-w-4,e.clientX+14))+"px"; tip.style.top=Math.max(4,(e.clientY+16+h>innerHeight?e.clientY-h-12:e.clientY+16))+"px"; });
-  box.addEventListener("pointerleave",hideTip);
+  box.addEventListener("pointerleave",()=>{hideTip();if(!drag&&KG_EDIT.hover){KG_EDIT.hover=null;kgRequestRender();}});
   const cancel=e=>{ if(drag?.id===e.pointerId){ drag=null; KG_EDIT.preview=null; hideTip(); kgRequestRender(); } };
   box.addEventListener("pointercancel",cancel);
   box.addEventListener("lostpointercapture",cancel);
   box.addEventListener("pointerup",e=>{
     if(drag?.id!==e.pointerId)return;
-    const tapped=!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<=4,move=KG_EDIT.preview;
+    const tapped=!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<=4,{label,startX,startY}=drag;
     drag=null; KG_EDIT.preview=null; box.style.cursor="grab";
-    if(move&&KG_EDIT.mode==="label"){kgEditCommit({...KG_EDIT.data,label:{...KG_EDIT.data.label,[move.key]:move.offset}});return;}
+    if(label&&KG_EDIT.mode==="label"){
+      const dx=e.clientX-startX,dy=e.clientY-startY;
+      if(Math.hypot(dx,dy)>3){
+        KG_EDIT.lastClick=null;
+        kgEditCommit({...KG_EDIT.data,label:{...KG_EDIT.data.label,[label.key]:{x:label.offset.x+dx/label.fs,y:label.offset.y+dy/label.fs}}});
+      }else{
+        const last=KG_EDIT.lastClick,now=Date.now();
+        if(last?.key===label.key&&now-last.time<450&&Math.hypot(startX-last.x,startY-last.y)<6){
+          KG_EDIT.lastClick=null;
+          if(Object.hasOwn(KG_EDIT.data.label,label.key)){
+            const positions={...KG_EDIT.data.label};delete positions[label.key];
+            kgEditCommit({...KG_EDIT.data,label:positions});
+          }
+        }else KG_EDIT.lastClick={key:label.key,time:now,x:startX,y:startY};
+      }
+      return;
+    }
     if(!tapped)return;
     kgRequestRender.flush();
     if(planMeasurePick("zsssk",e.clientX,e.clientY))return;
@@ -8995,13 +9087,13 @@ $("kgsvg").addEventListener("dblclick",e=>{
         if(x>=pl.x&&x<=pl.x+pl.w&&y>=pl.y&&y<=pl.y+pl.h){
           $("kgAddY").value=gmDec((KGV.cy-(x-pl.x-pl.w/2)/KGV.s).toFixed(3));
           $("kgAddX").value=gmDec((KGV.cx+(y-pl.y-pl.h/2)/KGV.s).toFixed(3));
-          $("kgAddZ").focus();
+          kgEditSubmit();   // 1.554: klik bod rovnou přidá jako v ZSS pilot; výška zadaná předem platí i pro klik
         }
       }
       return;
     }
-    const p=hitAt(e.clientX,e.clientY);
-    if(p) kgSelect(p.i,"plan"); else if(KGSEL!==null) kgSelect(null,"plan");
+    const selected=hitAt(e.clientX,e.clientY)?.i??kgDeviationAt(e.clientX,e.clientY);
+    if(selected!==null||KGSEL!==null)kgSelect(selected,"plan");
   });
 })();
 // Plan shortcuts must not intercept editable controls or another dialog.
@@ -17378,10 +17470,8 @@ gmJobResume();
  "Zobrazí výšky Z měřených bodů v metrech na tři desetinná místa. Lze kombinovat s čísly bodů.": "Show measured point elevations in metres to three decimal places. Can be combined with point names.",
  "Logo firmy (stejné jako v záhlaví Protokolu PDF) vpravo dole pod plánem, nad hlavičkou, ve 2D i 3D. Výchozí vypnuto.": "Show the company logo at the bottom right, above the footer, in 2D and 3D. Off by default.",
  "Výsledky se změnily. Vyberte popisek znovu.": "The results changed. Select the label again.",
- "Přetáhněte popisek odchylky do nové polohy.": "Drag the deviation label to its new position.",
- "Dvojklikem na popisek zadejte novou hodnotu v mm. Přepočítají se polohové odchylky i přiřazení k projektu.": "Double-click a label to enter a new value in mm. Plan deviations and design matches will be recalculated.",
- "Kliknutím do půdorysu vyplňte Y a X, nebo je zadejte ručně. Doplňte výšku Z v metrech a potvrďte.": "Click in plan view to fill in Y and X, or enter them manually. Enter elevation Z in metres and confirm.",
- "Zadejte platné souřadnice Y, X a Z v metrech.": "Enter valid Y, X and Z coordinates in metres.",
+ "Přetáhněte popisek odchylky. Dvojklik vrátí jeho automatickou polohu.": "Drag a deviation label. Double-click it to restore its automatic position.",
+ "Dvojklikem na popisek zadejte novou odchylku v milimetrech. Hodnota i opravené souřadnice se zaokrouhlí na celé milimetry.": "Double-click a label to enter a new deviation in millimetres. The value and corrected coordinates are rounded to whole millimetres.",
  "Zadejte nezápornou odchylku v milimetrech.": "Enter a non-negative deviation in millimetres.",
  "U nulové odchylky nelze určit směr opravy.": "The correction direction cannot be determined for this zero deviation.",
  "Souřadnice po opravě jsou mimo povolený rozsah.": "The corrected coordinates are outside the allowed range.",
@@ -20838,6 +20928,9 @@ gmJobResume();
  "Ručně přidané body (Upravit → Přidat bod): ⟦0⟧": "Manually added points (Edit → Add point): ⟦0⟧",
  "ručně přidaný bod": "manually added point",
  "bez výšky": "no elevation",
+ "Zadejte platné souřadnice Y a X v metrech. Výška Z je nepovinná.": "Enter valid Y and X coordinates in metres. Elevation Z is optional.",
+ "Klik do půdorysu přidá bod v místě kliknutí, nebo zadejte Y a X ručně a potvrďte. Výška Z je nepovinná; zadaná předem platí i pro klik do plánu.": "Clicking in plan view adds a point at the clicked location, or enter Y and X manually and confirm. Elevation Z is optional; if entered beforehand, it also applies to a click in the plan.",
+ "Výška je nepovinná. Bod bez Z má v tabulce prázdnou výšku a v prostorovém pohledu se nezobrazí.": "Elevation is optional. A point without Z has an empty elevation in the table and is not shown in 3D view.",
  "Přidat bod lze až po načtení projektu (PD): bod se přiřazuje ke středu z PD.": "A point can be added only after loading the design (PD): the point is matched to a design centre.",
  "V režimu Pouze obvod se zaměřené středy nepoužívají, bod nelze přidat.": "Surveyed centres are not used in Perimeter only mode, so the point cannot be added.",
  "Přímé středy jsou vypnuté (Přímý střed do = 0), bod nelze přidat.": "Direct centres are turned off (Direct centre within = 0), so the point cannot be added.",
